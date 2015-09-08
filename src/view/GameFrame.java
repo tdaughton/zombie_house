@@ -1,4 +1,4 @@
-/**
+package view; /**
  * Tess Daughton
  */
 import javax.swing.*;
