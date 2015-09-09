@@ -31,7 +31,10 @@ public abstract class Movable
     return this.circle;
   }
 
-  public boolean interests(Circle otherMovable)
+  public void setX(double x) { this.x += x; }
+  public void setY(double y) { this.y += y; }
+
+  public boolean intersects(Circle otherMovable)
   {
     boolean intersects = false;
     double r1 = Math.pow(otherMovable.getRadius()-this.getRadius(),2);
@@ -72,8 +75,8 @@ public abstract class Movable
 
   public void move(int xNew, int yNew)
   {
-    this.x += xNew;
-    this.y += yNew;
+    setX(xNew);
+    setY(yNew);
   }
 
 }
