@@ -18,6 +18,5 @@ public class ZombieHouseMain
         new GameFrame().setVisible(true);
       }
     });
-
   }
 }

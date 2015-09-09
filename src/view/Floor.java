@@ -3,14 +3,14 @@ package view;
 /**
  * Created by L301126 on 9/8/15.
  */
-public class Floor extends Tile
+public class Floor extends TileImage
 {
 
-  String filename = "resources/floor.png";
+  String filename = "src/view/resources/floor.png";
 
   public Floor()
   {
-    setTileImage(filename);
+    this.setTileImage(filename);
   }
 
 }

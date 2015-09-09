@@ -6,19 +6,18 @@ import java.awt.*;
 
 public class GameFrame extends JFrame
 {
-  private final int SCREEN_WIDTH;
-  private final int SCREEN_HEIGHT;
-
-
+  private static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
+  protected final static int MAX_SCREEN_WIDTH= (int) userScreenSize.getWidth();
+  protected final static int MAX_SCREEN_HEIGHT=  (int) userScreenSize.getHeight();
 
 
   public GameFrame()
   {
     super();
-    Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    this.SCREEN_WIDTH = (int) userScreenSize.getWidth();
-    this.SCREEN_HEIGHT= (int) userScreenSize.getHeight();
-    this.setSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
+
+    this.setSize(new Dimension(MAX_SCREEN_WIDTH, MAX_SCREEN_WIDTH));
+    this.getContentPane().add(new HouseImage());
+
   }
 
 
