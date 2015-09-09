@@ -18,7 +18,7 @@ public class GameFrame extends JFrame implements ActionListener
   private HouseImage grid;
 
 
-  public GameFrame(int[][] intGrid)
+  public GameFrame(int [][] intGrid)
   {
     super();
     grid = new HouseImage(intGrid);
@@ -44,5 +44,6 @@ public class GameFrame extends JFrame implements ActionListener
   {
     grid.setCurrentScreenWidth(this.getWidth());
     grid.setCurrentScreenHeight(this.getHeight());
+    repaint();
   }
 }

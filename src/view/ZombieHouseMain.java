@@ -10,7 +10,7 @@ public class ZombieHouseMain
 
   public static void main(String [] args)
   {
-    int[][] gameBoard = new GridReader().readGrid();
+    int [][] gameBoard = new GridReader().readGrid();
 
     SwingUtilities.invokeLater(new Runnable()
     {

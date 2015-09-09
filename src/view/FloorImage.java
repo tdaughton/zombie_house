@@ -6,7 +6,7 @@ package view;
 public class FloorImage extends TileImage
 {
 
-  String filename = "floor.png";
+  String filename = "floor2.jpg";
 
   public FloorImage()
   {
