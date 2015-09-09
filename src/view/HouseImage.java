@@ -29,6 +29,7 @@ public class HouseImage extends JPanel implements MouseWheelListener
     super();
     tileImages = this.translateTileImages(grid);
     addMouseWheelListener(this);
+    PlayerImage sprite = new PlayerImage();
   }
 
   private void drawTile(Graphics g)
