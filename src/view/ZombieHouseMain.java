@@ -10,12 +10,14 @@ public class ZombieHouseMain
 
   public static void main(String [] args)
   {
+    int[][] gameBoard = new GridReader().readGrid();
+
     SwingUtilities.invokeLater(new Runnable()
     {
       @Override
       public void run()
       {
-        new GameFrame().setVisible(true);
+        new GameFrame(gameBoard).setVisible(true);
       }
     });
   }
