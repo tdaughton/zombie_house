@@ -1,6 +1,10 @@
 package model;
 
 /**
+ * Miri Ryu
+ * CS351L-001
+ * Proj1 Zombie House
+ *
  * MapGenerator will generate and will have getMap() who returns 2D arrays of
  * tile map that has walls and movable tile and etc.
  * It will have 10 rooms and many hallways.
@@ -12,6 +16,15 @@ public class MapGenerator
 
   public int col, row;
 
+
+  /**
+   * It will generate new map. col must be at least 40 and row must be at least
+   * 30 because I can't make sure it will always be able to generate 10 rooms in
+   * smaller map. Smallest room will be 4x4; all rooms are rectangular shape.
+   *
+   * @param col
+   * @param row
+   */
   public MapGenerator(int col, int row)
   {
     map = new boolean[row][col];
@@ -29,6 +42,9 @@ public class MapGenerator
 
   }
 
+  /**
+   * Generating new map
+   */
   private void generateRandomRoom()
   {
     int roomWidth = 0, roomHeight = 0, roomX, roomY;
@@ -54,6 +70,9 @@ public class MapGenerator
     }
   }
 
+  /**
+   * Generating Hallways that completely fills the map.
+   */
   private void generateRandomHallways()
   {
     int num = 0;
@@ -65,6 +84,31 @@ public class MapGenerator
     System.out.println(num);
   }
 
+  /**
+   * Using A* pathfinding method it will find the fastest way to go through each
+   * map.
+   */
+  private void connectHallways()
+  {
+  }
+
+  /**
+   * After every room gets at least one entrance it will erase unused hallways.
+   */
+  private void eraseUnusedPath()
+  {
+  }
+
+  /**
+   * It will check if new random map is fittable to the current map.
+   *
+   * @param x x coordinate of new room
+   * @param y y coordinate of new room
+   * @param width must be greater than 4, less than or equal to 1/4 of map width
+   * @param height must be greater than 4, less than or equal to 1/4 of map hei-
+   *               ght
+   * @return true if it fits, false otherwise
+   */
   private boolean isFit(int x, int y, int width, int height)
   {
     if(x + width + 1 >= col) return false;
@@ -80,6 +124,35 @@ public class MapGenerator
     return true;
   }
 
+  /**
+   * This method is to check if there is any room for more hallways but it's not
+   * working as I meant so don't use it yet..
+   *
+   * @return true if there is such a wall tile that its 8 neighbors are all wal-
+   *         ls, false otherwise.
+   */
+  public boolean isCapableOfMoreHallways()
+  {
+    for(int i=1; i<col-1; i++)
+    {
+      for(int j=1; j<row-1; j++)
+      {
+        if(!map[j-1][i-1] && !map[j-1][i] && !map[j-1][i+1] &&  !map[j][i-1] &&
+                !map[j][i+1] && !map[j+1][i-1] && !map[j+1][i] && !map[j+1][i+1])
+        {
+          map[j][i] = true;
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * print 2D boolean map to see how the map looks like.
+   *
+   * @param map
+   */
   public void printMap(boolean[][] map)
   {
     int col = map[0].length;
@@ -99,25 +172,13 @@ public class MapGenerator
     }
   }
 
+  /**
+   * This is just to see if this class is working fine
+   *
+   * @param args
+   */
   public static void main(String[] args)
   {
     MapGenerator mg = new MapGenerator(40, 30);
-  }
-
-  public boolean isCapableOfMoreHallways()
-  {
-    for(int i=1; i<col-1; i++)
-    {
-      for(int j=1; j<row-1; j++)
-      {
-        if(!map[j-1][i-1] && !map[j-1][i] && !map[j-1][i+1] &&  !map[j][i-1] &&
-           !map[j][i+1] && !map[j+1][i-1] && !map[j+1][i] && !map[j+1][i+1])
-        {
-          map[j][i] = true;
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }
