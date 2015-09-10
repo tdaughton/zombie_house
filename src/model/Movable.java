@@ -1,4 +1,4 @@
-package view;
+package model;
 
 /**
  * Created by L301126 on 9/9/15.

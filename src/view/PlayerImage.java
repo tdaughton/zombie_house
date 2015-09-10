@@ -4,7 +4,9 @@
  */
 package view;
 
-public class PlayerImage extends Movable
+import model.Player;
+
+public class PlayerImage extends Player
 {
   public PlayerImage(double x, double y, double radius)
   {
