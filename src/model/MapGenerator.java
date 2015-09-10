@@ -1,7 +1,9 @@
 package model;
 
 /**
- * Created by Miri on 9/8/15.
+ * MapGenerator will generate and will have getMap() who returns 2D arrays of
+ * tile map that has walls and movable tile and etc.
+ * It will have 10 rooms and many hallways.
  */
 public class MapGenerator
 {
