@@ -16,7 +16,6 @@ public class MapGenerator
 
   public int col, row;
 
-
   /**
    * It will generate new map. col must be at least 40 and row must be at least
    * 30 because I can't make sure it will always be able to generate 10 rooms in
@@ -76,9 +75,14 @@ public class MapGenerator
   private void generateRandomHallways()
   {
     int num = 0;
-    while(isCapableOfMoreHallways())
+
+    for(int i=1; i<col-1; i++)
     {
-      num++;
+      for (int j=1; j<row-1; j++)
+      {
+        System.out.println(i + ", " + j);
+        if(isAbleToStartHallway(i, j)) startHallway(i, j);
+      }
     }
 
     System.out.println(num);
@@ -97,6 +101,44 @@ public class MapGenerator
    */
   private void eraseUnusedPath()
   {
+  }
+
+  /**
+   * This will start hallway from given point.
+   * This is so broken.. :(
+   */
+  private void startHallway(int x, int y)
+  {
+    int nextX = (Math.random() < .5)? 1: -1;
+    int nextY = (Math.random() < .5)? 1: -1;
+
+    System.out.println("X increment is " + nextX);
+    System.out.println("Y increment is " + nextY);
+    System.out.println("result = " + x+nextX + "," + y+nextY);
+    if(isAbleToStartHallway(x+nextX, y))
+    {
+      map[x][y] = true;
+      startHallway(x + nextX, y);
+    }
+    else if(isAbleToStartHallway(x-nextX, y))
+    {
+      map[x][y] = true;
+      startHallway(x-nextX, y);
+    }
+    else if(isAbleToStartHallway(x, y+nextY))
+    {
+      map[x][y] = true;
+      startHallway(x, y+nextY);
+    }
+    else if(isAbleToStartHallway(x, y-nextY))
+    {
+      map[x][y] = true;
+      startHallway(x, y-nextY);
+    }
+    else
+    {
+      map[x][y] = true;
+    }
   }
 
   /**
@@ -131,21 +173,26 @@ public class MapGenerator
    * @return true if there is such a wall tile that its 8 neighbors are all wal-
    *         ls, false otherwise.
    */
-  public boolean isCapableOfMoreHallways()
+  public boolean isAbleToStartHallway(int x, int y)
   {
-    for(int i=1; i<col-1; i++)
+
+    if(x-1 < 0 || y-1 < 0 || x+1 >= col || y+1 >= row)
     {
-      for(int j=1; j<row-1; j++)
-      {
-        if(!map[j-1][i-1] && !map[j-1][i] && !map[j-1][i+1] &&  !map[j][i-1] &&
-                !map[j][i+1] && !map[j+1][i-1] && !map[j+1][i] && !map[j+1][i+1])
-        {
-          map[j][i] = true;
-          return true;
-        }
-      }
+      System.out.println(x+", "+y);
+      return false;
     }
-    return false;
+
+    if(map[y-1][x-1] || map[y-1][x] || map[y-1][x+1] || map[y][x-1] ||
+       map[y][x+1] || map[y+1][x-1] || map[y+1][x] || map[y+1][x+1])
+    {
+      return false;
+    }
+    //if(!map[y-1][x-1] && !map[y-1][x] && !map[y-1][x+1] &&  !map[y][x-1] &&
+    //        !map[y][x+1] && !map[y+1][x-1] && !map[y+1][x] && !map[y+1][x+1])
+    //{
+      //return true;
+    //}
+    return true;
   }
 
   /**
