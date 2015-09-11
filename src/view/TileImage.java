@@ -11,10 +11,10 @@ public class TileImage
 {
 
   private BufferedImage TILE_IMAGE;
+  private boolean movable = true;
 
-
-  protected void setTileImage(String fileName)
-  {
+  protected void setTileImage(String fileName, boolean movable)
+  { movable = this.movable;
     try
     {
 
@@ -24,10 +24,18 @@ public class TileImage
     {
       e.printStackTrace();
     }
+
   }
 
-  protected BufferedImage getTileImage()
+  protected BufferedImage getTileImage() { return this.TILE_IMAGE; }
+
+  protected boolean getIsMovable()
   {
-    return this.TILE_IMAGE;
+    return this.movable;
+  }
+
+  protected String getTileType()
+  {
+    return "Tile";
   }
 }

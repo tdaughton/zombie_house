@@ -10,7 +10,11 @@ public class FloorImage extends TileImage
 
   public FloorImage()
   {
-    this.setTileImage(filename);
+    this.setTileImage(filename,true);
+  }
+  protected String getTileType()
+  {
+    return "Floor";
   }
 
 }

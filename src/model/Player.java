@@ -5,7 +5,7 @@ package model;
  */
 public class Player extends Movable
 {
-  public Player(double x, double y, double radius)
+  public Player(int x, int y, int radius)
   {
     super(x, y, radius);
   }

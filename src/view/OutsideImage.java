@@ -10,6 +10,11 @@ public class OutsideImage extends TileImage
 
   public OutsideImage()
   {
-    setTileImage(fileName);
+    setTileImage(fileName,true);
+  }
+
+  protected String getTileType()
+  {
+    return "Outside";
   }
 }

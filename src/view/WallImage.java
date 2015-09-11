@@ -10,7 +10,11 @@ public class WallImage extends TileImage
 
   public WallImage()
   {
-    this.setTileImage(filename);
+    this.setTileImage(filename, false);
+  }
+  protected String getTileType()
+  {
+    return "Wall";
   }
 
 }

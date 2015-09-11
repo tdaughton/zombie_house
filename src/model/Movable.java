@@ -8,12 +8,12 @@ import java.awt.Rectangle;
 
 public abstract class Movable
 {
-  protected double x;
-  protected double y;
-  protected double radius;
+  protected int x;
+  protected int y;
+  protected int radius;
   protected Circle circle;
   
-  public Movable(double x, double y, double radius)
+  public Movable(int x, int y, int radius)
   {
     this.x=x;
     this.y=y;
@@ -21,18 +21,15 @@ public abstract class Movable
     circle = new Circle(x,y,radius);
   }
 
-  public double getX() { return x; }
-  public double getY() { return y; }
-  public double getRadius(){ return radius; }
+  public int getX() { return this.x; }
+  public int getY() { return this.y; }
+  public int getRadius(){ return this.radius; }
 
 
   public Circle getBoundingCircle()
   {
     return this.circle;
   }
-
-  public void setX(double x) { this.x += x; }
-  public void setY(double y) { this.y += y; }
 
   public boolean intersects(Circle otherMovable)
   {
@@ -75,8 +72,7 @@ public abstract class Movable
 
   public void move(int xNew, int yNew)
   {
-    setX(xNew);
-    setY(yNew);
+    this.x += xNew;
+    this.y += yNew;
   }
-
 }

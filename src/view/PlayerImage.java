@@ -8,10 +8,24 @@ import model.Player;
 
 public class PlayerImage extends Player
 {
-  public PlayerImage(double x, double y, double radius)
-  {
-    super(x, y, radius);
+
+  private HouseImage house;
+  public PlayerImage(int x, int y, int radius)
+  { super(x, y, radius);
   }
+
+  public PlayerImage(int x, int y, int radius, HouseImage house)
+  { super(x,y,radius);
+    this.house = house;
+  }
+  protected int getRelativeX()
+  { return this.house.getCurrentScreenWidth()/2;
+  }
+  protected int getRelativeY()
+  {
+    return this.house.getCurrentScreenHeight()/2;
+  }
+
 }
 
 
