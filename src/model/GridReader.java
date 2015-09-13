@@ -1,8 +1,10 @@
-package view;
 
 /**
- * Created by L301126 on 9/9/15.
+ * Created by Tess Daughton, September 13th 2015
+ * Miri, I was using this class to read in my test case for the map, you can use if you need to read/write something for the MapGenerator, otherwise I can delete.
  */
+
+import view.HouseImage;
 
 import java.io.*;
 

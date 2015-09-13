@@ -1,10 +1,11 @@
-package model;
 
 /**
  * Created by Miri on 9/8/15.
+ * Edits: Tess Daughton, September 13th, 2015
  */
+package model;
 
-public class Tile extends Grid
+public class Tile extends Map
 {
 
   private int xMin;

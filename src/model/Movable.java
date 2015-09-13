@@ -1,13 +1,13 @@
+/**
+ * Created by Tess Daughton, September 13th, 2015
+ */
 package model;
 
-/**
- * Created by L301126 on 9/9/15.
- */
 import javafx.scene.shape.Circle;
 import java.awt.Rectangle;
 import view.HouseImage;
 
-public abstract class Movable
+public class Movable extends Map
 {
   protected int x;
   protected int y;
@@ -19,6 +19,7 @@ public abstract class Movable
 
   public Movable(int x, int y, int radius, Tile location, Tile[][] grid, HouseImage house)
   {
+    super(grid);
     this.x=x;
     this.y=y;
     this.radius=radius;

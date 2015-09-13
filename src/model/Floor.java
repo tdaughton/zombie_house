@@ -1,8 +1,9 @@
-package model;
 
 /**
- * Created by L301126 on 9/12/15.
+ * Created by Tess Daughton, September 13th, 2015
  */
+package model;
+
 public class Floor extends Tile
 {
   private boolean movable;

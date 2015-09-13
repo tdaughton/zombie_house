@@ -1,4 +1,3 @@
-package model;
 
 /**
  * Miri Ryu
@@ -9,6 +8,8 @@ package model;
  * tile map that has walls and movable tile and etc.
  * It will have 10 rooms and many hallways.
  */
+package model;
+
 public class MapGenerator
 {
   private final int NUMBER_OF_ROOMS = 10, NUMBER_OF_HALLWAYS=4;

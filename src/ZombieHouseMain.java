@@ -1,13 +1,14 @@
-package view;
+import view.*;
+import model.*;
 
 import javax.swing.*;
 
 /**
- * Created by L301126 on 9/8/15.
+ * Created by Tess Daughton, Sunday September 13th, 2015
+ * This class will start the game and utilize a thread manager to run it.
  */
 public class ZombieHouseMain
 {
-
   public static void main(String [] args)
   {
     int [][] gameBoard = new GridReader().readGrid();
@@ -21,4 +22,5 @@ public class ZombieHouseMain
       }
     });
   }
+}
 }

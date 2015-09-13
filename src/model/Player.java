@@ -1,10 +1,12 @@
+
+/**
+ * Created by Miri on 9/8/15.
+ * edits: Tess Daughton, September 13th, 2015
+ */
 package model;
 
 import view.HouseImage;
 
-/**
- * Created by Miri on 9/8/15.
- */
 public class Player extends Movable
 {
   private int x;
