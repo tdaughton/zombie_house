@@ -16,7 +16,7 @@ public abstract class Movable
   protected Tile location;
   protected HouseImage house;
   protected Tile[][] grid;
-  
+
   public Movable(int x, int y, int radius, Tile location, Tile[][] grid, HouseImage house)
   {
     this.x=x;
@@ -97,10 +97,12 @@ public abstract class Movable
 
   private boolean checkMovable(int xNew, int yNew, Tile current)
   {
+
     xNew = this.getX() + xNew;
     yNew = this.getY() + yNew;
 
     boolean move = false;
+
     for (int i = (current.getGridRow() - 1); i < (current.getGridRow() + 2); i++)
       for (int j = (current.getGridCol() - 1); j < (current.getGridCol() + 2); j++)
       {
@@ -108,7 +110,7 @@ public abstract class Movable
         {
           if (grid[i][j].contains(xNew, yNew) && grid[i][j].isMovable())
           {
-            setCurrentTile(grid[i][j]);
+            this.setCurrentTile(grid[i][j]);
             move = true;
             return move;
           }

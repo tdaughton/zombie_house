@@ -161,11 +161,13 @@ public class HouseImage extends JPanel implements KeyListener
     {
       tiles[x][y].setBounds((visTileX/2)*this.getTileWidth(),((visTileX/2)+1)*this.getTileWidth(),
                             (visTileY/2)*this.getTileHeight(), ((visTileY/2)+1)*this.getTileHeight());
-      System.out.println("(" + x + " , " + y + ")");
-      System.out.println(tiles[x][y].getTileType());
+
       sprite = new Player(tiles[x][y].getCenterTileX(), tiles[x][y].getCenterTileY(), 20, tiles[x][y], tiles, this);
       new PlayerImage(tiles[x][y].getCenterTileX(),tiles[x][y].getCenterTileY(), sprite.getRadius());
-      System.out.println("("+tiles[x][y].getCenterTileX()+" , " + tiles[x][y].getCenterTileY() + ")");
+
+//      System.out.println("(" + x + " , " + y + ")");
+//      System.out.println(tiles[x][y].getTileType());
+//      System.out.println("("+tiles[x][y].getCenterTileX()+" , " + tiles[x][y].getCenterTileY() + ")");
 
     }
     else spawnPlayer();
@@ -203,18 +205,7 @@ public class HouseImage extends JPanel implements KeyListener
     drawSprite(g);
   }
 
-  @Override
-  public void keyTyped(KeyEvent e)
-  {
-    int x = 0;
-    int y =0;
-    if(e.getKeyCode()==KeyEvent.VK_UP) y=-5;
-    if(e.getKeyCode()==KeyEvent.VK_DOWN)y=5;
-    if(e.getKeyCode()==KeyEvent.VK_RIGHT)x=5;
-    if(e.getKeyCode()==KeyEvent.VK_LEFT) x=-5;
-    this.calculateTileBounds();
-    sprite.move(x,y,sprite.getCurrentTile());
-  }
+
 
   @Override
   public void keyPressed(KeyEvent e)
@@ -226,8 +217,11 @@ public class HouseImage extends JPanel implements KeyListener
     if(e.getKeyCode()==KeyEvent.VK_RIGHT) x=5;
     if(e.getKeyCode()==KeyEvent.VK_LEFT) x=-5;
     this.calculateTileBounds();
-    sprite.move(x,y,sprite.getCurrentTile());
+    sprite.move(x, y, sprite.getCurrentTile());
   }
+
+  @Override
+  public void keyTyped(KeyEvent e) {}
 
   @Override
   public void keyReleased(KeyEvent e) {}
