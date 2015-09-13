@@ -39,7 +39,7 @@ public class Tile extends Grid
     return this.occupied;
   }
 
-  public boolean getIsMovable()
+  public boolean isMovable()
   {
     return this.movable;
   }

@@ -85,31 +85,30 @@ public abstract class Movable
   {
     if(this.checkMovable(xNew,yNew, current))
     {
-      this.setCurrentTile();
       this.x += xNew;
       this.y += yNew;
     }
   }
-  public void setCurrentTile()
+  public void setCurrentTile(Tile next)
   {
-    int x = house.getWidth()/ HouseImage.GRID_WIDTH;
-    int y = house.getHeight()/ HouseImage.GRID_HEIGHT;
-    this.location = grid[x][y];
+
+    this.location = next;
   }
 
   private boolean checkMovable(int xNew, int yNew, Tile current)
   {
     xNew = this.getX() + xNew;
     yNew = this.getY() + yNew;
+
     boolean move = false;
     for (int i = (current.getGridRow() - 1); i < (current.getGridRow() + 2); i++)
-      for (int j = (current.getGridCol() - 1); i < (current.getGridCol() + 2); j++)
+      for (int j = (current.getGridCol() - 1); j < (current.getGridCol() + 2); j++)
       {
         if(i>=0 && i<HouseImage.GRID_WIDTH && j>=0 && j<HouseImage.GRID_HEIGHT)
         {
-          if (grid[i][j].contains(xNew, yNew) && grid[i][j].getIsMovable())
+          if (grid[i][j].contains(xNew, yNew) && grid[i][j].isMovable())
           {
-            System.out.println("Hello World");
+            setCurrentTile(grid[i][j]);
             move = true;
             return move;
           }

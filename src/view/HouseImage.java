@@ -41,8 +41,6 @@ public class HouseImage extends JPanel implements KeyListener
 
   private void drawTile(int xMin, int yMin,int xMax, int yMax,  int xAdj, int yAdj,  Graphics g)
   {
-    this.calculateTileBounds(xMin,xMax,yMin,yMax);
-
     int x =0;
     int y= 0;
     for (int i =yMin; i < yMax; i++)
@@ -126,20 +124,31 @@ public class HouseImage extends JPanel implements KeyListener
     return tileImages;
   }
 
-  private void calculateTileBounds(int xStart, int xStop, int yStart, int yStop)
+  private void calculateTileBounds()
   {
-    int visX = 0;
-    int visY = 0;
-    for (int i = xStart; i < xStop; i++)
+    int minX = sprite.getCurrentTile().getGridRow() - 1;
+    int minY = sprite.getCurrentTile().getGridCol() - 1;
+    int maxX = minX + 2;
+    int maxY = minY + 2;
+    int x=(visTileX/2)-1;
+    int y = (visTileY/2)-1;
+    for (int i = minX; i <= maxX; i++)
     {
-      for (int j = yStart; j < yStop; j++)
+      for (int j = minY; j <= maxY; j++)
       {
-        tiles[i][j].setBounds((visX) * this.getTileWidth(), ((visX / 2) + 1) * this.getTileWidth(),
-            (visY) * this.getTileHeight(), ((visY / 2) + 1) * this.getTileHeight());
-        visX++;
+        if (i >= 0 && i < HouseImage.GRID_WIDTH && j >= 0 && j < HouseImage.GRID_HEIGHT)
+        {
+          tiles[i][j].setBounds(x * this.getTileWidth(), (x+1) * this.getTileWidth(),
+              y * this.getTileHeight(), (y+1) * this.getTileHeight());
+
+//          System.out.println("(" + i + ", " + j + ") " + tiles[i][j].getTileType());
+//        System.out.println("xMin: " + (x * this.getTileWidth()) + " xMax : " + ((x+1) * this.getTileWidth()));
+//          System.out.println("yMin: " + (y * this.getTileHeight()) + " yMax : " + ((y+1) * this.getTileHeight()));
+        }
+      y++;
       }
-      visY++;
-      visX = 0;
+      y=(visTileY/2)-1;
+      x++;
     }
   }
 
@@ -148,15 +157,15 @@ public class HouseImage extends JPanel implements KeyListener
   {
     int x = rand.nextInt(GRID_WIDTH);
     int y = rand.nextInt(GRID_HEIGHT);
-    if (tiles[x][y].getIsMovable())
+    if (tiles[x][y] instanceof Floor)
     {
       tiles[x][y].setBounds((visTileX/2)*this.getTileWidth(),((visTileX/2)+1)*this.getTileWidth(),
-                            (visTileY)*this.getTileHeight(), ((visTileY/2)+1)*this.getTileHeight());
+                            (visTileY/2)*this.getTileHeight(), ((visTileY/2)+1)*this.getTileHeight());
       System.out.println("(" + x + " , " + y + ")");
       System.out.println(tiles[x][y].getTileType());
       sprite = new Player(tiles[x][y].getCenterTileX(), tiles[x][y].getCenterTileY(), 20, tiles[x][y], tiles, this);
       new PlayerImage(tiles[x][y].getCenterTileX(),tiles[x][y].getCenterTileY(), sprite.getRadius());
-      System.out.println("("+tiles[x][y].getCenterTileX()+" , " + y + ")");
+      System.out.println("("+tiles[x][y].getCenterTileX()+" , " + tiles[x][y].getCenterTileY() + ")");
 
     }
     else spawnPlayer();
@@ -203,6 +212,7 @@ public class HouseImage extends JPanel implements KeyListener
     if(e.getKeyCode()==KeyEvent.VK_DOWN)y=5;
     if(e.getKeyCode()==KeyEvent.VK_RIGHT)x=5;
     if(e.getKeyCode()==KeyEvent.VK_LEFT) x=-5;
+    this.calculateTileBounds();
     sprite.move(x,y,sprite.getCurrentTile());
   }
 
@@ -215,6 +225,7 @@ public class HouseImage extends JPanel implements KeyListener
     if(e.getKeyCode()==KeyEvent.VK_DOWN) y=5;
     if(e.getKeyCode()==KeyEvent.VK_RIGHT) x=5;
     if(e.getKeyCode()==KeyEvent.VK_LEFT) x=-5;
+    this.calculateTileBounds();
     sprite.move(x,y,sprite.getCurrentTile());
   }
 
