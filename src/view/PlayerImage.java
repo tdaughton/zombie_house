@@ -4,28 +4,16 @@
  */
 package view;
 
-import model.Player;
-
-public class PlayerImage extends Player
+public class PlayerImage
 {
-
-  private HouseImage house;
+  private int x;
+  private int y;
+  private int radius;
   public PlayerImage(int x, int y, int radius)
-  { super(x, y, radius);
+  { this.x =x;
+    this.y=y;
+    this.radius=radius;
   }
-
-  public PlayerImage(int x, int y, int radius, HouseImage house)
-  { super(x,y,radius);
-    this.house = house;
-  }
-  protected int getRelativeX()
-  { return this.house.getCurrentScreenWidth()/2;
-  }
-  protected int getRelativeY()
-  {
-    return this.house.getCurrentScreenHeight()/2;
-  }
-
 }
 
 

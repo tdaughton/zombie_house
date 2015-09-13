@@ -12,9 +12,4 @@ public class WallImage extends TileImage
   {
     this.setTileImage(filename, false);
   }
-  protected String getTileType()
-  {
-    return "Wall";
-  }
-
 }

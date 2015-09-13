@@ -23,9 +23,12 @@ public class GridReader
       BufferedReader br = new BufferedReader(gridReader);
       while ((tileID = br.read()) != -1)
       {
+        //System.out.print((char)tileID);
         if(tileID == '\n')
         { x++;
           y=0;
+         // System.out.println();
+
         }
         else
         {

@@ -12,10 +12,6 @@ public class GameFrame extends JFrame implements ActionListener
   private static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   protected final static int MAX_SCREEN_WIDTH= (int) userScreenSize.getWidth();
   protected final static int MAX_SCREEN_HEIGHT=  (int) userScreenSize.getHeight();
-  private final int grid_height = MAX_SCREEN_WIDTH/40;
-  private final int grid_width = MAX_SCREEN_WIDTH/40;
-  protected static int currentScreenWidth;
-  protected static int currentScreenHeight;
   private Timer timer;
   private HouseImage grid;
 
@@ -48,6 +44,5 @@ public class GameFrame extends JFrame implements ActionListener
     grid.setCurrentScreenHeight(this.getHeight());
     repaint();
   }
-
 
 }

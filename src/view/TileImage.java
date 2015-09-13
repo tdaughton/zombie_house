@@ -9,13 +9,10 @@ import java.io.IOException;
 
 public class TileImage
 {
-
   private BufferedImage TILE_IMAGE;
-  private boolean movable = true;
 
   protected void setTileImage(String fileName, boolean movable)
-  { movable = this.movable;
-    try
+  { try
     {
 
       TILE_IMAGE = ImageIO.read(ClassLoader.getSystemResource(fileName));
@@ -29,13 +26,4 @@ public class TileImage
 
   protected BufferedImage getTileImage() { return this.TILE_IMAGE; }
 
-  protected boolean getIsMovable()
-  {
-    return this.movable;
-  }
-
-  protected String getTileType()
-  {
-    return "Tile";
-  }
 }

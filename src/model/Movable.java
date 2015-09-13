@@ -5,6 +5,7 @@ package model;
  */
 import javafx.scene.shape.Circle;
 import java.awt.Rectangle;
+import view.HouseImage;
 
 public abstract class Movable
 {
@@ -12,12 +13,18 @@ public abstract class Movable
   protected int y;
   protected int radius;
   protected Circle circle;
+  protected Tile location;
+  protected HouseImage house;
+  protected Tile[][] grid;
   
-  public Movable(int x, int y, int radius)
+  public Movable(int x, int y, int radius, Tile location, Tile[][] grid, HouseImage house)
   {
     this.x=x;
     this.y=y;
     this.radius=radius;
+    this.location = location;
+    this.house = house;
+    this.grid = grid;
     circle = new Circle(x,y,radius);
   }
 
@@ -29,6 +36,10 @@ public abstract class Movable
   public Circle getBoundingCircle()
   {
     return this.circle;
+  }
+  public Tile getCurrentTile()
+  {
+    return this.location;
   }
 
   public boolean intersects(Circle otherMovable)
@@ -70,9 +81,40 @@ public abstract class Movable
     return intersects;
   }
 
-  public void move(int xNew, int yNew)
+  public void move(int xNew, int yNew, Tile current)
   {
-    this.x += xNew;
-    this.y += yNew;
+    if(this.checkMovable(xNew,yNew, current))
+    {
+      this.setCurrentTile();
+      this.x += xNew;
+      this.y += yNew;
+    }
+  }
+  public void setCurrentTile()
+  {
+    int x = house.getWidth()/ HouseImage.GRID_WIDTH;
+    int y = house.getHeight()/ HouseImage.GRID_HEIGHT;
+    this.location = grid[x][y];
+  }
+
+  private boolean checkMovable(int xNew, int yNew, Tile current)
+  {
+    xNew = this.getX() + xNew;
+    yNew = this.getY() + yNew;
+    boolean move = false;
+    for (int i = (current.getGridRow() - 1); i < (current.getGridRow() + 2); i++)
+      for (int j = (current.getGridCol() - 1); i < (current.getGridCol() + 2); j++)
+      {
+        if(i>=0 && i<HouseImage.GRID_WIDTH && j>=0 && j<HouseImage.GRID_HEIGHT)
+        {
+          if (grid[i][j].contains(xNew, yNew) && grid[i][j].getIsMovable())
+          {
+            System.out.println("Hello World");
+            move = true;
+            return move;
+          }
+        }
+      }
+    return move;
   }
 }
