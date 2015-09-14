@@ -1,7 +1,6 @@
-import view.*;
-import model.*;
+import view.GameFrame;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 /**
  * Created by Tess Daughton, Sunday September 13th, 2015
@@ -22,5 +21,4 @@ public class ZombieHouseMain
       }
     });
   }
-}
 }
