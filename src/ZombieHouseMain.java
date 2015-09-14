@@ -1,3 +1,4 @@
+import model.GridReader;
 import view.GameFrame;
 
 import javax.swing.SwingUtilities;
