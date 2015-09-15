@@ -1,16 +1,21 @@
+
 /**
  * Created by Tess Daughton, September 13th 2015
  * Miri, I was using this class to read in my test case for the map, you can use if you need to read/write something for the MapGenerator, otherwise I can delete.
  */
+
 package model;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class GridReader
 {
   private int[][] grid = new int[40][40];
 
-  protected int[][] readGrid()
+  public int[][] readGrid()
   {
     int x = 0;
     int y = 0;

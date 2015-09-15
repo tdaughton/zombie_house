@@ -7,6 +7,8 @@ package model;
 
 public class Tile
 {
+  private int x, y;
+  private int type;
 
   private int xMin;
   private int xMax;
@@ -16,6 +18,7 @@ public class Tile
   private int gridCol;
   private boolean occupied;
   private boolean movable;
+
 
   public Tile(int gridRow, int gridCol, Tile[][] grid)
   {
@@ -83,8 +86,31 @@ public class Tile
   public void setBounds(int xMin, int xMax, int yMin, int yMax)
   {
     this.xMin = xMin;
-    this.xMax=xMax;
+    this.xMax = xMax;
     this.yMin = yMin;
-    this.yMax=yMax;
+    this.yMax = yMax;
   }
+
+  public int getType()
+  {
+    return type;
+  }
+
+  public void setType(int type)
+  {
+    this.type = type;
+  }
+
+  public int getX()
+  {
+    return x;
+
+  }
+
+  public int getY()
+  {
+    return y;
+  }
+
+
 }
