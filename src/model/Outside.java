@@ -20,6 +20,6 @@ public class Outside extends Tile
 
   public String getTileType()
   {
-    return "Outside";
+    return "O";
   }
 }

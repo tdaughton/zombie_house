@@ -5,7 +5,7 @@
  */
 package model;
 
-public class Tile extends Map
+public class Tile
 {
 
   private int xMin;
@@ -19,7 +19,7 @@ public class Tile extends Map
 
   public Tile(int gridRow, int gridCol, Tile[][] grid)
   {
-    super(grid);
+
     this.gridRow = gridRow;
     this.gridCol = gridCol;
     this.movable=false;
@@ -65,6 +65,19 @@ public class Tile extends Map
   public int getGridCol()
   {
   return this.gridCol;
+  }
+  public int getXMin()
+  {
+    return this.xMin;
+  }
+  public int getXMax()
+  {
+    return this.xMax;
+  }
+  public int getYMin() { return this.yMin; }
+  public int getYMax()
+  {
+    return this.yMax;
   }
 
   public void setBounds(int xMin, int xMax, int yMin, int yMax)

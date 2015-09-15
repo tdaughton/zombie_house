@@ -20,6 +20,6 @@ public class Floor extends Tile
 
     public String getTileType()
     {
-      return "Floor";
+      return "F";
     }
 }

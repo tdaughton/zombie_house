@@ -5,26 +5,23 @@ package model;
 
 import javafx.scene.shape.Circle;
 import java.awt.Rectangle;
-import view.HouseImage;
 
-public class Movable extends Map
+public class Movable
 {
   protected int x;
   protected int y;
   protected int radius;
   protected Circle circle;
   protected Tile location;
-  protected HouseImage house;
   protected Tile[][] grid;
 
-  public Movable(int x, int y, int radius, Tile location, Tile[][] grid, HouseImage house)
+  public Movable(int x, int y, int radius, Tile location, Tile[][] grid)
   {
-    super(grid);
+
     this.x=x;
     this.y=y;
     this.radius=radius;
     this.location = location;
-    this.house = house;
     this.grid = grid;
     circle = new Circle(x,y,radius);
   }
@@ -98,25 +95,35 @@ public class Movable extends Map
 
   private boolean checkMovable(int xNew, int yNew, Tile current)
   {
+    //System.out.println("("+this.getX() + ", " + this.getY() + ")");
 
     xNew = this.getX() + xNew;
     yNew = this.getY() + yNew;
 
-    boolean move = false;
+    //System.out.println("("+xNew + ", " + yNew + ")");
 
-    for (int i = (current.getGridRow() - 1); i < (current.getGridRow() + 2); i++)
-      for (int j = (current.getGridCol() - 1); j < (current.getGridCol() + 2); j++)
+
+    for (int j = (current.getGridCol() - 1); j < (current.getGridCol() + 2); j++)
+      for (int i = (current.getGridRow() - 1); i < (current.getGridRow() + 2); i++)
       {
-        if(i>=0 && i<HouseImage.GRID_WIDTH && j>=0 && j<HouseImage.GRID_HEIGHT)
+       // System.out.println("i: " + i + " j: " + j);
+       // System.out.println("xMin: " + grid[i][j].getXMin() + " xMax: " + grid[i][j].getXMax());
+       // System.out.println("yMin: " + grid[i][j].getYMin()+ " yMax: " + grid[i][j].getYMax());
+
+        if(i>=0 && i<ZombieHouseModel.ROWS && j>=0 && j<ZombieHouseModel.COLS)
         {
+            //System.out.println(grid[i][j].contains(xNew,yNew));
+         // System.out.println(grid[i][j].isMovable());
+
           if (grid[i][j].contains(xNew, yNew) && grid[i][j].isMovable())
           {
+            System.out.println(grid[i][j].getTileType());
             this.setCurrentTile(grid[i][j]);
-            move = true;
-            return move;
+            //System.out.println("true");
+            return true;
           }
         }
       }
-    return move;
+    return false;
   }
 }

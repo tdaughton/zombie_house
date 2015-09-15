@@ -5,17 +5,17 @@
  */
 package model;
 
-import view.HouseImage;
-
 public class Player extends Movable
 {
   private int x;
   private int y;
-  public Player(int x, int y, int radius, Tile location, Tile[][] grid, HouseImage house)
+  private Tile location;
+  public Player(int x, int y, int radius, Tile location, Tile[][] grid)
   {
-    super(x, y, radius,location,grid,house);
-    this.x = x;
+    super(x, y, radius,location,grid);
+    this.x=x;
     this.y=y;
+    this.location = location;
   }
 
 private void setX(int x1)
@@ -26,4 +26,9 @@ private void setX(int x1)
   {
     this.y=y1;
   }
+  private void setCurrentTile(int x, int y) {
+    this.location = grid[x][y];
+  }
+
+
 }

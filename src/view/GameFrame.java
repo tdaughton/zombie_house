@@ -2,33 +2,31 @@ package view;
 /**
  * Tess Daughton
  */
+import model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 public class GameFrame extends JFrame implements ActionListener
 {
-  private static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  protected final static int MAX_SCREEN_WIDTH= (int) userScreenSize.getWidth();
-  protected final static int MAX_SCREEN_HEIGHT=  (int) userScreenSize.getHeight();
+
   private Timer timer;
-  private HouseImage grid;
+  private GamePanel gamePanel;
 
-
-  public GameFrame(int [][] intGrid)
+  public GameFrame(Tile[][] grid, BufferedImage gameBoard, Dimension userScreenSize)
   {
     super();
-    grid = new HouseImage(intGrid);
-    grid.setSize(userScreenSize);
-    grid.setPreferredSize(userScreenSize);
-    grid.setBackground(Color.black);
 
+
+    gamePanel = new GamePanel(grid,gameBoard,userScreenSize);
 
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setPreferredSize(userScreenSize);
     this.setSize(userScreenSize);
-    this.getContentPane().add(grid, BorderLayout.CENTER);
+    this.setBackground(Color.black);
+    this.getContentPane().add(gamePanel, BorderLayout.CENTER);
     this.setVisible(true);
 
     timer=new Timer(10,this);
@@ -40,8 +38,8 @@ public class GameFrame extends JFrame implements ActionListener
   @Override
   public void actionPerformed(ActionEvent e)
   {
-    grid.setCurrentScreenWidth(this.getWidth());
-    grid.setCurrentScreenHeight(this.getHeight());
+    gamePanel.setCurrentScreenWidth(this.getWidth());
+    gamePanel.setCurrentScreenHeight(this.getHeight());
     repaint();
   }
 

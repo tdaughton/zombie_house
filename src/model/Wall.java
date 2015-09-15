@@ -20,6 +20,6 @@ public class Wall extends Tile
 
   public String getTileType()
   {
-    return "Wall";
+    return "W";
   }
 }

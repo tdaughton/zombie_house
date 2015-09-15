@@ -23,7 +23,7 @@ public class MapGenerator
    * smaller map. Smallest room will be 4x4; all rooms are rectangular shape.
    *
    * @param col
-   * @param row
+   * @param row`
    */
   public MapGenerator(int col, int row)
   {
