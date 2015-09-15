@@ -132,15 +132,15 @@ public class MapGenerator
 
     map[y][x].setType(4);
 
-    System.out.println("map "+ x + "," + y + " = " + map[y][x].getType());
+    //System.out.println("map "+ x + "," + y + " = " + map[y][x].getType());
 
     if(x+xInc <= 0 || x+xInc >= col-1 || x-xInc <= 0 || x-xInc >= col-1) return;
     if(y+yInc <= 0 || y+yInc >= row-1 || y-yInc <= 0 || y-yInc >= row-1) return;
 
     if(isExtendable(x, y+yInc, 0, yInc)) extendHallway(map[y+yInc][x]);
-    else if(isExtendable(x+xInc, y, xInc, 0)) extendHallway(map[y][x+xInc]);
-    else if(isExtendable(x-xInc, y, -xInc, 0)) extendHallway(map[y][x-xInc]);
-    else if(isExtendable(x, y-yInc, 0, -yInc)) extendHallway(map[y-yInc][x]);
+    if(isExtendable(x+xInc, y, xInc, 0)) extendHallway(map[y][x+xInc]);
+    if(isExtendable(x-xInc, y, -xInc, 0)) extendHallway(map[y][x-xInc]);
+    if(isExtendable(x, y-yInc, 0, -yInc)) extendHallway(map[y-yInc][x]);
 
     return;
   }
@@ -151,11 +151,7 @@ public class MapGenerator
     {
       for(int j=1; j<col-1; j++)
       {
-        if(isAlone(j, i))
-        {
-          System.out.println("is true");
-          return map[i][j];
-        }
+        if(isAlone(j, i)) return map[i][j];
       }
     }
     return null;
@@ -189,13 +185,13 @@ public class MapGenerator
   {
     if(xInc == 0)
     {
-      return isWall(x,y) && map[y+yInc][x-1].getType() == 0 &&
+      return isWall(x, y) && map[y+yInc][x-1].getType() == 0 &&
              map[y+yInc][x+1].getType() == 0 &&
              map[y][x-1].getType() == 0 && map[y][x+1].getType() == 0;
     }
     else
     {
-      return isWall(x, y) && map[y-1][x+xInc].getType() == 0 &&
+      return isWall(x, y) && map[y -1][x+xInc].getType() == 0 &&
              map[y+1][x+xInc].getType() == 0 &&
              map[y-1][x].getType() == 0 && map[y+1][x].getType() == 0;
     }
@@ -219,68 +215,8 @@ public class MapGenerator
       }
       System.out.println(ln);
     }
+    System.out.println();
   }
-
-/********
-
-  private void generateRandomHallways()
-  {
-    for(int i=1; i<col-1; i++)
-    {
-      for (int j=1; j<row-1; j++)
-      {
-        System.out.println("x =" + i + ", y =" + j);
-        if(isAlone(i, j)) startHallway(i, j);
-      }
-    }
-  }
-
-  private void connectHallways()
-  {
-  }
-
-  private void eraseUnusedPath()
-  {
-  }
-  private void startHallway(int x, int y)
-  {
-    xInc = (Math.random() < .5)? 1: -1;
-    yInc = (Math.random() < .5)? 1: -1;
-
-    System.out.println("X increment is " + xInc);
-    System.out.println("Y increment is " + yInc);
-    System.out.println("result = " + (x+xInc) + "," + (y+yInc));
-
-  }
-  private boolean isFit(int x, int y, int width, int height)
-  {
-    if(x + width + 1 >= col) return false;
-    if(y + height + 1 >= row) return false;
-
-    for(int i=0; i < width + 2; i++)
-    {
-      for(int j=0; j < height + 2; j++)
-      {
-        if(map[y+j-1][x+i-1].getType() > 0) return false;
-      }
-    }
-
-    return true;
-  }
-  public boolean isAlone(int x, int y)
-  {
-    if(x-1 < 0 || y-1 < 0 || x+1 >= col || y+1 >= row) return false;
-
-    if(map[y-1][x-1].getType() == 0 || map[y-1][x].getType() == 0 ||
-       map[y-1][x+1].getType() == 0 || map[y][x-1].getType() == 0 ||
-       map[y][x+1].getType() == 0 || map[y+1][x-1].getType() == 0 ||
-       map[y+1][x].getType() == 0 || map[y+1][x+1].getType() == 0)
-    {
-      return false;
-    }
-    return true;
-  }*/
-
 
   /**
    * This is just to see if this class is working fine
