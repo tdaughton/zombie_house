@@ -10,15 +10,31 @@ public class Player extends Movable
   private int x;
   private int y;
   private Tile location;
+
+  // Inventory is going to take traps only. If there will be any other items
+  // then we can use HashTable<String itemName, ArrayList<Item>> or something
+  // like that.
+  private int numberOfTraps;
+
   public Player(int x, int y, int radius, Tile location, Tile[][] grid)
   {
     super(x, y, radius,location,grid);
     this.x=x;
     this.y=y;
     this.location = location;
+
+    numberOfTraps = 0;
   }
 
-private void setX(int x1)
+  //============================================================================
+  // This method will allow the player to grab a trap from the tile if there
+  // exists a trap spawned in that tile.
+  //============================================================================
+  public void grabTrap() { numberOfTraps++; }
+  public void installTrap() { numberOfTraps--; }
+  public int getNumberOfTraps() { return numberOfTraps; }
+
+  private void setX(int x1)
 {
   this.x=x1;
 }

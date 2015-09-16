@@ -19,13 +19,15 @@ public class Tile
   private boolean occupied;
   private boolean movable;
 
+  private Trap trap;
 
   public Tile(int gridRow, int gridCol, Tile[][] grid)
   {
-
     this.gridRow = gridRow;
     this.gridCol = gridCol;
     this.movable=false;
+
+    this.trap = null;
   }
   private void setOccupied(boolean occupationStatus )
   {
@@ -113,4 +115,17 @@ public class Tile
   }
 
 
+  //============================================================================
+  // The traps are managed with following methods. All the methods are named
+  // kind of straightforward so I abbreviate the explanations.
+  //============================================================================
+  public void throwGrabbableTrap() { trap = new Trap(x, y, true); }
+
+  public void removeTrap() { trap = null; }
+
+  public void installTrap() { trap = new Trap(x, y, false); }
+
+  public Trap getTrap() { return trap; }
+
+  public boolean hasTrap() { return trap != null; }
 }
