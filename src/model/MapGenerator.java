@@ -8,20 +8,39 @@
 // the map indicates a tile on the screen. Each tile represents different
 // material such as floor tile, wall tile.
 //
-// #    Name     Passable
-// 0    Wall     false
-// 1    Floor    true
+// #    Name            Passable
+// 0    Wall            false
+// 1    Room            true
+// 2    Hallways        true
+// 4    End of Hallway  true
+// 8    Doorway         true
+// 16   Exit            true
 //
+// However, when the map generation is finished, they are going to be changed
+// as follows:
+//
+// 0(Wall) ------------------> 0(Wall)
+// 1(Room) ------------------> 1(Floor)
+// 2(Hallways) --------------> 1(Floor)
+// 4(End of Hallway) --------> 1(Floor)
+// 8(Doorway) ---------------> 1(Floor)
+// 16(Exit) -----------------> 2(Exit)
+//
+// The reason I change them into new notation is because once the map is
+// generated the original notations are unnecessary.
 //==============================================================================
 package model;
 
+import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MapGenerator
 {
-  private final int NUMBER_OF_ROOMS = 10, NUMBER_OF_HALLWAYS=4;
+  private final int NUMBER_OF_ROOMS = 10;
   private int[][] map;
-  private Room[] rooms;
+  private ArrayList<Rectangle> rooms;
+  private ArrayList<Room> rooms2;
   Random random;
 
   private int col, row;
@@ -46,16 +65,21 @@ public class MapGenerator
   public MapGenerator(int col, int row)
   {
     map = new int[row][col];
-    rooms = new Room[NUMBER_OF_ROOMS];
+    rooms = new ArrayList<>();
     random = new Random();
 
     this.col = col;
     this.row = row;
 
     initiateHouse();
-    generateRandomRoom();
+    while(true)
+    {
+      if(getQuadSect(new Room(0, 0, col, row), 0) > NUMBER_OF_ROOMS) break;
+      System.out.println();
+    }
+    //generateRandomRoom();
     //updateRoom();
-    printMap();
+    //printMap();
     //generateRandomHallway();
     //printMap();
 
@@ -77,36 +101,109 @@ public class MapGenerator
   }
 
   //============================================================================
-  // It will generate random room. It calls room class but I will also change it
-  // to only use int array.
+  // Instead of picking random numbers for a rectangle and hoping for the
+  // rectangle to fit into the map eventually, this method will call a
+  // recursive method getQuadSect which divide given Room class into 4 smaller
+  // rooms. The recursion will stop when the room gets too small or when the
+  // iteration seems to be happened enough to generate sufficient number of
+  // rooms.
   //============================================================================
   private void generateRandomRoom()
   {
-    Room newRoom;
+    Rectangle newRoom;
     int roomWidth, roomHeight, roomX, roomY;
 
     for(int r=0; r<NUMBER_OF_ROOMS; r++)
     {
-      while(rooms[r] == null)
+      while(true)
       {
-        roomWidth = (5 + random.nextInt(col/8) * 2);
-        roomHeight = (5 + random.nextInt(row/8) * 2);
+        roomWidth = (5 + random.nextInt(col/12) * 2);
+        roomHeight = (5 + random.nextInt(row/12) * 2);
 
-        roomX = 1 + random.nextInt(col - roomWidth - 2);
-        roomY = 1 + random.nextInt(row - roomHeight - 2);
+        roomX = 1 + random.nextInt((col-roomWidth-2)/2) * 2;
+        roomY = 1 + random.nextInt((row-roomHeight-2)/2) * 2;
 
-        System.out.println(roomWidth + ", " + roomHeight);
+        newRoom = new Rectangle(roomX, roomY, roomWidth, roomHeight);
 
-        newRoom = new Room(roomX, roomY, roomWidth, roomHeight);
-
-        if(isOk(newRoom))
+        if(!intersectsWithAny(newRoom))
         {
-          rooms[r] = newRoom;
+          addNewRom(newRoom);
+          //printMap();
+          break;
         }
       }
     }
   }
-/**
+
+  //============================================================================
+  // Divide given rectangle into 4 rectangles. Check how deep the iteration
+  // went through and if it's enough to generate given number of rooms then
+  // stops.
+  //============================================================================
+  private int getQuadSect(Room room, int it)
+  {
+    Room[] sects = new Room[4];
+    int xAxis, yAxis;
+
+    // If the room dimension is smaller than 5x5, it's too small.
+    if(room.width < 5 || room.height < 5) return 0;
+
+    // If the room dimension is smaller than 8x8, it can't be divided further.
+    if(room.width < 8 || room.height < 8)
+    {
+      room.print();
+      return 1;
+    }
+
+    // If it iterated about the enough time, it should stop because I don't want
+    // the room to be too small.
+    if(Math.pow(4.0, (double) it) > NUMBER_OF_ROOMS)
+    {
+      room.print();
+      return 1;
+    }
+
+    xAxis = room.x1 + 5 + random.nextInt(room.width/2 - 3) * 2;
+    yAxis = room.y1 + 5 + random.nextInt(room.height/2 - 3) * 2;
+
+    sects[0] = new Room(room.x1, room.y1, xAxis, yAxis);
+    sects[1] = new Room(room.x1, yAxis, xAxis, room.y2);
+    sects[2] = new Room(xAxis, room.y1, room.x2, yAxis);
+    sects[3] = new Room(xAxis, yAxis, room.x2, room.y2);
+
+    return getQuadSect(sects[0], it+1) + getQuadSect(sects[1], it+1) +
+           getQuadSect(sects[2], it+1) + getQuadSect(sects[3], it+1);
+  }
+
+  //============================================================================
+  // This is to find if the new room intersects with any other rooms
+  //============================================================================
+  private boolean intersectsWithAny(Rectangle other)
+  {
+    for(Rectangle current : rooms)
+    {
+      if(other.intersects(other)) return true;
+    }
+    return false;
+  }
+
+  //============================================================================
+  // This method will add the new room into the map.
+  //============================================================================
+  private void addNewRom(Rectangle newRoom)
+  {
+    rooms.add(newRoom);
+
+    for(int i=newRoom.y; i<newRoom.y+newRoom.height; i++)
+    {
+      for(int j=newRoom.x; j<newRoom.x+newRoom.width; j++)
+      {
+        map[i][j] = 1;
+      }
+    }
+  }
+
+  /**
   //============================================================================
   // At each point found to be alone without any neighbor in adjacent 8 tiles
   // a hallway can be started. Every time such a tile is found call this
@@ -121,46 +218,6 @@ public class MapGenerator
     }
   }*/
 
-  //============================================================================
-  // Once I change all the tile classes into int array this method will not be
-  // necessary but this is just to update the rooms on the actual map.
-  //============================================================================
-  public void updateRoom()
-  {
-    int x, y, x2, y2;
-
-    for(int r=0; r<NUMBER_OF_ROOMS; r++)
-    {
-      x = rooms[r].getX();
-      y = rooms[r].getY();
-      x2 = x + rooms[r].getWidth();
-      y2 = y + rooms[r].getHeight();
-
-      for(int i=x; i<x2; i++)
-      {
-        for(int j=y; j<y2; j++)
-        {
-          map[j][i] = 1;
-        }
-      }
-    }
-  }
-
-  //============================================================================
-  // This is to find if the new rectangular room intersects with any other rooms
-  // I couldn't think of better name for the method but I will probably come up
-  // with something better and specific later on.
-  //============================================================================
-  public boolean isOk(Room room)
-  {
-    int i = 0;
-    while(rooms[i] != null)
-    {
-      if(rooms[i].intersects(room)) return false;
-      i++;
-    }
-    return true;
-  }
 /**
   //============================================================================
   // This is a method to extend hallway as far as it can go but each time the
@@ -284,6 +341,27 @@ public class MapGenerator
     System.out.println();
   }
 
+  public class Room
+  {
+    public int x1, x2, y1, y2, width, height;
+
+    public Room(int x1, int y1, int x2, int y2)
+    {
+      this.x1 = x1;
+      this.y1 = y1;
+      this.x2 = x2;
+      this.y2 = y2;
+      width = Math.abs(x2 - x1);
+      height = Math.abs(y2 - y1);
+    }
+
+    public void print()
+    {
+      System.out.println("(" + x1 + ", " + y1 + ")->(" + x2 + ", " + y2 + "): width = "
+        + width + ", height = " + height);
+    }
+  }
+
   /**
    * This is just to see if this class is working fine
    *
@@ -291,6 +369,6 @@ public class MapGenerator
    */
   public static void main(String[] args)
   {
-    MapGenerator mg = new MapGenerator(41, 31);
+    MapGenerator mg = new MapGenerator(48, 41);
   }
 }
