@@ -31,20 +31,23 @@
 //==============================================================================
 package model;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class MapGenerator
 {
+  // If the number of rooms are too big compared to the dimension of the map
+  // the tempRooms won't fit into the map so try not to use such a number.
   private final int NUMBER_OF_ROOMS = 10;
+
   private int[][] map;
-  private ArrayList<Rectangle> rooms;
-  private ArrayList<Room> rooms2;
-  Random random;
+  private Room[] rooms;
+
+  private ArrayList<Room> tempRooms;
+
+  private Random random;
 
   private int col, row;
-
 
   //============================================================================
   // MapGenerating can be abstracted to following steps:
@@ -55,7 +58,7 @@ public class MapGenerator
   //    look prettier.
   // 3. Generate random hallways. Hallways are going to change directions or end
   //    at odd number of coordinates only, too.
-  // 4. Connect rooms and hallways. Each room can have multiple doors but must
+  // 4. Connect tempRooms and hallways. Each room can have multiple doors but must
   //    have at least one.
   // 5. locate exit on hallway.
   // 6. Erase unused hallways.
@@ -64,24 +67,21 @@ public class MapGenerator
   //============================================================================
   public MapGenerator(int col, int row)
   {
-    map = new int[row][col];
-    rooms = new ArrayList<>();
     random = new Random();
+
+    map = new int[row][col];
+    rooms = new Room[NUMBER_OF_ROOMS];
+
+    tempRooms = new ArrayList<>();
 
     this.col = col;
     this.row = row;
 
     initiateHouse();
-    while(true)
-    {
-      if(getQuadSect(new Room(0, 0, col, row), 0) > NUMBER_OF_ROOMS) break;
-      System.out.println();
-    }
-    //generateRandomRoom();
-    //updateRoom();
-    //printMap();
-    //generateRandomHallway();
-    //printMap();
+    generateRandomRoom();
+    printMap();
+    generateRandomHallway();
+    printMap();
 
   }
 
@@ -104,188 +104,97 @@ public class MapGenerator
   // Instead of picking random numbers for a rectangle and hoping for the
   // rectangle to fit into the map eventually, this method will call a
   // recursive method getQuadSect which divide given Room class into 4 smaller
-  // rooms. The recursion will stop when the room gets too small or when the
+  // tempRooms. The recursion will stop when the room gets too small or when the
   // iteration seems to be happened enough to generate sufficient number of
-  // rooms.
+  // tempRooms.
   //============================================================================
   private void generateRandomRoom()
   {
-    Rectangle newRoom;
-    int roomWidth, roomHeight, roomX, roomY;
+    while(true)
+    { // generate smaller squares for border
+      if(getQuadSect(new Room(0, 0, col-2, row-2), 0) > NUMBER_OF_ROOMS) break;
+      tempRooms.clear();
+    }
 
-    for(int r=0; r<NUMBER_OF_ROOMS; r++)
+    while(tempRooms.size() > NUMBER_OF_ROOMS)
+    { // Pick random tempRooms.
+      tempRooms.remove(random.nextInt(tempRooms.size()));
+    }
+
+    for(int i=0; i<NUMBER_OF_ROOMS; i++)
     {
-      while(true)
+      addNewRom(tempRooms.get(i), i);
+    }
+  }
+
+  //============================================================================
+  // At each point found to be alone (a wall tile that has all 8 adjacent tiles
+  // are also walls) start a hallway and extend it as far as it can go.
+  //============================================================================
+  private void generateRandomHallway()
+  {
+    int x, y;
+
+    for(int i=0; i<row/2-1; i++)
+    {
+      for(int j=0; j<col/2-1; j++)
       {
-        roomWidth = (5 + random.nextInt(col/12) * 2);
-        roomHeight = (5 + random.nextInt(row/12) * 2);
+        x = 1 + (j*2);
+        y = 1 + (i*2);
 
-        roomX = 1 + random.nextInt((col-roomWidth-2)/2) * 2;
-        roomY = 1 + random.nextInt((row-roomHeight-2)/2) * 2;
-
-        newRoom = new Rectangle(roomX, roomY, roomWidth, roomHeight);
-
-        if(!intersectsWithAny(newRoom))
+        if(isAlone(x, y))
         {
-          addNewRom(newRoom);
-          //printMap();
-          break;
+          map[y][x] = 4;
+          extendHallway(x, y);
         }
       }
     }
   }
 
   //============================================================================
-  // Divide given rectangle into 4 rectangles. Check how deep the iteration
-  // went through and if it's enough to generate given number of rooms then
-  // stops.
-  //============================================================================
-  private int getQuadSect(Room room, int it)
-  {
-    Room[] sects = new Room[4];
-    int xAxis, yAxis;
-
-    // If the room dimension is smaller than 5x5, it's too small.
-    if(room.width < 5 || room.height < 5) return 0;
-
-    // If the room dimension is smaller than 8x8, it can't be divided further.
-    if(room.width < 8 || room.height < 8)
-    {
-      room.print();
-      return 1;
-    }
-
-    // If it iterated about the enough time, it should stop because I don't want
-    // the room to be too small.
-    if(Math.pow(4.0, (double) it) > NUMBER_OF_ROOMS)
-    {
-      room.print();
-      return 1;
-    }
-
-    xAxis = room.x1 + 5 + random.nextInt(room.width/2 - 3) * 2;
-    yAxis = room.y1 + 5 + random.nextInt(room.height/2 - 3) * 2;
-
-    sects[0] = new Room(room.x1, room.y1, xAxis, yAxis);
-    sects[1] = new Room(room.x1, yAxis, xAxis, room.y2);
-    sects[2] = new Room(xAxis, room.y1, room.x2, yAxis);
-    sects[3] = new Room(xAxis, yAxis, room.x2, room.y2);
-
-    return getQuadSect(sects[0], it+1) + getQuadSect(sects[1], it+1) +
-           getQuadSect(sects[2], it+1) + getQuadSect(sects[3], it+1);
-  }
-
-  //============================================================================
-  // This is to find if the new room intersects with any other rooms
-  //============================================================================
-  private boolean intersectsWithAny(Rectangle other)
-  {
-    for(Rectangle current : rooms)
-    {
-      if(other.intersects(other)) return true;
-    }
-    return false;
-  }
-
-  //============================================================================
-  // This method will add the new room into the map.
-  //============================================================================
-  private void addNewRom(Rectangle newRoom)
-  {
-    rooms.add(newRoom);
-
-    for(int i=newRoom.y; i<newRoom.y+newRoom.height; i++)
-    {
-      for(int j=newRoom.x; j<newRoom.x+newRoom.width; j++)
-      {
-        map[i][j] = 1;
-      }
-    }
-  }
-
-  /**
-  //============================================================================
-  // At each point found to be alone without any neighbor in adjacent 8 tiles
-  // a hallway can be started. Every time such a tile is found call this
-  // function and extend hallway in random direction and as long as it can go.
-  //============================================================================
-  private void generateRandomHallway()
-  {
-    TileModel start;
-    while((start = getStartTile()) != null)
-    {
-      extendHallway(start);
-    }
-  }*/
-
-/**
-  //============================================================================
   // This is a method to extend hallway as far as it can go but each time the
   // direction is kind of randomized. If the hallway can't be extended anymore
   // it will just stop.
   //============================================================================
-  public void extendHallway(TileModel current)
+  public void extendHallway(int x, int y)
   {
-    int xInc, yInc;
-    int x = current.getX(), y = current.getY();
+    int xInc = (random.nextInt(1) > 0)? 1: -1;
+    int yInc = (random.nextInt(1) > 0)? 1: -1;
 
-    xInc = (Math.random() < .5)? 1: -1;
-    yInc = (Math.random() < .5)? 1: -1;
-
-    map[y][x]=4;
-
-    //System.out.println("map "+ x + "," + y + " = " + map[y][x].getType());
-
-    if(x+xInc <= 0 || x+xInc >= col-1 || x-xInc <= 0 || x-xInc >= col-1) return;
-    if(y+yInc <= 0 || y+yInc >= row-1 || y-yInc <= 0 || y-yInc >= row-1) return;
-
-    if(isExtendable(x, y+yInc, 0, yInc)) extendHallway(y+yInc, x);
-    if(isExtendable(x+xInc, y, xInc, 0)) extendHallway(y, x+xInc);
-    if(isExtendable(x-xInc, y, -xInc, 0)) extendHallway(y, x-xInc);
-    if(isExtendable(x, y-yInc, 0, -yInc)) extendHallway(y-yInc, x);
-
-    return;
-  }
-
-  //============================================================================
-  // This is returning a tile that stands alone but I will think of better way
-  // to adapt this method for 2D int.
-  //============================================================================
-  public TileModel getStartTile()
-  {
-    for(int i=1; i<row-1; i++)
+    if(isExtendable(x, y+yInc, 0, yInc))
     {
-      for(int j=1; j<col-1; j++)
-      {
-        if(isAlone(j, i)) return map[i][j];
-      }
+      map[y+yInc][x] = 2;
+      map[y+yInc*2][x] = 2;
+
+      extendHallway(x, y+yInc*2);
     }
-    return null;
+    else if(isExtendable(x+xInc, y, xInc, 0))
+    {
+      map[y][x+xInc] = 2;
+      map[y][x+xInc*2] = 2;
+
+      extendHallway(x+xInc*2, y);
+    }
+    else if(isExtendable(x-xInc, y, -xInc, 0))
+    {
+      map[y][x-xInc] = 2;
+      map[y][x-xInc*2] = 2;
+
+      extendHallway(x-xInc*2, y);
+    }
+    else if(isExtendable(x, y-yInc, 0, -yInc))
+    {
+      map[y-yInc][x] = 2;
+      map[y-yInc*2][x] = 2;
+
+      extendHallway(x, y-yInc*2);
+    }
+    else
+    {
+      System.out.println("(" + x + ", " + y + "): " + xInc + ", " + yInc);
+      map[y][x] = 4;
+    }
   }
-
-
-  //============================================================================
-  // Returns true if the given coordinates of the map is a map tile, false
-  // otherwise.
-  //============================================================================
-  public boolean isWall(int x, int y)
-  {
-    return map[y][x].getType() == 0;
-  }
-
-  //============================================================================
-  // Returns true all the adjacent tiles are walls and the tile itself is also
-  // a wall.
-  //============================================================================
-  public boolean isAlone(int x, int y)
-  {
-    return isWall(x, y) && map[y-1][x-1].getType() == 0 &&
-           map[y-1][x].getType() == 0 && map[y-1][x+1].getType() == 0 &&
-           map[y][x-1].getType() == 0 && map[y][x+1].getType() == 0 &&
-           map[y+1][x-1].getType() == 0 && map[y+1][x].getType() == 0 &&
-           map[y+1][x+1].getType() == 0;
-  }
-
 
   //============================================================================
   // returns true if the tile is "extendable". (I will have to come up with
@@ -297,6 +206,7 @@ public class MapGenerator
   //    *  *  *       east, south.
   //
   //    @  @  @
+  //    @ [?] @
   //    @ [?] @  =>  Say that the tile wants to extend to north, then we want
   //    * [ ] *      @ marked tiles to be wall.
   //    *  *  *
@@ -306,20 +216,98 @@ public class MapGenerator
   //============================================================================
   public boolean isExtendable(int x, int y, int xInc, int yInc)
   {
-    if(xInc == 0)
+    int newX = x + xInc * 3;
+    int newY = y + yInc * 3;
+
+    if(newX < 0 || newX >= col || newY < 0 || newY >= row) return false;
+
+    for(int i=-1; i<2; i++)
     {
-      return isWall(x, y) && map[y+yInc][x-1].getType() == 0 &&
-             map[y+yInc][x+1].getType() == 0 &&
-             map[y][x-1].getType() == 0 && map[y][x+1].getType() == 0;
+      for(int j=-1; j<2; j++)
+      {
+        if(map[y+i+yInc*2][x+j+xInc*2] > 0) {
+          System.out.println("   " + (x+j+xInc*2)+ ", " + (y+i+yInc*2)+ " = " +map[(y+i+yInc*2)][(x+j+xInc*2)]);
+          System.out.println("   increments: " + xInc + ", " + yInc);
+          return false;
+        }
+      }
     }
-    else
+
+    return true;
+  }
+
+  //============================================================================
+  // Divide given rectangle into 4 rectangles. Check how deep the iteration
+  // went through and if it's enough to generate given number of tempRooms then
+  // stops.
+  //============================================================================
+  private int getQuadSect(Room room, int it)
+  {
+    Room[] sects = new Room[4];
+    int xAxis, yAxis;
+
+    if(room.width < 5 || room.height < 5) return 0; // 5x5 is too small.
+
+    if(room.width < 8 || room.height < 8 ||
+       Math.pow(4.0, (double) it) > NUMBER_OF_ROOMS)
+    { // If the dimension of room gets too small it can't be divided further.
+      tempRooms.add(room);
+      return 1;
+    }
+
+    xAxis = room.x1 + 5 + random.nextInt(room.width/2 - 3) * 2;
+    yAxis = room.y1 + 5 + random.nextInt(room.height/2 - 3) * 2;
+
+    sects[0] = new Room(room.x1, room.y1, xAxis, yAxis);
+    sects[1] = new Room(room.x1, yAxis + 1, xAxis, room.y2);
+    sects[2] = new Room(xAxis + 1, room.y1, room.x2, yAxis);
+    sects[3] = new Room(xAxis + 1, yAxis + 1, room.x2, room.y2);
+
+    return getQuadSect(sects[0], it+1) + getQuadSect(sects[1], it+1) +
+           getQuadSect(sects[2], it+1) + getQuadSect(sects[3], it+1);
+  }
+
+  //============================================================================
+  // This method will add the new room into the map.
+  //============================================================================
+  private void addNewRom(Room room, int roomNum)
+  {
+    int x, y, width, height;
+    int rX, rY, rWidth, rHeight;
+
+    rX = room.x1;
+    rY = room.y1;
+    rWidth = room.width;
+    rHeight = room.height;
+
+    width = rWidth>6? 5 + random.nextInt((rWidth - 5) / 2) * 2: 5;
+    height = rHeight>6? 5 + random.nextInt((rHeight - 5) / 2) * 2: 5;
+
+    x = rWidth>width+1? rX + random.nextInt((rWidth-width)/2) * 2: rX;
+    y = rHeight>height+1? rY + random.nextInt((rHeight-height)/2) * 2: rY;
+
+    for(int i=y; i<y+height; i++)
     {
-      return isWall(x, y) && map[y -1][x+xInc].getType() == 0 &&
-             map[y+1][x+xInc].getType() == 0 &&
-             map[y-1][x].getType() == 0 && map[y+1][x].getType() == 0;
+      for(int j=x; j<x+width; j++)
+      {
+        map[i+1][j+1] = 1;
+        rooms[roomNum] = new Room(x, y, x + width, y + height);
+      }
     }
   }
-*/
+
+  //============================================================================
+  // Returns true all the adjacent tiles are walls and the tile itself is also
+  // a wall.
+  //============================================================================
+  public boolean isAlone(int x, int y)
+  {
+    return map[y][x] == 0 && map[y-1][x-1] == 0 && map[y-1][x] == 0 &&
+           map[y-1][x+1] == 0 && map[y][x-1] == 0 && map[y][x] == 0 &&
+           map[y][x+1] == 0 && map[y+1][x-1] == 0 && map[y+1][x] == 0 &&
+           map[y+1][x+1] == 0;
+  }
+
   public void printMap()
   {
     String ln ="";
@@ -332,6 +320,10 @@ public class MapGenerator
         {
           case 0: ln += " * ";
             break;
+          case 1: ln += "[1]";
+            break;
+          case 4: ln += "[4]";
+            break;
           default: ln += "[ ]";
             break;
         }
@@ -341,6 +333,10 @@ public class MapGenerator
     System.out.println();
   }
 
+  //============================================================================
+  // Simple class to store information for rectangle. I thought it will be
+  // lighter using my own class rather than using rectangle.
+  //============================================================================
   public class Room
   {
     public int x1, x2, y1, y2, width, height;
@@ -357,8 +353,8 @@ public class MapGenerator
 
     public void print()
     {
-      System.out.println("(" + x1 + ", " + y1 + ")->(" + x2 + ", " + y2 + "): width = "
-        + width + ", height = " + height);
+      System.out.println("(" + x1 + ", " + y1 + ")->(" + x2 + ", " + y2 +
+              "): width = " + width + ", height = " + height);
     }
   }
 
