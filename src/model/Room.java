@@ -6,7 +6,6 @@ package model;
 public class Room
 {
   private int x, y, width, height;
-  private Tile[][] chunk;
 
   public Room(int x, int y, int width, int height)
   {
