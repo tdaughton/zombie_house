@@ -11,7 +11,7 @@ public class Zombie extends Movable
   private int y;
   public Zombie(int x, int y, int radius, Tile location, Tile[][] grid)
   {
-    super(x, y, radius,location,grid);
+    super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
     this.x = x;
     this.y=y;
   }

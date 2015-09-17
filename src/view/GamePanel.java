@@ -56,7 +56,7 @@ public class GamePanel extends JPanel implements KeyListener
     if(map[x][y] instanceof Floor)
     {
       sprite = new Player(map[x][y].getCenterTileX(),map[x][y].getCenterTileY(),60,map[x][y],
-                          map,GridOrientation.pickRandomOrientation());
+                          map);
     }
     else getRandomStart(map);
     return sprite;
