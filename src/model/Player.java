@@ -12,7 +12,6 @@ public class Player extends Movable
   private Tile location;
   private Tile[][] grid;
   private Enum playerOrientation;
-  public Player(int x, int y, int radius, Tile location, Tile[][] grid, Enum playerOrientation)
 
   // Inventory is going to take traps only. If there will be any other items
   // then we can use HashTable<String itemName, ArrayList<Item>> or something
@@ -21,7 +20,7 @@ public class Player extends Movable
 
   public Player(int x, int y, int radius, Tile location, Tile[][] grid)
   {
-    super(x, y, radius,location,grid);
+    super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
     this.x=x;
     this.y=y;
     this.location = location;
