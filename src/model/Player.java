@@ -1,4 +1,3 @@
-
 /**
  * Created by Miri on 9/8/15.
  * edits: Tess Daughton, September 13th, 2015
@@ -7,12 +6,12 @@ package model;
 
 public class Player extends Movable
 {
-  private int x;
-  private int y;
-  private Tile location;
-  private Tile[][] grid;
-  private Enum playerOrientation;
-
+  private static final double DIST_SIGHT = 5.0f;
+  private static final double DIST_HEAR = 10.0f;
+  private static final double SPEED_WALK = 1.0f;
+  private static final double SPEED_MULT = 2.0f;
+  private static final double STAM_MAX = 5.0f;
+  private static final double STAM_REGEN = 0.2f;
   // Inventory is going to take traps only. If there will be any other items
   // then we can use HashTable<String itemName, ArrayList<Item>> or something
   // like that.
@@ -20,14 +19,8 @@ public class Player extends Movable
 
   public Player(int x, int y, int radius, Tile location, Tile[][] grid)
   {
-    super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
-    this.x=x;
-    this.y=y;
-    this.location = location;
-
+    super(x, y, radius, location, grid, GridOrientation.pickRandomOrientation());
     numberOfTraps = 0;
-    this.grid=grid;
-    this.playerOrientation=playerOrientation;
   }
 
   //============================================================================
