@@ -121,10 +121,8 @@ public class MapGenerator
       tempRooms.remove(random.nextInt(tempRooms.size()));
     }
 
-    for (int i = 0; i < NUMBER_OF_ROOMS; i++)
-    {
-      addNewRom(tempRooms.get(i), i);
-    }
+    for (int i = 0; i < NUMBER_OF_ROOMS; i++) addNewRom(tempRooms.get(i), i);
+    for(int i=0; i < NUMBER_OF_ROOMS; i++) rooms[i].print();
   }
 
   //============================================================================
@@ -161,39 +159,35 @@ public class MapGenerator
     int xInc = (random.nextInt(1) > 0) ? 1 : -1;
     int yInc = (random.nextInt(1) > 0) ? 1 : -1;
 
-    if (isExtendable(x, y + yInc, 0, yInc))
+    if (isExtendable(x, y, 0, yInc))
     {
       map[y + yInc][x] = 2;
       map[y + yInc * 2][x] = 2;
 
       extendHallway(x, y + yInc * 2);
     }
-    else if (isExtendable(x + xInc, y, xInc, 0))
+    else if (isExtendable(x, y, xInc, 0))
     {
       map[y][x + xInc] = 2;
       map[y][x + xInc * 2] = 2;
 
       extendHallway(x + xInc * 2, y);
     }
-    else if (isExtendable(x - xInc, y, -xInc, 0))
+    else if (isExtendable(x, y, -xInc, 0))
     {
       map[y][x - xInc] = 2;
       map[y][x - xInc * 2] = 2;
 
       extendHallway(x - xInc * 2, y);
     }
-    else if (isExtendable(x, y - yInc, 0, -yInc))
+    else if (isExtendable(x, y, 0, -yInc))
     {
       map[y - yInc][x] = 2;
       map[y - yInc * 2][x] = 2;
 
       extendHallway(x, y - yInc * 2);
     }
-    else
-    {
-      System.out.println("(" + x + ", " + y + "): " + xInc + ", " + yInc);
-      map[y][x] = 4;
-    }
+    else map[y][x] = 4;
   }
 
   //============================================================================
@@ -225,12 +219,7 @@ public class MapGenerator
     {
       for (int j = -1; j < 2; j++)
       {
-        if (map[y + i + yInc * 2][x + j + xInc * 2] > 0)
-        {
-          System.out.println("   " + (x + j + xInc * 2) + ", " + (y + i + yInc * 2) + " = " + map[(y + i + yInc * 2)][(x + j + xInc * 2)]);
-          System.out.println("   increments: " + xInc + ", " + yInc);
-          return false;
-        }
+        if (map[y + i + yInc * 2][x + j + xInc * 2] > 0) return false;
       }
     }
 
@@ -265,7 +254,7 @@ public class MapGenerator
     sects[3] = new Room(xAxis + 1, yAxis + 1, room.x2, room.y2);
 
     return getQuadSect(sects[0], it + 1) + getQuadSect(sects[1], it + 1) +
-            getQuadSect(sects[2], it + 1) + getQuadSect(sects[3], it + 1);
+           getQuadSect(sects[2], it + 1) + getQuadSect(sects[3], it + 1);
   }
 
   //============================================================================
@@ -276,8 +265,9 @@ public class MapGenerator
     int x, y, width, height;
     int rX, rY, rWidth, rHeight;
 
-    rX = room.x1;
-    rY = room.y1;
+    rX = room.x1 + 1;
+    rY = room.y1 + 1;
+
     rWidth = room.width;
     rHeight = room.height;
 
@@ -287,12 +277,13 @@ public class MapGenerator
     x = rWidth > width + 1 ? rX + random.nextInt((rWidth - width) / 2) * 2 : rX;
     y = rHeight > height + 1 ? rY + random.nextInt((rHeight - height) / 2) * 2 : rY;
 
+    rooms[roomNum] = new Room(x, y, x + width, y + height);
+
     for (int i = y; i < y + height; i++)
     {
       for (int j = x; j < x + width; j++)
       {
-        map[i + 1][j + 1] = 1;
-        rooms[roomNum] = new Room(x, y, x + width, y + height);
+        map[i][j] = 1;
       }
     }
   }
@@ -304,9 +295,9 @@ public class MapGenerator
   public boolean isAlone(int x, int y)
   {
     return map[y][x] == 0 && map[y - 1][x - 1] == 0 && map[y - 1][x] == 0 &&
-            map[y - 1][x + 1] == 0 && map[y][x - 1] == 0 && map[y][x] == 0 &&
-            map[y][x + 1] == 0 && map[y + 1][x - 1] == 0 && map[y + 1][x] == 0 &&
-            map[y + 1][x + 1] == 0;
+           map[y - 1][x + 1] == 0 && map[y][x - 1] == 0 && map[y][x] == 0 &&
+           map[y][x + 1] == 0 && map[y + 1][x - 1] == 0 && map[y + 1][x] == 0 &&
+           map[y + 1][x + 1] == 0;
   }
 
   public void printMap()
@@ -326,6 +317,9 @@ public class MapGenerator
             ln += "[1]";
             break;
           case 4:
+            ln += "[4]";
+            break;
+          case 8:
             ln += "[4]";
             break;
           default:
