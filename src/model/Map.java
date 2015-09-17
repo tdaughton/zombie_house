@@ -1,11 +1,12 @@
-package model;
-
-import java.util.Random;
-
 /**
  * Created by Tess Daughton, September 13th 2015
  * Takes in a tile map given by ZombieHouseModel
  */
+
+package model;
+
+import java.util.Random;
+
 public class Map
 {
   private Random random;
@@ -15,13 +16,13 @@ public class Map
   private int tileHeight;
   private int tileWidth;
 
-  public Map(Tile[][] grid, int rows , int cols, int width, int height)
+  public Map(Tile[][] grid, int rows, int cols, int width, int height)
   {
-    this.COLS=cols;
-    this.ROWS=rows;
+    this.COLS = cols;
+    this.ROWS = rows;
     this.grid = grid;
-    this.tileHeight=height;
-    this.tileWidth=width;
+    this.tileHeight = height;
+    this.tileWidth = width;
     this.setBounds();
 
     random = new Random();
@@ -29,7 +30,7 @@ public class Map
 
   private void setBounds()
   {
-    for(int i=0; i<ROWS; i++)
+    for (int i = 0; i < ROWS; i++)
     {
       for (int j = 0; j < COLS; j++)
       {
@@ -48,14 +49,14 @@ public class Map
   public void throwGrabbableTraps(int numberOfTraps)
   {
     int x, y;
-    for(int i=0; i<numberOfTraps; i++)
+    for (int i = 0; i < numberOfTraps; i++)
     {
-      while(true)
+      while (true)
       { //Find x and y that we can throw a trap
         x = random.nextInt(COLS);
         y = random.nextInt(ROWS);
 
-        if(grid[y][x].isMovable() && !grid[y][x].hasTrap()) break;
+        if (grid[y][x].isMovable() && !grid[y][x].hasTrap()) break;
       }
 
       grid[y][x].throwGrabbableTrap();
@@ -67,7 +68,7 @@ public class Map
   //============================================================================
   public void grabTrap(int x, int y)
   {
-    if(grid[y][x].getTrap().isGrabbable())
+    if (grid[y][x].getTrap().isGrabbable())
     {
       grid[y][x].removeTrap();
       //player.grapTrap();

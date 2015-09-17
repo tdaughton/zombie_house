@@ -1,4 +1,3 @@
-
 //==============================================================================
 // Miri Ryu
 // CS351L-001
@@ -29,6 +28,7 @@
 // The reason I change them into new notation is because once the map is
 // generated the original notations are unnecessary.
 //==============================================================================
+
 package model;
 
 import java.util.ArrayList;
@@ -91,9 +91,9 @@ public class MapGenerator
   //============================================================================
   private void initiateHouse()
   {
-    for(int i=0; i<row; i++)
+    for (int i = 0; i < row; i++)
     {
-      for(int j=0; j<col; j++)
+      for (int j = 0; j < col; j++)
       {
         map[i][j] = 0;
       }
@@ -110,18 +110,18 @@ public class MapGenerator
   //============================================================================
   private void generateRandomRoom()
   {
-    while(true)
+    while (true)
     { // generate smaller squares for border
-      if(getQuadSect(new Room(0, 0, col-2, row-2), 0) > NUMBER_OF_ROOMS) break;
+      if (getQuadSect(new Room(0, 0, col - 2, row - 2), 0) > NUMBER_OF_ROOMS) break;
       tempRooms.clear();
     }
 
-    while(tempRooms.size() > NUMBER_OF_ROOMS)
+    while (tempRooms.size() > NUMBER_OF_ROOMS)
     { // Pick random tempRooms.
       tempRooms.remove(random.nextInt(tempRooms.size()));
     }
 
-    for(int i=0; i<NUMBER_OF_ROOMS; i++)
+    for (int i = 0; i < NUMBER_OF_ROOMS; i++)
     {
       addNewRom(tempRooms.get(i), i);
     }
@@ -135,14 +135,14 @@ public class MapGenerator
   {
     int x, y;
 
-    for(int i=0; i<row/2-1; i++)
+    for (int i = 0; i < row / 2 - 1; i++)
     {
-      for(int j=0; j<col/2-1; j++)
+      for (int j = 0; j < col / 2 - 1; j++)
       {
-        x = 1 + (j*2);
-        y = 1 + (i*2);
+        x = 1 + (j * 2);
+        y = 1 + (i * 2);
 
-        if(isAlone(x, y))
+        if (isAlone(x, y))
         {
           map[y][x] = 4;
           extendHallway(x, y);
@@ -158,36 +158,36 @@ public class MapGenerator
   //============================================================================
   public void extendHallway(int x, int y)
   {
-    int xInc = (random.nextInt(1) > 0)? 1: -1;
-    int yInc = (random.nextInt(1) > 0)? 1: -1;
+    int xInc = (random.nextInt(1) > 0) ? 1 : -1;
+    int yInc = (random.nextInt(1) > 0) ? 1 : -1;
 
-    if(isExtendable(x, y+yInc, 0, yInc))
+    if (isExtendable(x, y + yInc, 0, yInc))
     {
-      map[y+yInc][x] = 2;
-      map[y+yInc*2][x] = 2;
+      map[y + yInc][x] = 2;
+      map[y + yInc * 2][x] = 2;
 
-      extendHallway(x, y+yInc*2);
+      extendHallway(x, y + yInc * 2);
     }
-    else if(isExtendable(x+xInc, y, xInc, 0))
+    else if (isExtendable(x + xInc, y, xInc, 0))
     {
-      map[y][x+xInc] = 2;
-      map[y][x+xInc*2] = 2;
+      map[y][x + xInc] = 2;
+      map[y][x + xInc * 2] = 2;
 
-      extendHallway(x+xInc*2, y);
+      extendHallway(x + xInc * 2, y);
     }
-    else if(isExtendable(x-xInc, y, -xInc, 0))
+    else if (isExtendable(x - xInc, y, -xInc, 0))
     {
-      map[y][x-xInc] = 2;
-      map[y][x-xInc*2] = 2;
+      map[y][x - xInc] = 2;
+      map[y][x - xInc * 2] = 2;
 
-      extendHallway(x-xInc*2, y);
+      extendHallway(x - xInc * 2, y);
     }
-    else if(isExtendable(x, y-yInc, 0, -yInc))
+    else if (isExtendable(x, y - yInc, 0, -yInc))
     {
-      map[y-yInc][x] = 2;
-      map[y-yInc*2][x] = 2;
+      map[y - yInc][x] = 2;
+      map[y - yInc * 2][x] = 2;
 
-      extendHallway(x, y-yInc*2);
+      extendHallway(x, y - yInc * 2);
     }
     else
     {
@@ -219,14 +219,15 @@ public class MapGenerator
     int newX = x + xInc * 3;
     int newY = y + yInc * 3;
 
-    if(newX < 0 || newX >= col || newY < 0 || newY >= row) return false;
+    if (newX < 0 || newX >= col || newY < 0 || newY >= row) return false;
 
-    for(int i=-1; i<2; i++)
+    for (int i = -1; i < 2; i++)
     {
-      for(int j=-1; j<2; j++)
+      for (int j = -1; j < 2; j++)
       {
-        if(map[y+i+yInc*2][x+j+xInc*2] > 0) {
-          System.out.println("   " + (x+j+xInc*2)+ ", " + (y+i+yInc*2)+ " = " +map[(y+i+yInc*2)][(x+j+xInc*2)]);
+        if (map[y + i + yInc * 2][x + j + xInc * 2] > 0)
+        {
+          System.out.println("   " + (x + j + xInc * 2) + ", " + (y + i + yInc * 2) + " = " + map[(y + i + yInc * 2)][(x + j + xInc * 2)]);
           System.out.println("   increments: " + xInc + ", " + yInc);
           return false;
         }
@@ -246,25 +247,25 @@ public class MapGenerator
     Room[] sects = new Room[4];
     int xAxis, yAxis;
 
-    if(room.width < 5 || room.height < 5) return 0; // 5x5 is too small.
+    if (room.width < 5 || room.height < 5) return 0; // 5x5 is too small.
 
-    if(room.width < 8 || room.height < 8 ||
-       Math.pow(4.0, (double) it) > NUMBER_OF_ROOMS)
+    if (room.width < 8 || room.height < 8 ||
+            Math.pow(4.0, (double)it) > NUMBER_OF_ROOMS)
     { // If the dimension of room gets too small it can't be divided further.
       tempRooms.add(room);
       return 1;
     }
 
-    xAxis = room.x1 + 5 + random.nextInt(room.width/2 - 3) * 2;
-    yAxis = room.y1 + 5 + random.nextInt(room.height/2 - 3) * 2;
+    xAxis = room.x1 + 5 + random.nextInt(room.width / 2 - 3) * 2;
+    yAxis = room.y1 + 5 + random.nextInt(room.height / 2 - 3) * 2;
 
     sects[0] = new Room(room.x1, room.y1, xAxis, yAxis);
     sects[1] = new Room(room.x1, yAxis + 1, xAxis, room.y2);
     sects[2] = new Room(xAxis + 1, room.y1, room.x2, yAxis);
     sects[3] = new Room(xAxis + 1, yAxis + 1, room.x2, room.y2);
 
-    return getQuadSect(sects[0], it+1) + getQuadSect(sects[1], it+1) +
-           getQuadSect(sects[2], it+1) + getQuadSect(sects[3], it+1);
+    return getQuadSect(sects[0], it + 1) + getQuadSect(sects[1], it + 1) +
+            getQuadSect(sects[2], it + 1) + getQuadSect(sects[3], it + 1);
   }
 
   //============================================================================
@@ -280,17 +281,17 @@ public class MapGenerator
     rWidth = room.width;
     rHeight = room.height;
 
-    width = rWidth>6? 5 + random.nextInt((rWidth - 5) / 2) * 2: 5;
-    height = rHeight>6? 5 + random.nextInt((rHeight - 5) / 2) * 2: 5;
+    width = rWidth > 6 ? 5 + random.nextInt((rWidth - 5) / 2) * 2 : 5;
+    height = rHeight > 6 ? 5 + random.nextInt((rHeight - 5) / 2) * 2 : 5;
 
-    x = rWidth>width+1? rX + random.nextInt((rWidth-width)/2) * 2: rX;
-    y = rHeight>height+1? rY + random.nextInt((rHeight-height)/2) * 2: rY;
+    x = rWidth > width + 1 ? rX + random.nextInt((rWidth - width) / 2) * 2 : rX;
+    y = rHeight > height + 1 ? rY + random.nextInt((rHeight - height) / 2) * 2 : rY;
 
-    for(int i=y; i<y+height; i++)
+    for (int i = y; i < y + height; i++)
     {
-      for(int j=x; j<x+width; j++)
+      for (int j = x; j < x + width; j++)
       {
-        map[i+1][j+1] = 1;
+        map[i + 1][j + 1] = 1;
         rooms[roomNum] = new Room(x, y, x + width, y + height);
       }
     }
@@ -302,29 +303,33 @@ public class MapGenerator
   //============================================================================
   public boolean isAlone(int x, int y)
   {
-    return map[y][x] == 0 && map[y-1][x-1] == 0 && map[y-1][x] == 0 &&
-           map[y-1][x+1] == 0 && map[y][x-1] == 0 && map[y][x] == 0 &&
-           map[y][x+1] == 0 && map[y+1][x-1] == 0 && map[y+1][x] == 0 &&
-           map[y+1][x+1] == 0;
+    return map[y][x] == 0 && map[y - 1][x - 1] == 0 && map[y - 1][x] == 0 &&
+            map[y - 1][x + 1] == 0 && map[y][x - 1] == 0 && map[y][x] == 0 &&
+            map[y][x + 1] == 0 && map[y + 1][x - 1] == 0 && map[y + 1][x] == 0 &&
+            map[y + 1][x + 1] == 0;
   }
 
   public void printMap()
   {
-    String ln ="";
-    for(int i=0; i<row; i++)
+    String ln = "";
+    for (int i = 0; i < row; i++)
     {
       ln = "";
-      for(int j=0; j<col; j++)
+      for (int j = 0; j < col; j++)
       {
         switch (map[i][j])
         {
-          case 0: ln += " * ";
+          case 0:
+            ln += " * ";
             break;
-          case 1: ln += "[1]";
+          case 1:
+            ln += "[1]";
             break;
-          case 4: ln += "[4]";
+          case 4:
+            ln += "[4]";
             break;
-          default: ln += "[ ]";
+          default:
+            ln += "[ ]";
             break;
         }
       }
@@ -360,8 +365,7 @@ public class MapGenerator
 
   /**
    * This is just to see if this class is working fine
-   *
-   * @param args
+   * @param args do nothing
    */
   public static void main(String[] args)
   {

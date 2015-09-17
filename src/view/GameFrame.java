@@ -2,7 +2,9 @@ package view;
 /**
  * Tess Daughton
  */
-import model.*;
+
+import model.Tile;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +13,6 @@ import java.awt.image.BufferedImage;
 
 public class GameFrame extends JFrame implements ActionListener
 {
-
   private Timer timer;
   private GamePanel gamePanel;
 
@@ -19,8 +20,7 @@ public class GameFrame extends JFrame implements ActionListener
   {
     super();
 
-
-    gamePanel = new GamePanel(grid,gameBoard,userScreenSize);
+    this.gamePanel = new GamePanel(grid, gameBoard, userScreenSize);
 
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setPreferredSize(userScreenSize);
@@ -29,18 +29,15 @@ public class GameFrame extends JFrame implements ActionListener
     this.getContentPane().add(gamePanel, BorderLayout.CENTER);
     this.setVisible(true);
 
-    timer=new Timer(10,this);
-    timer.start();
-
+    this.timer = new Timer(16, this);
+    this.timer.start();
   }
-
 
   @Override
   public void actionPerformed(ActionEvent e)
   {
-    gamePanel.setCurrentScreenWidth(this.getWidth());
-    gamePanel.setCurrentScreenHeight(this.getHeight());
+    this.gamePanel.setCurrentScreenWidth(this.getWidth());
+    this.gamePanel.setCurrentScreenHeight(this.getHeight());
     repaint();
   }
-
 }

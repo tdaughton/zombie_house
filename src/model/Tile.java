@@ -1,9 +1,11 @@
-
 /**
  * Created by Miri on 9/8/15.
  * Edits: Tess Daughton, September 13th, 2015
  */
+
 package model;
+
+import java.awt.*;
 
 public class Tile
 {
@@ -14,6 +16,7 @@ public class Tile
   private int xMax;
   private int yMin;
   private int yMax;
+  private Rectangle bounds;
   private int gridRow;
   private int gridCol;
   private boolean occupied;
@@ -25,17 +28,20 @@ public class Tile
   {
     this.gridRow = gridRow;
     this.gridCol = gridCol;
-    this.movable=false;
+    this.movable = false;
 
     this.trap = null;
   }
-  private void setOccupied(boolean occupationStatus )
+
+  private void setOccupied(boolean occupationStatus)
   {
-   this.occupied=occupationStatus;
+    this.occupied = occupationStatus;
   }
+
   public boolean contains(int x, int y)
   {
     boolean contains = false;
+    if (this.bounds.contains(x, y)) contains = true;
     if(x>=xMin && x<=xMax && y>=yMin && y<=yMax) contains = true;
     return contains;
   }
@@ -57,32 +63,53 @@ public class Tile
 
   public int getCenterTileX()
   {
-    return (xMin+xMax)/2;
+    return (int)this.bounds.getCenterX();
+    //return (xMin+xMax)/2;
   }
+
   public int getCenterTileY()
   {
-    return (yMin+yMax)/2;
+    return (int)this.bounds.getCenterY();
+    //return (yMin+yMax)/2;
   }
+
   public int getGridRow()
   {
-   return this.gridRow;
+    return this.gridRow;
   }
+
   public int getGridCol()
   {
-  return this.gridCol;
+    return this.gridCol;
   }
+
   public int getXMin()
   {
-    return this.xMin;
+    return (int)this.bounds.getMinX();
+    //return this.xMin;
   }
+
   public int getXMax()
   {
-    return this.xMax;
+    return (int)this.bounds.getMaxX();
+    //return this.xMax;
   }
-  public int getYMin() { return this.yMin; }
+
+  public int getYMin()
+  {
+    return (int)this.bounds.getMinY();
+    //return this.yMin;
+  }
+
   public int getYMax()
   {
-    return this.yMax;
+    return (int)this.bounds.getMaxY();
+    //return this.yMax;
+  }
+
+  public Rectangle getBounds()
+  {
+    return bounds;
   }
 
   public void setBounds(int xMin, int xMax, int yMin, int yMax)
@@ -91,6 +118,7 @@ public class Tile
     this.xMax = xMax;
     this.yMin = yMin;
     this.yMax = yMax;
+    this.bounds = new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
   }
 
   public int getType()
@@ -106,7 +134,6 @@ public class Tile
   public int getX()
   {
     return x;
-
   }
 
   public int getY()
@@ -114,18 +141,32 @@ public class Tile
     return y;
   }
 
-
   //============================================================================
   // The traps are managed with following methods. All the methods are named
   // kind of straightforward so I abbreviate the explanations.
   //============================================================================
-  public void throwGrabbableTrap() { trap = new Trap(x, y, true); }
+  public void throwGrabbableTrap()
+  {
+    trap = new Trap(x, y, true);
+  }
 
-  public void removeTrap() { trap = null; }
+  public void removeTrap()
+  {
+    trap = null;
+  }
 
-  public void installTrap() { trap = new Trap(x, y, false); }
+  public void installTrap()
+  {
+    trap = new Trap(x, y, false);
+  }
 
-  public Trap getTrap() { return trap; }
+  public Trap getTrap()
+  {
+    return trap;
+  }
 
-  public boolean hasTrap() { return trap != null; }
+  public boolean hasTrap()
+  {
+    return trap != null;
+  }
 }

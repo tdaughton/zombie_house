@@ -18,7 +18,7 @@ public class ZombieHouseViewer
       @Override
       public void run()
       {
-        new GameFrame(grid,gameBoard, userScreenSize).setVisible(true);
+        new GameFrame(grid, gameBoard, userScreenSize).setVisible(true);
       }
     });
   }

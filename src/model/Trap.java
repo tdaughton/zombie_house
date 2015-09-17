@@ -1,5 +1,3 @@
-package model;
-
 //==============================================================================
 // Miri Ryu
 // CS351L001
@@ -7,6 +5,9 @@ package model;
 //
 // Trap class only holds its x and y coordinates and grab-abl-ity :)
 //==============================================================================
+
+package model;
+
 public class Trap
 {
   private int x, y;
@@ -27,7 +28,18 @@ public class Trap
   // We don't need setter for x and y because once it is installed it won't be
   // moved or removed unless the trap is exploded.
   //============================================================================
-  public int getX() { return x; }
-  public int getY() { return y; }
-  public boolean isGrabbable() { return grabbable; }
+  public int getX()
+  {
+    return x;
+  }
+
+  public int getY()
+  {
+    return y;
+  }
+
+  public boolean isGrabbable()
+  {
+    return grabbable;
+  }
 }

@@ -1,8 +1,8 @@
-
 /**
  * Created by Miri on 9/8/15.
  * edits: Tess Daughton, September 13th, 2015
  */
+
 package model;
 
 public class Player extends Movable
@@ -18,9 +18,9 @@ public class Player extends Movable
 
   public Player(int x, int y, int radius, Tile location, Tile[][] grid)
   {
-    super(x, y, radius,location,grid);
-    this.x=x;
-    this.y=y;
+    super(x, y, radius, location, grid);
+    this.x = x;
+    this.y = y;
     this.location = location;
 
     numberOfTraps = 0;
@@ -30,21 +30,33 @@ public class Player extends Movable
   // This method will allow the player to grab a trap from the tile if there
   // exists a trap spawned in that tile.
   //============================================================================
-  public void grabTrap() { numberOfTraps++; }
-  public void installTrap() { numberOfTraps--; }
-  public int getNumberOfTraps() { return numberOfTraps; }
+  public void grabTrap()
+  {
+    numberOfTraps++;
+  }
+
+  public void installTrap()
+  {
+    numberOfTraps--;
+  }
+
+  public int getNumberOfTraps()
+  {
+    return numberOfTraps;
+  }
 
   private void setX(int x1)
-{
-  this.x=x1;
-}
+  {
+    this.x = x1;
+  }
+
   private void setY(int y1)
   {
-    this.y=y1;
+    this.y = y1;
   }
-  private void setCurrentTile(int x, int y) {
+
+  private void setCurrentTile(int x, int y)
+  {
     this.location = grid[x][y];
   }
-
-
 }
