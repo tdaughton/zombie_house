@@ -33,26 +33,12 @@ public class Movable
 
   }
 
-  public int getX()
-  {
-    return this.x;
-  }
   public int getX() { return this.x; }
   public int getY() { return this.y; }
   public int getRadius(){ return this.radius; }
   public Enum getPlayerOrientation()
   {
     return this.playerOrientation;
-  }
-
-  public int getY()
-  {
-    return this.y;
-  }
-
-  public int getRadius()
-  {
-    return this.radius;
   }
 
   public Circle getBoundingCircle()
@@ -69,8 +55,6 @@ public class Movable
     boolean intersects = false;
     double r1 = Math.pow(otherMovable.getRadius() - this.getRadius(), 2);
     double r2 = Math.pow(otherMovable.getRadius()+this.getRadius(),2);
-    double r1 = Math.pow(otherMovable.getRadius() - this.getRadius(), 2);
-    double r2 = Math.pow(otherMovable.getRadius() + this.getRadius(), 2);
 
     double distance = Math.pow((otherMovable.getCenterX() - this.getX()), 2) +
             Math.pow((otherMovable.getCenterY() - this.getY()), 2);
@@ -129,42 +113,27 @@ public class Movable
   private boolean checkMovable(int xNew, int yNew, Tile current)
   {
     boolean movable = false;
-    //System.out.println("("+this.getX() + ", " + this.getY() + ")");
     xNew = this.x + xNew;
     yNew = this.x + yNew;
-
-    //System.out.println("("+xNew + ", " + yNew + ")");
-    xNew = this.getX() + xNew;
-    yNew = this.getY() + yNew;
 
     for (int j = (current.getGridCol() - 1); j < (current.getGridCol() + 2); j++)
       for (int i = (current.getGridRow() - 1); i < (current.getGridRow() + 2); i++)
       {
-        // System.out.println("i: " + i + " j: " + j);
-        // System.out.println("xMin: " + grid[i][j].getXMin() + " xMax: " + grid[i][j].getXMax());
-        // System.out.println("yMin: " + grid[i][j].getYMin()+ " yMax: " + grid[i][j].getYMax());
-
         if (i >= 0 && i < ZombieHouseModel.ROWS && j >= 0 && j < ZombieHouseModel.COLS)
-        if(i>=0 && i<ZombieHouseModel.ROWS && j>=0 && j<ZombieHouseModel.COLS)
-        {
-          boolean cont = grid[i][j].contains(xNew, yNew);
-          boolean mova = grid[i][j].isMovable();
-          boolean inte = new Movable(xNew, yNew, this.radius, this.location, this.grid).intersects(grid[i][j].getBounds());
-          //System.out.println("cont " + cont + " mova " + mova + " inte " + inte);
-          if ((cont || inte) && mova)
-          if (grid[i][j].contains(xNew, yNew) && grid[i][j].isMovable())
+          if (i >= 0 && i < ZombieHouseModel.ROWS && j >= 0 && j < ZombieHouseModel.COLS)
           {
-            //System.out.println(grid[i][j].getTileType());
-            this.setCurrentTile(grid[i][j]);
-            //System.out.println("true");
-            movable = true;
-            System.out.println(grid[i][j].getTileType());
-            this.location=grid[i][j];
-            return true;
+            boolean cont = grid[i][j].contains(xNew, yNew);
+            boolean mova = grid[i][j].isMovable();
+            boolean inte = new Movable(xNew, yNew, this.radius, this.location, this.grid, GridOrientation.pickRandomOrientation()).intersects(grid[i][j].getBounds());
+            if ((cont || inte) && mova)
+              if (grid[i][j].contains(xNew, yNew) && grid[i][j].isMovable())
+              {
+                this.setCurrentTile(grid[i][j]);
+                this.location = grid[i][j];
+                return true;
+              }
           }
-        }
       }
-    }
     return movable;
   }
 
