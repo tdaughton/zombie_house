@@ -14,8 +14,10 @@ public class Movable
   protected Circle circle;
   protected Tile location;
   protected Tile[][] grid;
+  private Enum playerOrientation;
 
-  public Movable(int x, int y, int radius, Tile location, Tile[][] grid)
+
+  public Movable(int x, int y, int radius, Tile location, Tile[][] grid, Enum playerOrientation)
   {
 
     this.x=x;
@@ -23,12 +25,18 @@ public class Movable
     this.radius=radius;
     this.location = location;
     this.grid = grid;
+    this.playerOrientation=playerOrientation;
     circle = new Circle(x,y,radius);
+
   }
 
   public int getX() { return this.x; }
   public int getY() { return this.y; }
   public int getRadius(){ return this.radius; }
+  public Enum getPlayerOrientation()
+  {
+    return this.playerOrientation;
+  }
 
 
   public Circle getBoundingCircle()
@@ -43,7 +51,7 @@ public class Movable
   public boolean intersects(Circle otherMovable)
   {
     boolean intersects = false;
-    double r1 = Math.pow(otherMovable.getRadius()-this.getRadius(),2);
+    double r1 = Math.pow(otherMovable.getRadius() - this.getRadius(), 2);
     double r2 = Math.pow(otherMovable.getRadius()+this.getRadius(),2);
 
     double distance = Math.pow((otherMovable.getCenterX()-this.getX()),2) +
@@ -79,47 +87,31 @@ public class Movable
     return intersects;
   }
 
-  public void move(int xNew, int yNew, Tile current)
+
+  public void move(int xNew, int yNew, Tile current, Enum orientation)
   {
     if(this.checkMovable(xNew,yNew, current))
     {
+      this.playerOrientation=orientation;
       this.x += xNew;
       this.y += yNew;
     }
   }
-  public void setCurrentTile(Tile next)
-  {
-
-    this.location = next;
-  }
 
   private boolean checkMovable(int xNew, int yNew, Tile current)
   {
-    //System.out.println("("+this.getX() + ", " + this.getY() + ")");
-
     xNew = this.getX() + xNew;
     yNew = this.getY() + yNew;
-
-    //System.out.println("("+xNew + ", " + yNew + ")");
-
 
     for (int j = (current.getGridCol() - 1); j < (current.getGridCol() + 2); j++)
       for (int i = (current.getGridRow() - 1); i < (current.getGridRow() + 2); i++)
       {
-       // System.out.println("i: " + i + " j: " + j);
-       // System.out.println("xMin: " + grid[i][j].getXMin() + " xMax: " + grid[i][j].getXMax());
-       // System.out.println("yMin: " + grid[i][j].getYMin()+ " yMax: " + grid[i][j].getYMax());
-
         if(i>=0 && i<ZombieHouseModel.ROWS && j>=0 && j<ZombieHouseModel.COLS)
         {
-            //System.out.println(grid[i][j].contains(xNew,yNew));
-         // System.out.println(grid[i][j].isMovable());
-
           if (grid[i][j].contains(xNew, yNew) && grid[i][j].isMovable())
           {
             System.out.println(grid[i][j].getTileType());
-            this.setCurrentTile(grid[i][j]);
-            //System.out.println("true");
+            this.location=grid[i][j];
             return true;
           }
         }

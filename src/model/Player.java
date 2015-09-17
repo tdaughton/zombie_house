@@ -10,25 +10,16 @@ public class Player extends Movable
   private int x;
   private int y;
   private Tile location;
-  public Player(int x, int y, int radius, Tile location, Tile[][] grid)
+  private Tile[][] grid;
+  private Enum playerOrientation;
+  public Player(int x, int y, int radius, Tile location, Tile[][] grid, Enum playerOrientation)
   {
-    super(x, y, radius,location,grid);
+    super(x, y, radius,location,grid,playerOrientation);
     this.x=x;
     this.y=y;
     this.location = location;
+    this.grid=grid;
+    this.playerOrientation=playerOrientation;
   }
-
-private void setX(int x1)
-{
-  this.x=x1;
-}
-  private void setY(int y1)
-  {
-    this.y=y1;
-  }
-  private void setCurrentTile(int x, int y) {
-    this.location = grid[x][y];
-  }
-
 
 }
