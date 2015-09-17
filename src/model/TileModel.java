@@ -1,8 +1,9 @@
-package model;
-
 /**
  * Created by Miri on 9/13/15.
  */
+
+package model;
+
 public class TileModel
 {
   private int x, y;
