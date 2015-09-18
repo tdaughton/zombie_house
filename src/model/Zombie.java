@@ -17,11 +17,11 @@ public class Zombie extends Movable
 
   private void setX(int x1)
   {
-    this.x = x1;
+    this.circle.setCenterX(x1);
   }
 
   private void setY(int y1)
   {
-    this.y = y1;
+    this.circle.setCenterY(y1);
   }
 }

@@ -28,6 +28,7 @@ public class GamePanel extends JPanel implements KeyListener
   private int negXOffSet=0;
   private int negYOffSet=0;
   private int iterator=0;
+
   public GamePanel(Tile[][] map, BufferedImage grid, Dimension userScreenSize)
   {
     super();
@@ -44,24 +45,24 @@ public class GamePanel extends JPanel implements KeyListener
   {
     this.currentScreenWidth=x;
   }
+
   protected void setCurrentScreenHeight(int y)
   {
     this.currentScreenHeight=y;
   }
+
   private Player getRandomStart(Tile[][] map)
   {
     int x= rand.nextInt(39);
     int y = rand.nextInt(39);
 
-    if(map[x][y] instanceof Floor)
+    if(map[y][x] instanceof Floor)
     {
-      sprite = new Player(map[x][y].getCenterTileX(),map[x][y].getCenterTileY(),60,map[x][y],
-                          map);
+      sprite = new Player(map[y][x].getCenterTileX(),map[y][x].getCenterTileY(),60,map[y][x], map);
     }
     else getRandomStart(map);
     return sprite;
   }
-
 
   private BufferedImage getVisibleBuffer()
   {
@@ -88,12 +89,13 @@ public class GamePanel extends JPanel implements KeyListener
     if ((yMin+yMax) >= grid.getHeight()) yMax = grid.getHeight() - yMin;
 
     return grid.getSubimage(xMin, yMin, xMax, yMax);
-
   }
 
   private void drawSprite(Graphics g)
   {
-    g.drawImage(sprites.getCurrentPlayerImage(sprite), this.currentScreenWidth / 2, this.currentScreenHeight / 2, null);
+    g.drawImage(sprites.getCurrentPlayerImage(sprite), (this.currentScreenWidth - (int)sprite.getBoundingCircle().getRadius()) / 2, (this.currentScreenHeight + (int)sprite.getBoundingCircle().getRadius()) / 2, null);
+    //g.setColor(Color.RED);
+    //g.fillOval((this.currentScreenWidth - (int)sprite.getBoundingCircle().getRadius()) / 2,(this.currentScreenHeight + (int)sprite.getBoundingCircle().getRadius()) / 2,(int)sprite.getBoundingCircle().getRadius(),(int)sprite.getBoundingCircle().getRadius());
   }
 
   @Override
@@ -116,7 +118,7 @@ public class GamePanel extends JPanel implements KeyListener
     Tile curr = sprite.getCurrentTile();
     int move=5;
 
-    if(iterator%8==0)
+    /*if(iterator%8==0)
     {
       gameSounds.leftFootStep();
     }
@@ -124,7 +126,7 @@ public class GamePanel extends JPanel implements KeyListener
     {
       gameSounds.rightFootStep();
     }
-    iterator++;
+    iterator++;*/
 
     if(e.getKeyCode()==KeyEvent.VK_R) move=3*move;
     if(e.getKeyCode()==KeyEvent.VK_UP || e.getKeyCode()==KeyEvent.VK_W) sprite.move(0,-(move),curr, GridOrientation.NORTH);
@@ -137,8 +139,13 @@ public class GamePanel extends JPanel implements KeyListener
 
   @Override
   public void keyTyped(KeyEvent e)
-  {}
+  {
+
+  }
 
   @Override
-  public void keyReleased(KeyEvent e) {}
+  public void keyReleased(KeyEvent e)
+  {
+
+  }
 }
