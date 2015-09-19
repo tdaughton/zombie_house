@@ -17,6 +17,14 @@ public class Player extends Movable
   // like that.
   private int numberOfTraps;
 
+  /**
+   * Full constructor
+   * @param x                    X coordinate of center point (in pixels)
+   * @param y                    Y coordinate of center point (in pixels)
+   * @param radius               Radius of bounding circle (in pixels)
+   * @param location             Tile location containing center point
+   * @param grid                 Reference to Zombie House map
+   */
   public Player(int x, int y, int radius, Tile location, Tile[][] grid)
   {
     super(x, y, radius, location, grid, GridOrientation.pickRandomOrientation());
@@ -40,20 +48,5 @@ public class Player extends Movable
   public int getNumberOfTraps()
   {
     return numberOfTraps;
-  }
-
-  private void setX(int x1)
-  {
-    circle.setCenterX(x1);
-  }
-
-  private void setY(int y1)
-  {
-    circle.setCenterY(y1);
-  }
-
-  private void setCurrentTile(int x, int y)
-  {
-    location = grid[y][x];
   }
 }

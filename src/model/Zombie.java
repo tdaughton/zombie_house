@@ -7,8 +7,15 @@ package model;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * This class serves as the model for Zombies in Zombie House. It specifies behavior unique to
+ * Zombies among Movables including automatic walking, olfactory sense, and chasing down the Player.
+ */
 public class Zombie extends Movable implements Alive
 {
+  /**
+   * Enumerator to give zombie types fancy names.
+   */
   private enum WalkType
   {
     RANDOM, LINE
@@ -32,6 +39,14 @@ public class Zombie extends Movable implements Alive
   private double damage;
   private boolean dead;
 
+  /**
+   * Full constructor
+   * @param x                    X coordinate of center point (in pixels)
+   * @param y                    Y coordinate of center point (in pixels)
+   * @param radius               Radius of bounding circle (in pixels)
+   * @param location             Tile location containing center point
+   * @param grid                 Reference to Zombie House map
+   */
   public Zombie(int x, int y, int radius, Tile location, Tile[][] grid)
   {
     super(x, y, radius, location, grid, GridOrientation.pickRandomOrientation());
@@ -39,22 +54,18 @@ public class Zombie extends Movable implements Alive
     path = new ArrayList<>();
   }
 
-  private void setX(int x1)
-  {
-    circle.setCenterX(x1);
-  }
-
-  private void setY(int y1)
-  {
-    circle.setCenterY(y1);
-  }
-
+  /**
+   * Walk in predetermined direction or path
+   */
   private void walk()
   {
     int xNew = (int)(SPEED_WALK * Math.sin(theta));
     int yNew = (int)(SPEED_WALK * Math.cos(theta));
   }
 
+  /**
+   * Decide how to walk based on WalkType and distance to player.
+   */
   private void decisionEngine()
   {
     /*int pcX = player.getX();
