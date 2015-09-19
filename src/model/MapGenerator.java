@@ -32,6 +32,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class MapGenerator
@@ -58,12 +59,10 @@ public class MapGenerator
   //    look prettier.
   // 3. Generate random hallways. Hallways are going to change directions or end
   //    at odd number of coordinates only, too.
-  // 4. Connect tempRooms and hallways. Each room can have multiple doors but must
-  //    have at least one.
+  // 4. Connect tempRooms and hallways. Each room can have multiple doors but
+  //    must have at least one.
   // 5. locate exit on hallway.
   // 6. Erase unused hallways.
-  //
-  // @param col @param row represent dimension of the map.
   //============================================================================
   public MapGenerator(int col, int row)
   {
@@ -79,10 +78,140 @@ public class MapGenerator
 
     initiateHouse();
     generateRandomRoom();
-    printMap();
     generateRandomHallway();
-    printMap();
+    generateDoorways();
+    //printMap();
+    removeUnusedHallways();
+    //printMap();
+    translateIntoDisplayableMap();
+    //printMap();
+  }
 
+  public int[][] getMap()
+  {
+    return map;
+  }
+
+  private void translateIntoDisplayableMap()
+  {
+    for(int i=0; i<row; i++)
+    {
+      for(int j=0; j<col; j++)
+      {
+        if(map[i][j] != 0) map[i][j] = 1;
+      }
+    }
+  }
+
+
+  //============================================================================
+  // Search for end of the hallway and start removing.
+  //============================================================================
+  private void removeUnusedHallways()
+  {
+    countEndofHallways();
+  }
+
+  //============================================================================
+  // Search for end of the hallway and start removing.
+  //============================================================================
+  private int countEndofHallways()
+  {
+    int countEndOfHallway = 0;
+    for(int i=0; i<row; i++)
+    {
+      for(int j=0; j<col; j++)
+      {
+        if(map[i][j] == 4)
+        {
+          removeHallways(j, i);
+        }
+      }
+    }
+    return countEndOfHallway;
+  }
+
+  private void removeHallways(int x, int y)
+  {
+    map[y][x] = 0;
+    if(x-1 >= 0 && map[y][x-1] == 2) removeHallways(x-1, y);
+    else if(x+1 < col-1 && map[y][x+1] == 2) removeHallways(x+1, y);
+    else if(y-1 >= 0 && map[y-1][x] == 2) removeHallways(x, y-1);
+    else if(y+1 < row-1 && map[y+1][x] == 2) removeHallways(x, y+1);
+
+    return;
+  }
+
+  //============================================================================
+  // This method will build doors.
+  //============================================================================
+  private void generateDoorways()
+  {
+    for(int i=0; i<NUMBER_OF_ROOMS; i++) buildDoorFor(rooms[i]);
+  }
+
+  //============================================================================
+  // Each room will have at least one door to exit the room. Each side of the
+  // room hold only one door.
+  //============================================================================
+  private void buildDoorFor(Room room)
+  {
+    ArrayList<Character> availableSides = getAvailableSides(room);
+
+    int numDoors = 1 + random.nextInt(availableSides.size()-1);
+    int x, y;
+
+    Collections.shuffle(availableSides);
+
+    for(int i = 0; i < numDoors ; i++) drill(room, availableSides.get(i));
+    availableSides.clear();
+  }
+
+  private void drill(Room room, char direction)
+  {
+    int x, y, xInc = 0, yInc = 0;
+    switch(direction)
+    {
+      case 'N' :
+        x = 1 + room.x1 + random.nextInt(room.width-2);
+        y = room.y1;
+        yInc = -1;
+        break;
+      case 'E' :
+        y = 1 + room.y1 + random.nextInt(room.height-2);
+        x = room.x2-1;
+        xInc = 1;
+        break;
+      case 'W' :
+        y = 1 + room.y1 + random.nextInt(room.height-2);
+        x = room.x1;
+        xInc = -1;
+        break;
+      case 'S' :
+        x = 1 + room.x1 + random.nextInt(room.width-2);
+        y = room.y2-1;
+        yInc = 1;
+        break;
+      default:
+        return;
+    }
+
+    map[y][x] = 8;
+    map[y+yInc][x+xInc] = 8;
+    map[y+yInc*2][x+xInc*2] = 8;
+  }
+
+  //============================================================================
+  // This will get how many sides can have access to the hallway.
+  //============================================================================
+  private ArrayList<Character> getAvailableSides(Room room)
+  {
+    ArrayList<Character> availableSides = new ArrayList<>();
+    if(room.x1 > 2) availableSides.add('W');
+    if(room.x2 < col - 3) availableSides.add('E');
+    if(room.y1 > 1) availableSides.add('N');
+    if(room.y2 < row - 3) availableSides.add('S');
+    return availableSides;
   }
 
   //============================================================================
@@ -122,7 +251,6 @@ public class MapGenerator
     }
 
     for (int i = 0; i < NUMBER_OF_ROOMS; i++) addNewRom(tempRooms.get(i), i);
-    for(int i=0; i < NUMBER_OF_ROOMS; i++) rooms[i].print();
   }
 
   //============================================================================
@@ -320,7 +448,7 @@ public class MapGenerator
             ln += "[4]";
             break;
           case 8:
-            ln += "[4]";
+            ln += "[&]";
             break;
           default:
             ln += "[ ]";

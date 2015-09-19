@@ -65,9 +65,9 @@ public class ImageLoader
     this.background = new BufferedImage(tileWidth * this.rows, tileHeight * this.cols, BufferedImage.TYPE_INT_RGB);
     Graphics g = this.background.getGraphics();
 
-    for (int j = 0; j < this.cols; j++)
+    for (int i = 0; i < this.rows; i++)
     {
-      for (int i = 0; i < this.rows; i++)
+      for (int j = 0; j < this.cols; j++)
       {
         if (grid[i][j] instanceof Floor)
         {
@@ -85,10 +85,10 @@ public class ImageLoader
         {
           g.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
-        yCoord += tileHeight;
+        xCoord += tileWidth;
       }
-      xCoord += tileWidth;
-      yCoord = 0;
+      yCoord += tileHeight;
+      xCoord = 0;
     }
   }
 

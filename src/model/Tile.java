@@ -1,4 +1,3 @@
-
 /**
  * Created by Miri on 9/8/15.
  * Edits: Tess Daughton, September 13th, 2015
@@ -133,32 +132,4 @@ public class Tile extends Rectangle
   {
     return trap != null;
   }
-  //============================================================================
-  // The traps are managed with following methods. All the methods are named
-  // kind of straightforward so I abbreviate the explanations.
-  //============================================================================
-//  public void throwGrabbableTrap()
-//  {
-//    trap = new Trap(x, y, true);
-//  }
-//
-//  public void removeTrap()
-//  {
-//    trap = null;
-//  }
-//
-//  public void installTrap()
-//  {
-//    trap = new Trap(x, y, false);
-//  }
-//
-//  public Trap getTrap()
-//  {
-//    return trap;
-//  }
-//
-//  public boolean hasTrap()
-//  {
-//    return trap != null;
-//  }
 }

@@ -17,7 +17,7 @@ public enum GridOrientation
     if(randX==1) return SOUTH;
     if(randX==2) return EAST;
     if(randX==3) return WEST;
-    if(randX==4) return NORTHWEST;
+    if(randX==4) return NORTHEAST;
     if(randX==5) return NORTHWEST;
     if(randX==6) return SOUTHEAST;
     if(randX==7) return SOUTHWEST;
