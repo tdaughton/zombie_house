@@ -13,6 +13,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.awt.Dimension;
 import javax.swing.JPanel;
+import java.util.ArrayList;
 import java.util.Random;
 import java.awt.RadialGradientPaint;
 
@@ -28,14 +29,15 @@ public class GamePanel extends JPanel implements KeyListener
   private int negXOffSet=0;
   private int negYOffSet=0;
   private int iterator=0;
+  private boolean[] keys = new boolean[128];
 
   public GamePanel(Tile[][] map, BufferedImage grid, Dimension userScreenSize)
   {
     super();
     this.sprite = this.getRandomStart(map);
     this.grid=grid;
-    this.currentScreenWidth=(int)userScreenSize.getWidth();
-    this.currentScreenHeight=(int)userScreenSize.getHeight();
+    this.currentScreenWidth=this.getSize().width;
+    this.currentScreenHeight=this.getSize().height;
     this.setFocusable(true);
     this.requestFocusInWindow(true);
     this.addKeyListener(this);
@@ -43,12 +45,12 @@ public class GamePanel extends JPanel implements KeyListener
 
   protected void setCurrentScreenWidth(int x)
   {
-    this.currentScreenWidth=x;
+    this.currentScreenWidth=this.getSize().width;
   }
 
   protected void setCurrentScreenHeight(int y)
   {
-    this.currentScreenHeight=y;
+    this.currentScreenHeight=this.getSize().height;
   }
 
   private Player getRandomStart(Tile[][] map)
@@ -93,9 +95,9 @@ public class GamePanel extends JPanel implements KeyListener
 
   private void drawSprite(Graphics g)
   {
-    g.drawImage(sprites.getCurrentPlayerImage(sprite), (this.currentScreenWidth - (int)sprite.getBoundingCircle().getRadius()) / 2, (this.currentScreenHeight + (int)sprite.getBoundingCircle().getRadius()) / 2, null);
     //g.setColor(Color.RED);
-    //g.fillOval((this.currentScreenWidth - (int)sprite.getBoundingCircle().getRadius()) / 2,(this.currentScreenHeight + (int)sprite.getBoundingCircle().getRadius()) / 2,(int)sprite.getBoundingCircle().getRadius(),(int)sprite.getBoundingCircle().getRadius());
+    //g.fillOval(this.currentScreenWidth / 2, this.currentScreenHeight / 2, (int)sprite.getBoundingCircle().getRadius(), (int)sprite.getBoundingCircle().getRadius());
+    g.drawImage(sprites.getCurrentPlayerImage(sprite), this.currentScreenWidth / 2, this.currentScreenHeight / 2, null);
   }
 
   @Override
@@ -118,7 +120,7 @@ public class GamePanel extends JPanel implements KeyListener
     Tile curr = sprite.getCurrentTile();
     int move=5;
 
-    /*if(iterator%8==0)
+    if(iterator%8==0)
     {
       gameSounds.leftFootStep();
     }
@@ -126,13 +128,33 @@ public class GamePanel extends JPanel implements KeyListener
     {
       gameSounds.rightFootStep();
     }
-    iterator++;*/
+    iterator++;
 
-    if(e.getKeyCode()==KeyEvent.VK_R) move=3*move;
-    if(e.getKeyCode()==KeyEvent.VK_UP || e.getKeyCode()==KeyEvent.VK_W) sprite.move(0,-(move),curr, GridOrientation.NORTH);
-    if(e.getKeyCode()==KeyEvent.VK_DOWN ||e.getKeyCode()==KeyEvent.VK_S) sprite.move(0,move,curr, GridOrientation.SOUTH);
-    if(e.getKeyCode()==KeyEvent.VK_RIGHT || e.getKeyCode()==KeyEvent.VK_D) sprite.move(move,0,curr, GridOrientation.EAST);
-    if(e.getKeyCode()==KeyEvent.VK_LEFT || e.getKeyCode()==KeyEvent.VK_A) sprite.move(-(move),0,curr, GridOrientation.WEST);
+    int keyPressed = e.getKeyCode();
+    switch (keyPressed)
+    {
+      case KeyEvent.VK_R:
+      case KeyEvent.VK_UP:
+      case KeyEvent.VK_DOWN:
+      case KeyEvent.VK_RIGHT:
+      case KeyEvent.VK_LEFT:
+      case KeyEvent.VK_W:
+      case KeyEvent.VK_S:
+      case KeyEvent.VK_D:
+      case KeyEvent.VK_A:
+      case KeyEvent.VK_SHIFT:
+      case KeyEvent.VK_T:
+        keys[e.getKeyCode()] = true;
+        break;
+      default:
+        break;
+    }
+
+    if (this.keys[KeyEvent.VK_R] || this.keys[KeyEvent.VK_SHIFT]) move=3*move;
+    if (this.keys[KeyEvent.VK_UP] || this.keys[KeyEvent.VK_W]) sprite.move(0,-(move),curr, GridOrientation.NORTH);
+    if (this.keys[KeyEvent.VK_DOWN] || this.keys[KeyEvent.VK_S]) sprite.move(0,move,curr, GridOrientation.SOUTH);
+    if (this.keys[KeyEvent.VK_RIGHT] || this.keys[KeyEvent.VK_D]) sprite.move(move,0,curr, GridOrientation.EAST);
+    if (this.keys[KeyEvent.VK_LEFT] || this.keys[KeyEvent.VK_A]) sprite.move(-(move), 0, curr, GridOrientation.WEST);
 
     sprites.setRotatingRun();
   }
@@ -140,12 +162,69 @@ public class GamePanel extends JPanel implements KeyListener
   @Override
   public void keyTyped(KeyEvent e)
   {
+    Tile curr = sprite.getCurrentTile();
+    int move=5;
 
+    if(iterator%8==0)
+    {
+      gameSounds.leftFootStep();
+    }
+    if(iterator%8==4)
+    {
+      gameSounds.rightFootStep();
+    }
+    iterator++;
+
+    int keyPressed = e.getKeyCode();
+    switch (keyPressed)
+    {
+      case KeyEvent.VK_R:
+      case KeyEvent.VK_UP:
+      case KeyEvent.VK_DOWN:
+      case KeyEvent.VK_RIGHT:
+      case KeyEvent.VK_LEFT:
+      case KeyEvent.VK_W:
+      case KeyEvent.VK_S:
+      case KeyEvent.VK_D:
+      case KeyEvent.VK_A:
+      case KeyEvent.VK_SHIFT:
+      case KeyEvent.VK_T:
+        keys[e.getKeyCode()] = true;
+        break;
+      default:
+        break;
+    }
+
+    if (this.keys[KeyEvent.VK_R] || this.keys[KeyEvent.VK_SHIFT]) move=3*move;
+    if (this.keys[KeyEvent.VK_UP] || this.keys[KeyEvent.VK_W]) sprite.move(0,-(move),curr, GridOrientation.NORTH);
+    if (this.keys[KeyEvent.VK_DOWN] || this.keys[KeyEvent.VK_S]) sprite.move(0,move,curr, GridOrientation.SOUTH);
+    if (this.keys[KeyEvent.VK_RIGHT] || this.keys[KeyEvent.VK_D]) sprite.move(move,0,curr, GridOrientation.EAST);
+    if (this.keys[KeyEvent.VK_LEFT] || this.keys[KeyEvent.VK_A]) sprite.move(-(move), 0, curr, GridOrientation.WEST);
+
+    sprites.setRotatingRun();
   }
 
   @Override
   public void keyReleased(KeyEvent e)
   {
-
+    int keyPressed = e.getKeyCode();
+    switch (keyPressed)
+    {
+      case KeyEvent.VK_R:
+      case KeyEvent.VK_UP:
+      case KeyEvent.VK_DOWN:
+      case KeyEvent.VK_RIGHT:
+      case KeyEvent.VK_LEFT:
+      case KeyEvent.VK_W:
+      case KeyEvent.VK_S:
+      case KeyEvent.VK_D:
+      case KeyEvent.VK_A:
+      case KeyEvent.VK_SHIFT:
+      case KeyEvent.VK_T:
+        keys[e.getKeyCode()] = false;
+        break;
+      default:
+        break;
+    }
   }
 }
