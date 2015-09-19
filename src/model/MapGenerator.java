@@ -87,6 +87,11 @@ public class MapGenerator
     //printMap();
   }
 
+  public int[][] getMap()
+  {
+    return map;
+  }
+
   private void translateIntoDisplayableMap()
   {
     for(int i=0; i<row; i++)

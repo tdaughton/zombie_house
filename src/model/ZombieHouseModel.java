@@ -20,8 +20,9 @@ public class ZombieHouseModel
 
   public ZombieHouseModel()
   {
-    //MapGenerator mapGen = new MapGenerator(40, 40);
-    grid = this.translateTileImages(new GridReader().readGrid(), ROWS, COLS);
+    MapGenerator mapGen = new MapGenerator(40, 40);
+    grid = this.translateTileImages(mapGen.getMap(), ROWS, COLS);
+    //grid = this.translateTileImages(new GridReader().readGrid(), ROWS, COLS);
 
     map = new Map(grid, ROWS, COLS, MAX_SCREEN_WIDTH / 12, MAX_SCREEN_HEIGHT / 10);
   }
@@ -35,8 +36,10 @@ public class ZombieHouseModel
     {
       for (int j = 0; j < cols; j++)
       {
-        if (grid[i][j] == 48) tiles[i][j] = new Outside(i, j, tiles);
+        /*if (grid[i][j] == 48) tiles[i][j] = new Outside(i, j, tiles);
         else if (grid[i][j] == 49) tiles[i][j] = new Floor(i, j, tiles);
+        else tiles[i][j] = new Wall(i, j, tiles);*/
+        if (grid[i][j] != 0) tiles[i][j] = new Floor(i, j, tiles);
         else tiles[i][j] = new Wall(i, j, tiles);
       }
     }
