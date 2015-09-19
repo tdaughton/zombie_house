@@ -34,7 +34,6 @@ public class Map
     {
       for (int j = 0; j < COLS; j++)
       {
-        grid[i][j].setBounds(j * tileWidth, (j + 1) * tileWidth, i * tileHeight, (i + 1) * tileHeight);
 //        System.out.print(i+ " tile bounds: " + (i * tileWidth) + " , " + ((i + 1) * tileWidth)+" | ");
 //        System.out.print(j+ " tile bounds: " + j * tileHeight + "," + ((j + 1) * tileHeight));
 //        System.out.println();

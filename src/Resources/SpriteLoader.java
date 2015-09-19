@@ -90,7 +90,7 @@ public class SpriteLoader
 
   }
 
-  public void setRotatingRun()
+  public void getRotatingRun()
   {
     if (iterator == 1) currentPlayerImage = run1;
     else if (iterator == 2) currentPlayerImage = run2;

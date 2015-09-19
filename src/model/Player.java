@@ -18,13 +18,12 @@ public class Player extends Movable
   // like that.
   private int numberOfTraps;
 
-  public Player(int x, int y, int radius, Tile location, Tile[][] grid)
+  public Player(int x, int y, int radius, Tile location, Tile[][] grid, Enum playerOrientation)
   {
     super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
     this.x=x;
     this.y=y;
     this.location = location;
-
     numberOfTraps = 0;
     this.grid=grid;
     this.playerOrientation=playerOrientation;

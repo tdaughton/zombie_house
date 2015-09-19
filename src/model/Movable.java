@@ -122,11 +122,12 @@ public class Movable
         if (i >= 0 && i < ZombieHouseModel.ROWS && j >= 0 && j < ZombieHouseModel.COLS)
           if (i >= 0 && i < ZombieHouseModel.ROWS && j >= 0 && j < ZombieHouseModel.COLS)
           {
-            boolean cont = grid[i][j].contains(xNew, yNew);
-            boolean mova = grid[i][j].isMovable();
-            boolean inte = new Movable(xNew, yNew, this.radius, this.location, this.grid, GridOrientation.pickRandomOrientation()).intersects(grid[i][j].getBounds());
-            if ((cont || inte) && mova)
-              if (grid[i][j].contains(xNew, yNew) && grid[i][j].isMovable())
+//            boolean cont = grid[i][j].contains(xNew, yNew);
+//            boolean mova = grid[i][j].isMovable();
+//            boolean inte = new Movable(xNew, yNew, this.radius, this.location, this.grid, GridOrientation.pickRandomOrientation()).intersects(grid[i][j].getBounds());
+//            if ((cont || inte) && mova)
+              Movable test = new Movable(xNew,yNew,this.radius,this.location, this.grid, GridOrientation.pickRandomOrientation());
+              if (test.intersects(grid[i][j].getBounds()) && grid[i][j].isMovable())
               {
                 this.setCurrentTile(grid[i][j]);
                 this.location = grid[i][j];

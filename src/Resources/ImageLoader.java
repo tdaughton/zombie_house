@@ -4,10 +4,7 @@
 
 package Resources;
 
-import model.Floor;
-import model.Outside;
-import model.Tile;
-import model.Wall;
+import model.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,23 +20,26 @@ public class ImageLoader
   private BufferedImage wallImage;
   private BufferedImage outsideImage;
   private BufferedImage background;
+  private ZombieHouseModel zModel;
 
   private int cols;
   private int rows;
 
-  public ImageLoader(int MAX_SCREEN_WIDTH, int MAX_SCREEN_HEIGHT)
+  public ImageLoader(ZombieHouseModel zModel, int MAX_SCREEN_WIDTH, int MAX_SCREEN_HEIGHT)
   {
     this.MAX_SCREEN_HEIGHT = MAX_SCREEN_HEIGHT;
     this.MAX_SCREEN_WIDTH = MAX_SCREEN_WIDTH;
+    this.zModel = zModel;
     readImages();
+    initializeMap(40,40);
   }
 
-  public void initializeMap(Tile[][] grid, int cols, int rows)
+  public void initializeMap(int cols, int rows)
   {
     this.cols = cols;
     this.rows = rows;
 
-    this.createBackground(grid);
+    this.createBackground(zModel.getMap().getGrid());
   }
 
   protected void readImages()
@@ -56,7 +56,7 @@ public class ImageLoader
     }
   }
 
-  protected void createBackground(Tile[][] grid)
+  public void createBackground(Tile[][] grid)
   {
     int tileWidth = this.MAX_SCREEN_WIDTH / 12;
     int tileHeight = this.MAX_SCREEN_HEIGHT / 10;

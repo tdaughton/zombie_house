@@ -6,6 +6,8 @@
 package model;
 
 import java.awt.*;
+import java.util.Random;
+import java.util.Collection;
 
 public class ZombieHouseModel
 {
@@ -14,6 +16,18 @@ public class ZombieHouseModel
   protected final static int MAX_SCREEN_HEIGHT = (int)userScreenSize.getHeight();
   protected final static int ROWS = 40;
   protected final static int COLS = 40;
+  public static boolean upKey = false;
+  public static boolean downKey = false;
+  public static boolean leftKey = false;
+  public static boolean rightKey= false;
+  public static boolean runKey = false;
+  private static final double zombieSpawnRate = 0.01;
+  private static final double trapSpawnRate = 0.01;
+  public Random rand = new Random();
+  private Player sprite;
+  private Collection<Zombie> zombies;
+  private Collection<Trap> traps;
+
   protected Map map;
 
   private Tile grid[][];
@@ -22,6 +36,7 @@ public class ZombieHouseModel
   {
     //MapGenerator mapGen = new MapGenerator(40, 40);
     grid = this.translateTileImages(new GridReader().readGrid(), ROWS, COLS);
+    sprite = this.getRandomStart(grid);
 
     map = new Map(grid, ROWS, COLS, MAX_SCREEN_WIDTH / 12, MAX_SCREEN_HEIGHT / 10);
   }
@@ -29,6 +44,8 @@ public class ZombieHouseModel
   private Tile[][] translateTileImages(int[][] grid, int rows, int cols)
   {
     Tile[][] tiles = new Tile[rows][cols];
+    int tileWidth = MAX_SCREEN_WIDTH/12;
+    int tileHeight = MAX_SCREEN_HEIGHT/10;
 
 
     for (int i = 0; i < rows; i++)
@@ -38,13 +55,32 @@ public class ZombieHouseModel
         if (grid[i][j] == 48) tiles[i][j] = new Outside(i, j, tiles);
         else if (grid[i][j] == 49) tiles[i][j] = new Floor(i, j, tiles);
         else tiles[i][j] = new Wall(i, j, tiles);
+        tiles[i][j].setBounds(j * tileWidth, (j + 1) * tileWidth, i * tileHeight, (i + 1) * tileHeight);
       }
     }
     return tiles;
   }
 
+  private Player getRandomStart(Tile[][] map)
+  {
+    int x= rand.nextInt(39);
+    int y = rand.nextInt(39);
+
+    if(map[x][y] instanceof Floor)
+    {
+      sprite = new Player(map[x][y].getCenterTileX(),map[x][y].getCenterTileY(),60,map[x][y],
+          map,GridOrientation.pickRandomOrientation());
+    }
+    else getRandomStart(map);
+    return sprite;
+  }
+
   public Map getMap()
   {
     return this.map;
+  }
+  public Player getPlayer()
+  {
+    return this.sprite;
   }
 }

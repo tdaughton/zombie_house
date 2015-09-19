@@ -9,9 +9,9 @@ public class Zombie extends Movable
 {
   private int x;
   private int y;
-  public Zombie(int x, int y, int radius, Tile location, Tile[][] grid)
+  public Zombie(int x, int y, int radius, Tile location, Tile[][] grid, Enum zombieOrientation)
   {
-    super(x, y, radius,location,grid);
+    super(x, y, radius,location,grid, zombieOrientation);
     this.x = x;
     this.y=y;
   }

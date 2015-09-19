@@ -8,7 +8,7 @@ package model;
 
 import java.awt.*;
 
-public class Tile
+public class Tile extends Rectangle
 {
   private int x, y;
   private int type;
@@ -66,13 +66,11 @@ public class Tile
   public int getCenterTileX()
   {
     return (int)this.bounds.getCenterX();
-    //return (xMin+xMax)/2;
   }
 
   public int getCenterTileY()
   {
     return (int)this.bounds.getCenterY();
-    //return (yMin+yMax)/2;
   }
 
   public int getGridRow()
@@ -85,29 +83,6 @@ public class Tile
     return this.gridCol;
   }
 
-  public int getXMin()
-  {
-    return (int)this.bounds.getMinX();
-    //return this.xMin;
-  }
-
-  public int getXMax()
-  {
-    return (int)this.bounds.getMaxX();
-    //return this.xMax;
-  }
-
-  public int getYMin()
-  {
-    return (int)this.bounds.getMinY();
-    //return this.yMin;
-  }
-
-  public int getYMax()
-  {
-    return (int)this.bounds.getMaxY();
-    //return this.yMax;
-  }
 
   public Rectangle getBounds()
   {
@@ -116,10 +91,6 @@ public class Tile
 
   public void setBounds(int xMin, int xMax, int yMin, int yMax)
   {
-    this.xMin = xMin;
-    this.xMax = xMax;
-    this.yMin = yMin;
-    this.yMax = yMax;
     this.bounds = new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
   }
 
@@ -133,16 +104,6 @@ public class Tile
     this.type = type;
   }
 
-  public int getX()
-  {
-    return x;
-
-  }
-
-  public int getY()
-  {
-    return y;
-  }
 
   //============================================================================
   // The traps are managed with following methods. All the methods are named
