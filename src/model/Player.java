@@ -44,16 +44,16 @@ public class Player extends Movable
 
   private void setX(int x1)
   {
-    this.circle.setCenterX(x1);
+    circle.setCenterX(x1);
   }
 
   private void setY(int y1)
   {
-    this.circle.setCenterY(y1);
+    circle.setCenterY(y1);
   }
 
   private void setCurrentTile(int x, int y)
   {
-    this.location = grid[y][x];
+    location = grid[y][x];
   }
 }

@@ -5,10 +5,7 @@
 
 package control;
 
-import model.Player;
-import model.Trap;
-import model.Zombie;
-import model.ZombieHouseModel;
+import model.*;
 
 import java.util.List;
 
@@ -16,10 +13,9 @@ public class ZombieHouseController
 {
   private static final double zombieSpawnRate = 0.01;
   private static final double trapSpawnRate = 0.01;
-  private ZombieHouseModel house;
+  private Tile[][] grid;
   private List<Zombie> zombies;
   private List<Trap> traps;
   private Player pc;
-
 
 }

@@ -9,6 +9,9 @@ import java.awt.*;
 
 public class Movable
 {
+  protected int x;
+  protected int y;
+  protected int radius;
   protected Circle circle;
   protected Tile location;
   protected Tile[][] grid;
@@ -18,11 +21,14 @@ public class Movable
 
   public Movable()
   {
-    this.circle = new Circle(0, 0, 1);
+    circle = new Circle(0, 0, 1);
   }
 
   public Movable(int x, int y, int radius, Tile location, Tile[][] grid, Enum playerOrientation)
   {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
     this.location = location;
     this.grid = grid;
     this.playerOrientation = playerOrientation;
@@ -31,42 +37,42 @@ public class Movable
 
   public int getX()
   {
-    return (int)this.circle.getCenterX();
+    return x;
   }
 
   public int getY()
   {
-    return (int)this.circle.getCenterY();
+    return y;
   }
 
   public int getRadius()
   {
-    return (int)this.circle.getRadius();
+    return radius;
   }
 
   public Enum getPlayerOrientation()
   {
-    return this.playerOrientation;
+    return playerOrientation;
   }
 
   public Circle getBoundingCircle()
   {
-    return this.circle;
+    return circle;
   }
 
   public Tile getCurrentTile()
   {
-    return this.location;
+    return location;
   }
 
   public boolean intersects(Circle otherMovable)
   {
     boolean intersects = false;
-    double r1 = Math.pow(otherMovable.getRadius() - this.circle.getRadius(), 2);
-    double r2 = Math.pow(otherMovable.getRadius() + this.circle.getRadius(), 2);
+    double r1 = Math.pow(otherMovable.getRadius() - radius, 2);
+    double r2 = Math.pow(otherMovable.getRadius() + radius, 2);
 
-    double distance = Math.pow((otherMovable.getCenterX() - this.circle.getCenterX()), 2) +
-                      Math.pow((otherMovable.getCenterY() - this.circle.getCenterY()), 2);
+    double distance = Math.pow((otherMovable.getCenterX() - x), 2) +
+                      Math.pow((otherMovable.getCenterY() - x), 2);
 
     if (distance >= r1 && distance <= r2) intersects = true;
 
@@ -77,56 +83,65 @@ public class Movable
   public boolean intersects(Rectangle immovableSpace)
   {
     boolean result = false;
-    double circR = this.circle.getRadius();
-    double r1 = Math.abs(this.circle.getCenterX() - immovableSpace.getCenterX());
-    double r2 = Math.abs(this.circle.getCenterY() - immovableSpace.getCenterY());
+    double r1 = Math.abs(x - immovableSpace.getCenterX());
+    double r2 = Math.abs(y - immovableSpace.getCenterY());
     double halfWidth = immovableSpace.getWidth() / 2;
     double halfHeight = immovableSpace.getHeight() / 2;
 
-    if (r1 > (halfWidth + circR)) result = false;
-    else if (r2 > (halfHeight + circR)) result = false;
+    if (r1 > (halfWidth + radius)) result = false;
+    else if (r2 > (halfHeight + radius)) result = false;
     else if (r1 <= (halfWidth)) result = true;
     else if (r2 <= (halfHeight)) result = true;
 
     double cd = Math.pow(r1 - halfWidth, 2) + Math.pow(r2 - halfHeight, 2);
-    if (cd <= Math.pow(circR, 2)) result = true;
+    if (cd <= Math.pow(radius, 2)) result = true;
 
     return result;
   }
 
   public void move(int xNew, int yNew, Tile current, Enum orientation)
   {
-    double xPos = this.circle.getCenterX() + xNew;
-    double yPos = this.circle.getCenterY() + yNew;
-    int gCol = (int)(xPos / this.location.getBounds().getWidth());
-    int gRow = (int)(yPos / this.location.getBounds().getHeight());
+    double xPos = x + xNew;
+    double yPos = y + yNew;
+    int gCol = (int)(xNew / location.getBounds().getWidth());
+    int gRow = (int)(yNew / location.getBounds().getHeight());
 
-    moveChecker.circle.setCenterX(xPos);
-    moveChecker.circle.setCenterY(yPos);
-    moveChecker.circle.setRadius(this.circle.getRadius());
-    Tile nextTile = this.grid[gRow][gCol];
-
-    boolean mova = nextTile.isMovable();
-    boolean inte = moveChecker.intersects(nextTile.getBounds());
-    if (mova || !inte)
+    if (canMoveTo(xPos, yPos))
     {
-      this.playerOrientation = orientation;
-      this.circle.setCenterX(xPos);
-      this.circle.setCenterY(yPos);
-      this.location = this.grid[gRow][gCol];
+      playerOrientation = orientation;
+      x = (int)xPos;
+      circle.setCenterX(x);
+      y = (int)yPos;
+      circle.setCenterY(y);
+      location = grid[gRow][gCol];
     }
+  }
+
+  protected boolean canMoveTo(double xNew, double yNew)
+  {
+    int gCol = (int)(xNew / location.getBounds().getWidth());
+    int gRow = (int)(yNew / location.getBounds().getHeight());
+    Tile nextTile = grid[gRow][gCol];
+
+    moveChecker.circle.setCenterX(xNew);
+    moveChecker.circle.setCenterY(yNew);
+    moveChecker.circle.setRadius(circle.getRadius());
+
+    boolean canMove = nextTile.isMovable();
+    boolean intersectsWall = moveChecker.intersects(nextTile.getBounds());
+    return (canMove || !intersectsWall);
   }
 
   public void setCurrentTile(Tile next)
   {
-    this.location = next;
+    location = next;
   }
 
   public double getDistanceTo(int xNew, int yNew)
   {
     double dist;
 
-    dist = Math.sqrt(Math.pow((this.circle.getCenterX() - xNew), 2) + Math.pow((this.circle.getCenterY() - yNew), 2));
+    dist = Math.sqrt(Math.pow((x - xNew), 2) + Math.pow((y - yNew), 2));
 
     return dist;
   }
