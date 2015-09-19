@@ -23,22 +23,8 @@ public class Map
     this.grid = grid;
     this.tileHeight = height;
     this.tileWidth = width;
-    this.setBounds();
 
     random = new Random();
-  }
-
-  private void setBounds()
-  {
-    for (int i = 0; i < ROWS; i++)
-    {
-      for (int j = 0; j < COLS; j++)
-      {
-//        System.out.print(i+ " tile bounds: " + (i * tileWidth) + " , " + ((i + 1) * tileWidth)+" | ");
-//        System.out.print(j+ " tile bounds: " + j * tileHeight + "," + ((j + 1) * tileHeight));
-//        System.out.println();
-      }
-    }
   }
 
 

@@ -134,12 +134,13 @@ public class Movable
    */
   public boolean intersects(Rectangle immovableSpace)
   {
-    double r1 = Math.abs(circle.getCenterX() - immovableSpace.getCenterX());
-    double r2 = Math.abs(circle.getCenterY() - immovableSpace.getCenterY());
     double halfWidth = immovableSpace.getWidth() / 2;
     double halfHeight = immovableSpace.getHeight() / 2;
+    double r1 = Math.abs(this.circle.getCenterX() - immovableSpace.getCenterX());
+    double r2 = Math.abs(this.circle.getCenterY() - immovableSpace.getCenterY());
 
-    if (r1 > (halfWidth + radius) || r2 > (halfHeight + radius)) return false;
+
+    if (r1 > (halfWidth + this.radius) || r2 > (halfHeight + this.radius)) return false;
     if (r1 <= (halfWidth) || r2 <= (halfHeight)) return true;
     double cd = Math.pow(r1 - halfWidth, 2) + Math.pow(r2 - halfHeight, 2);
     return (cd <= Math.pow(radius, 2));
@@ -179,8 +180,8 @@ public class Movable
    */
   protected boolean canMoveTo(double xNew, double yNew)
   {
-    int gCol = (int)(xNew / location.getBounds().getWidth());
-    int gRow = (int)(yNew / location.getBounds().getHeight());
+    int gCol = (int)(xNew / location.getWidth());
+    int gRow = (int)(yNew / location.getHeight());
     Tile nextTile = grid[gRow][gCol];
 
     moveChecker.circle.setCenterX(xNew);
@@ -188,8 +189,8 @@ public class Movable
     moveChecker.circle.setRadius(circle.getRadius());
 
     boolean canMove = nextTile.isMovable();
-    boolean intersectsWall = moveChecker.intersects(nextTile.getBounds());
-    return (canMove || !intersectsWall);
+    boolean intersectsWall = moveChecker.intersects(nextTile);
+    return (!intersectsWall || canMove);
   }
 
   /**
