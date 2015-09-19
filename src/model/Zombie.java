@@ -9,6 +9,11 @@ import java.util.Random;
 
 public class Zombie extends Movable implements Alive
 {
+  private enum WalkType
+  {
+    RANDOM, LINE
+  }
+
   private static final double SPEED_WALK = 0.5f;
   private static final double RATE_ACT = 2.0f;
   private static final double DIST_SMELL = 7.0f;
@@ -17,22 +22,15 @@ public class Zombie extends Movable implements Alive
   private WalkType wType;
   private double theta;
 
-  private enum WalkType
-  {
-    RANDOM, LINE
-  }
-
-
   // I thought maybe depending on the types of zombie, how much damage they take
   // and how much health they recover each second may differ. If makes the game
   // too difficult, then let's not do this. :D -Miri
   private int originalHealth;
-  private int currentHeealth;
+  private int currentHealth;
   private double healingRate;
   private double defenceRate;
   private double damage;
   private boolean dead;
-
 
   public Zombie(int x, int y, int radius, Tile location, Tile[][] grid)
   {
@@ -86,9 +84,7 @@ public class Zombie extends Movable implements Alive
       theta = rng.nextDouble() * Math.PI * 2.0;
     }
     //}
-    this.circle.setCenterY(y1);
   }
-
 
   //============================================================================
   // Zombies should take damage from trap.
@@ -102,16 +98,16 @@ public class Zombie extends Movable implements Alive
   @Override
   public int getHealth()
   {
-    return currentHeealth;
+    return currentHealth;
   }
 
   @Override
   public void updateCurrentStatus()
   {
-    currentHeealth -= damage;
+    currentHealth -= damage;
     damage -= damage*defenceRate;
 
-    if(currentHeealth <= 0) dead = true;
+    if(currentHealth <= 0) dead = true;
   }
 
   @Override
