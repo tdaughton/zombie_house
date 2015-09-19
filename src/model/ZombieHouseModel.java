@@ -55,7 +55,7 @@ public class ZombieHouseModel
         if (grid[i][j] == 48) tiles[i][j] = new Outside(i, j, tiles);
         else if (grid[i][j] == 49) tiles[i][j] = new Floor(i, j, tiles);
         else tiles[i][j] = new Wall(i, j, tiles);
-        tiles[i][j].setBounds(j * tileWidth, (j + 1) * tileWidth, i * tileHeight, (i + 1) * tileHeight);
+        tiles[i][j].setBounds(j * tileWidth, i * tileHeight, tileWidth, tileHeight);
       }
     }
     return tiles;

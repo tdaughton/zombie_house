@@ -5,9 +5,7 @@
 
 import Resources.*;
 import model.*;
-import view.*;
 import model.ZombieHouseModel;
-import view.ZombieHouseViewer;
 
 import javax.swing.*;
 

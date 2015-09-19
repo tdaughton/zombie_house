@@ -1,6 +1,5 @@
 import javax.swing.*;
 import model.*;
-import view.*;
 
 public class ZombieHouseMain
 {

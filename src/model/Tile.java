@@ -9,18 +9,14 @@ import java.awt.*;
 
 public class Tile extends Rectangle
 {
-  private int x, y;
-  private int type;
+  protected int x, y;
+  protected int type;
 
-  private int xMin;
-  private int xMax;
-  private int yMin;
-  private int yMax;
-  private Rectangle bounds;
-  private int gridRow;
-  private int gridCol;
-  private boolean occupied;
-  private boolean movable;
+  //private Rectangle bounds;
+  protected int gridRow;
+  protected int gridCol;
+  protected boolean occupied;
+  protected boolean movable;
 
   private Trap trap;
 
@@ -39,13 +35,13 @@ public class Tile extends Rectangle
     this.occupied = occupationStatus;
   }
 
-  public boolean contains(int x, int y)
-  {
-    boolean contains = false;
-    if (this.bounds.contains(x, y)) contains = true;
-    if(x>=xMin && x<=xMax && y>=yMin && y<=yMax) contains = true;
-    return contains;
-  }
+//  public boolean contains(int x, int y)
+//  {
+//    boolean contains = false;
+//    if (this.contains(x, y)) contains = true;
+//    if(x>=this.xMin && x<=xMax && y>=yMin && y<=yMax) contains = true;
+//    return contains;
+//  }
 
   public boolean isOccupied()
   {
@@ -64,12 +60,12 @@ public class Tile extends Rectangle
 
   public int getCenterTileX()
   {
-    return (int)this.bounds.getCenterX();
+    return (int)this.getCenterX();
   }
 
   public int getCenterTileY()
   {
-    return (int)this.bounds.getCenterY();
+    return (int)this.getCenterY();
   }
 
   public int getGridRow()
@@ -85,13 +81,13 @@ public class Tile extends Rectangle
 
   public Rectangle getBounds()
   {
-    return bounds;
+    return this;
   }
 
-  public void setBounds(int xMin, int xMax, int yMin, int yMax)
-  {
-    this.bounds = new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
-  }
+//  public void setBounds(int xMin, int xMax, int yMin, int yMax)
+//  {
+//    this.setBounds(new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin));
+//  }
 
   public int getType()
   {
