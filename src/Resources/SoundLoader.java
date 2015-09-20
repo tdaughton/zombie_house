@@ -1,71 +1,91 @@
 /**
  * Created by Tess Daughton, September 13th 2015
  */
+
 package Resources;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import java.io.BufferedInputStream;
-import java.io.File;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.embed.swing.JFXPanel;
-import java.util.concurrent.*;
-import java.nio.file.Paths;
+import javax.sound.sampled.*;
+import java.io.*;
+
 public class SoundLoader
 {
+  private Clip pcRightFoot;
+  private Clip pcLeftFoot;
+  private Clip backgroundMusic;
 
+  /**
+   * Default constructor. Loads all (three) known sound files and keep references to them.
+   */
   public SoundLoader()
   {
-    this.playBackgroundMusic();
+    pcRightFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav");
+    pcLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav");
+    backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
   }
 
+  /**
+   * Performs steps necessary to obtain an audio Clip from a given file path.
+   * @param path  String representing path to an audio file
+   * @return  Clip opened via arcane magicks and/or null pointer
+   */
+  private Clip openWavByResourcePath(String path)
+  {
+    InputStream res;
+    BufferedInputStream buf;
+    AudioInputStream ais;
+    Clip wav;
+
+    try
+    {
+      res = this.getClass().getResourceAsStream(path);
+      buf = new BufferedInputStream(res);
+      ais = AudioSystem.getAudioInputStream(buf);
+      wav = AudioSystem.getClip();
+      wav.open(ais);
+
+      return wav;
+    }
+    catch (IOException | UnsupportedAudioFileException | LineUnavailableException ex)
+    {
+      ex.printStackTrace();
+    }
+
+    return null;
+  }
+
+  /**
+   * Plays sound effect for player's right foot step
+   */
   public void rightFootStep()
   {
-    try
-    {
-      //AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(("src/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav")).getAbsoluteFile());
-      AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(this.getClass().getResourceAsStream("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav")));
-      Clip clip = AudioSystem.getClip();
-      clip.open(audioInputStream);
-      clip.start();
-    }
-    catch(Exception ex)
-    {
-      ex.printStackTrace();
-    }
+    if(pcRightFoot.isRunning()) pcRightFoot.stop();
+    pcRightFoot.setFramePosition(0);
+    pcRightFoot.start();
   }
 
+  /**
+   * Plays sound effect for player's left foot step
+   */
   public void leftFootStep()
   {
-    try
-    {
-      //AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(("src/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav")).getAbsoluteFile());
-      AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(this.getClass().getResourceAsStream("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav")));
-      Clip clip = AudioSystem.getClip();
-      clip.open(audioInputStream);
-      clip.start();
-    }
-    catch(Exception ex)
-    {
-      ex.printStackTrace();
-    }
+    if(pcLeftFoot.isRunning()) pcLeftFoot.stop();
+    pcLeftFoot.setFramePosition(0);
+    pcLeftFoot.start();
   }
 
+  /**
+   * Starts playing background music infinitely
+   */
   public void playBackgroundMusic()
   {
-    try
-    {
-      //AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(("src/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav")).getAbsoluteFile());
-      AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(this.getClass().getResourceAsStream("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav")));
-      Clip clip = AudioSystem.getClip();
-      clip.open(audioInputStream);
-      clip.start();
-    }
-    catch(Exception ex)
-    {
-      ex.printStackTrace();
-    }
+    backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+  }
+
+  /**
+   * Stops playing background music without rewind. Untested: Should probably allow resuming from the same location.
+   */
+  public void stopBackgroundMusic()
+  {
+    if (backgroundMusic.isRunning()) backgroundMusic.stop();
   }
 }
