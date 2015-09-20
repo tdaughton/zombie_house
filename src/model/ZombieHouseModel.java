@@ -16,15 +16,10 @@ public class ZombieHouseModel
   protected final static int MAX_SCREEN_HEIGHT = (int)userScreenSize.getHeight();
   protected final static int ROWS = 40;
   protected final static int COLS = 40;
-  public static boolean upKey = false;
-  public static boolean downKey = false;
-  public static boolean leftKey = false;
-  public static boolean rightKey= false;
-  public static boolean runKey = false;
   private static final double zombieSpawnRate = 0.01;
   private static final double trapSpawnRate = 0.01;
   public Random rand = new Random();
-  private Player sprite;
+  private Player playerCharacter;
   private Collection<Zombie> zombies;
   private Collection<Trap> traps;
 
@@ -37,17 +32,23 @@ public class ZombieHouseModel
     MapGenerator mapGen = new MapGenerator(40, 40);
     //grid = this.translateTileImages(new GridReader().readGrid(), ROWS, COLS);
     grid = this.translateTileImages(mapGen.getMap(), ROWS, COLS);
-    sprite = this.getRandomStart(grid);
+    playerCharacter = this.getRandomStart(grid);
 
     map = new Map(grid, ROWS, COLS, MAX_SCREEN_WIDTH / 12, MAX_SCREEN_HEIGHT / 10);
   }
 
+  /**
+   * This method translates a 2D int array into a 2D Tile array
+   * @param grid  input 2D int array representing some tile types
+   * @param rows  height of input/output arrays
+   * @param cols  width of input/output arrays
+   * @return  a 2D Tile array representing the Zombie House
+   */
   private Tile[][] translateTileImages(int[][] grid, int rows, int cols)
   {
     Tile[][] tiles = new Tile[rows][cols];
     int tileWidth = MAX_SCREEN_WIDTH/12;
     int tileHeight = MAX_SCREEN_HEIGHT/10;
-
 
     for (int i = 0; i < rows; i++)
     {
@@ -64,6 +65,11 @@ public class ZombieHouseModel
     return tiles;
   }
 
+  /**
+   * Parses the Zombie House map and places the Player at a random location
+   * @param map  2D Tile array of the Zombie House
+   * @return  new Player located at random tile
+   */
   private Player getRandomStart(Tile[][] map)
   {
     int x= rand.nextInt(39);
@@ -71,23 +77,48 @@ public class ZombieHouseModel
 
     if(map[x][y] instanceof Floor)
     {
-      sprite = new Player(map[x][y].getCenterTileX(),map[x][y].getCenterTileY(),60,map[x][y],
+      playerCharacter = new Player(map[x][y].getCenterTileX(),map[x][y].getCenterTileY(),60,map[x][y],
           map,GridOrientation.pickRandomOrientation());
     }
     else getRandomStart(map);
-    return sprite;
+    return playerCharacter;
   }
 
+  /**
+   * This method takes a displacement as int xy-coordinate pair and an orientation and tells the Player object to move
+   * @param dX  X-displacement (in pixels)
+   * @param dY  Y-displacement (in pixels)
+   * @param gO  orientation on the grid
+   */
+  public void movePlayer(int dX, int dY, Enum gO)
+  {
+    playerCharacter.move(dX, dY, playerCharacter.getCurrentTile(), gO);
+    playerCharacter.getFrames().getRotatingRun();
+  }
+
+  /**
+   * Getter for the map object
+   * @return  reference to the Map
+   */
   public Map getMap()
   {
     return this.map;
   }
+
+  /**
+   * Getter for the player object
+   * @return  reference to the Player
+   */
   public Player getPlayer()
   {
-    return this.sprite;
+    return this.playerCharacter;
   }
 
-  public void update()
+  /**
+   * This method dispatches time-based events among game agents
+   * @param deltaSeconds  time elapsed since last update
+   */
+  public void update(double deltaSeconds)
   {
     //TODO: update zombies
     //TODO: update player

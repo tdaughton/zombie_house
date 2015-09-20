@@ -4,6 +4,8 @@
  */
 package model;
 
+import Resources.SpriteLoader;
+
 public class Player extends Movable
 {
   private static final double DIST_SIGHT = 5.0f;
@@ -12,6 +14,8 @@ public class Player extends Movable
   private static final double SPEED_MULT = 2.0f;
   private static final double STAM_MAX = 5.0f;
   private static final double STAM_REGEN = 0.2f;
+  //Player keeps track of its own animation frames (sprites)
+  private SpriteLoader frames;
   // Inventory is going to take traps only. If there will be any other items
   // then we can use HashTable<String itemName, ArrayList<Item>> or something
   // like that.
@@ -28,11 +32,18 @@ public class Player extends Movable
   public Player(int x, int y, int radius, Tile location, Tile[][] grid, Enum playerOrientation)
   {
     super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
-    this.x=x;
-    this.y=y;
-    this.location = location;
-
+    //currently SpriteLoader only handles player sprites
+    frames = new SpriteLoader();
     numberOfTraps = 0;
+  }
+
+  /**
+   * Getter for Player's animation frames (sprites)
+   * @return
+   */
+  public SpriteLoader getFrames()
+  {
+    return frames;
   }
 
   //============================================================================
