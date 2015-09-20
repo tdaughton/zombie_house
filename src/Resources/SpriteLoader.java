@@ -1,14 +1,10 @@
-
 /**
  * Created by Tess Daughton, September 13th 2015
  *
- *
  * http://slick.ninjacave.com/forum/viewtopic.php?f=3&t=5364
- * /
-
  */
-package Resources;
 
+package Resources;
 
 import model.GridOrientation;
 import model.Player;
@@ -17,6 +13,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
+
 public class SpriteLoader
 {
   public BufferedImage playerSheetRun;
@@ -42,7 +39,6 @@ public class SpriteLoader
   public BufferedImage currentPlayerImage;
   public BufferedImage subPlayerImage;
 
-
   public SpriteLoader()
   {
     currentPlayerImage = idle1;
@@ -51,16 +47,14 @@ public class SpriteLoader
     this.setIndividualFrames();
   }
 
-
   private void loadSprites()
   {
     try
     {
       playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
       playerSheetIdle = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/idle.png"));
-
-
-    } catch (IOException e)
+    }
+    catch (IOException e)
     {
       e.printStackTrace();
     }
@@ -86,8 +80,6 @@ public class SpriteLoader
     run13 = playerSheetRun.getSubimage(174, 196, 59, 71);
     run14 = playerSheetRun.getSubimage(261, 196, 59, 71);
     run15 = playerSheetRun.getSubimage(348, 196, 57, 71);
-
-
   }
 
   public void getRotatingRun()
@@ -122,13 +114,10 @@ public class SpriteLoader
     AffineTransform transform = new AffineTransform();
     int rotateDegrees = 0;
 
-
     if(currentOrientation== GridOrientation.NORTH) rotateDegrees=0;
     else if(currentOrientation== GridOrientation.SOUTH) rotateDegrees=180;
     else if(currentOrientation== GridOrientation.EAST) rotateDegrees=90;
     else if(currentOrientation== GridOrientation.WEST) rotateDegrees=-90;
-
-
 
     transform.rotate(Math.toRadians(rotateDegrees), currentPlayerImage.getWidth() / 2, currentPlayerImage
             .getHeight() / 2);
