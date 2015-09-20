@@ -1,21 +1,20 @@
+/**
+ * Created by whoever whenever
+ * Jar entry point for Zombie House
+ */
+
 import javax.swing.*;
-import model.*;
 
 public class ZombieHouseMain
 {
-
-  public static void main(String[]args)
+  public static void main(String[] args)
   {
-    ZombieHouseModel zModel;
-    ZombieHouseViewer zView;
-
-  SwingUtilities.invokeLater(new Runnable()
-  {
-
-    public void run()
+    SwingUtilities.invokeLater(new Runnable()
     {
-     new ZombieHouseFrame().setVisible(true);
-    }
-  });
+      public void run()
+      {
+        new ZombieHouseFrame().setVisible(true);
+      }
+    });
   }
 }
