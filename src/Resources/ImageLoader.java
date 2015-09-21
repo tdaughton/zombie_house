@@ -22,6 +22,7 @@ public class ImageLoader
   private BufferedImage background;
   private ZombieHouseModel zModel;
   private TrapLoader trapLoader = new TrapLoader();
+  private Tile[][] grid;
 
   private int cols;
   private int rows;
@@ -31,6 +32,7 @@ public class ImageLoader
     this.MAX_SCREEN_HEIGHT = MAX_SCREEN_HEIGHT;
     this.MAX_SCREEN_WIDTH = MAX_SCREEN_WIDTH;
     this.zModel = zModel;
+    this.grid = zModel.getMap().getGrid();
     readImages();
     initializeMap(40, 40);
   }
@@ -40,7 +42,7 @@ public class ImageLoader
     this.cols = cols;
     this.rows = rows;
 
-    this.createBackground(zModel.getMap().getGrid());
+    this.createBackground();
   }
 
   protected void readImages()
@@ -57,7 +59,7 @@ public class ImageLoader
     }
   }
 
-  public void createBackground(Tile[][] grid)
+  public void createBackground()
   {
     int tileWidth = this.MAX_SCREEN_WIDTH / 12;
     int tileHeight = this.MAX_SCREEN_HEIGHT / 10;
@@ -86,12 +88,6 @@ public class ImageLoader
         {
           g.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
-
-        if(grid[i][j].hasTrap())
-        {
-          g.drawImage(trapLoader.getTrap(), (int) grid[i][j].getCenterX(), (int) grid[i][j].getCenterY(),null);
-        }
-
         xCoord += tileWidth;
       }
       yCoord += tileHeight;

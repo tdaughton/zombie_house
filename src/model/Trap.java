@@ -12,6 +12,8 @@ public class Trap
 {
   private int x, y;
   private boolean grabbable;
+  private boolean explosionTriggered;
+  private Movable movableTrigger;
 
   //============================================================================
   // Creates a trap class with x and y coordinates. Trap is only 1-tile size
@@ -22,6 +24,7 @@ public class Trap
     this.x = x;
     this.y = y;
     this.grabbable = grabbable;
+    this.explosionTriggered = false;
   }
 
   //============================================================================
@@ -43,4 +46,20 @@ public class Trap
     return grabbable;
   }
 
+  public void setExplosionTrigger()
+  {
+    this.explosionTriggered=true;
+  }
+  public void setMovableTrigger(Movable mover)
+  {
+    this.movableTrigger=mover;
+  }
+  public Movable getMovableTrigger()
+  {
+    return this.movableTrigger;
+  }
+  public boolean explosionTriggered()
+  {
+    return this.explosionTriggered;
+  }
 }

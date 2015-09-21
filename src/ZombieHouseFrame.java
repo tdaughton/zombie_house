@@ -161,6 +161,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     int movement = 5;
     if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) movement = 3 * movement;
     //check diagonal movements
+    //TODO these are moving too quickly and also the player orientation is not working correctly
     if ((keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) && (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]))
     {
       zModel.movePlayer(movement-4, -movement+4, GridOrientation.NORTHEAST);

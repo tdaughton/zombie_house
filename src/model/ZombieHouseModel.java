@@ -73,8 +73,8 @@ public class ZombieHouseModel
    */
   private Player getRandomStart(Tile[][] map)
   {
-    int x= rand.nextInt(39);
-    int y = rand.nextInt(39);
+    int x= rand.nextInt(40);
+    int y = rand.nextInt(40);
 
     if(map[x][y] instanceof Floor)
     {
@@ -94,13 +94,14 @@ public class ZombieHouseModel
     int x= rand.nextInt(40);
     int y = rand.nextInt(40);
 
-    if(map[x][y] instanceof Floor && traps.size()<100)
+    if(map[x][y] instanceof Floor)
     {
-      Trap trap = new Trap((int) map[x][y].getCenterX(),(int) map[x][y].getCenterY(), true);
+      System.out.println("setting traps");
+      Trap trap = new Trap( (int) map[x][y].getCenterX(),(int) map[x][y].getCenterY(), true);
       traps.add(trap);
       map[x][y].installTrap();
     }
-    else setRandomTraps(map);
+    if(traps.size()<10) setRandomTraps(map);
   }
 
   /**

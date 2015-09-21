@@ -65,7 +65,6 @@ public class ZombieHouseViewer extends JPanel
   private BufferedImage getVisibleBuffer()
   {
     int xMin, xMax, yMin, yMax;
-
     this.negXOffSet = 0;
     this.negYOffSet = 0;
 
@@ -89,6 +88,7 @@ public class ZombieHouseViewer extends JPanel
     yMax = yMin + this.getHeight();
     if ((yMin + yMax) >= background.getHeight()) yMax = background.getHeight() - yMin;
 
+    background=imageLoader.getBackground();
     return background.getSubimage(xMin, yMin, xMax, yMax);
   }
 
@@ -103,6 +103,26 @@ public class ZombieHouseViewer extends JPanel
 
   }
 
+  private void drawTraps(Graphics g)
+  {
+    g = background.getGraphics();
+    Tile[][] tiles = zModel.getMap().getGrid();
+    for (Tile[] tileRow : tiles)
+    {
+      for (Tile tile : tileRow)
+      {
+        if (tile.hasTrap())
+        {
+          g.drawImage(trapLoader.getTrap(), (int) tile.getCenterX(), (int) tile.getCenterY(), null);
+          if (tile.getTrap().explosionTriggered())
+          {
+            trapLoader.getExplosionEffect(g, tile, imageLoader, tile.getTrap().getMovableTrigger());
+          }
+        }
+      }
+    }
+  }
+
   /**
    * Overrides JPanel paintComponent to display gameplay elements
    * @param g
@@ -111,12 +131,7 @@ public class ZombieHouseViewer extends JPanel
   public void paintComponent(Graphics g)
   {
     g.drawImage(this.getVisibleBuffer(), negXOffSet, negYOffSet, null);
-    if(playerSprite.explosionTriggered())
-    { //soundLoader.playExplosionEffect();
-      g.drawImage(trapLoader.getExplosionEffect(), this.getWidth()/2,this.getHeight()/2, null);
-      //playerSprite.getCurrentTile().removeTrap();
-      playerSprite.explosionTerminated();
-    }
     drawSprite(g);
+    drawTraps(g);
   }
 }

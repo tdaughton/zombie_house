@@ -1,8 +1,11 @@
 package Resources;
 
+import model.Tile;
+import model.Movable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.awt.Graphics;
 
 /**
  * Created by Tess Daughton, September 20th 2015
@@ -67,7 +70,7 @@ public class TrapLoader
     }
   }
 
-  protected BufferedImage getTrap()
+  public BufferedImage getTrap()
   {
     return this.trap;
   }
@@ -107,43 +110,48 @@ public class TrapLoader
     explosion30 = explosionSheet.getSubimage(907, 478, 135, 125);
     }
 
-  public BufferedImage getExplosionEffect()
+  public void getExplosionEffect(Graphics g, Tile tile, ImageLoader imageLoader, Movable mover )
   {
-    if (iterator == 1) currentTrapImage = explosion1;
-    else if (iterator == 2) currentTrapImage = explosion2;
-    else if (iterator == 3) currentTrapImage = explosion3;
-    else if (iterator == 4) currentTrapImage = explosion4;
-    else if (iterator == 5) currentTrapImage = explosion5;
-    else if (iterator == 6) currentTrapImage = explosion6;
-    else if (iterator == 7) currentTrapImage = explosion7;
-    else if (iterator == 8) currentTrapImage = explosion8;
-    else if (iterator == 9) currentTrapImage = explosion9;
-    else if (iterator == 10) currentTrapImage = explosion10;
-    else if (iterator == 11) currentTrapImage = explosion11;
-    else if (iterator == 12) currentTrapImage = explosion12;
-    else if (iterator == 13) currentTrapImage = explosion13;
-    else if (iterator == 14) currentTrapImage = explosion14;
-    else if (iterator == 15) currentTrapImage = explosion15;
-    else if (iterator == 16) currentTrapImage = explosion16;
-    else if (iterator == 17) currentTrapImage = explosion17;
-    else if (iterator == 18) currentTrapImage = explosion18;
-    else if (iterator == 19) currentTrapImage = explosion19;
-    else if (iterator == 20) currentTrapImage = explosion20;
-    else if (iterator == 21) currentTrapImage = explosion21;
-    else if (iterator == 22) currentTrapImage = explosion22;
-    else if (iterator == 23) currentTrapImage = explosion23;
-    else if (iterator == 24) currentTrapImage = explosion24;
-    else if (iterator == 25) currentTrapImage = explosion25;
-    else if (iterator == 26) currentTrapImage = explosion26;
-    else if (iterator == 27) currentTrapImage = explosion27;
-    else if (iterator == 28) currentTrapImage = explosion28;
-    else if (iterator == 29) currentTrapImage = explosion29;
-    else if (iterator == 30)
+    if (iterator == 1) g.drawImage(explosion1, mover.getX(), mover.getY(), null);
+    else if (iterator == 2) g.drawImage(explosion2,  mover.getX(), mover.getY(), null);
+    else if (iterator == 3) g.drawImage(explosion3,  mover.getX(), mover.getY(), null);
+    else if (iterator == 4) g.drawImage(explosion4,  mover.getX(), mover.getY(), null);
+    else if (iterator == 5) g.drawImage(explosion5,  mover.getX(), mover.getY(), null);
+    else if (iterator == 6) g.drawImage(explosion6,  mover.getX(), mover.getY(), null);
+    else if (iterator == 7) g.drawImage(explosion7,  mover.getX(), mover.getY(), null);
+    else if (iterator == 8) g.drawImage(explosion8,  mover.getX(), mover.getY(), null);
+    else if (iterator == 9) g.drawImage(explosion9,  mover.getX(), mover.getY(), null);
+    else if (iterator == 10) g.drawImage(explosion10,  mover.getX(), mover.getY(), null);
+    else if (iterator == 11) g.drawImage(explosion11,  mover.getX(), mover.getY(), null);
+    else if (iterator == 12) g.drawImage(explosion12,  mover.getX(), mover.getY(), null);
+    else if (iterator == 13) g.drawImage(explosion13,  mover.getX(), mover.getY(), null);
+    else if (iterator == 14) g.drawImage(explosion14,  mover.getX(), mover.getY(), null);
+    else if (iterator == 15) g.drawImage(explosion15,  mover.getX(), mover.getY(), null);
+    else if (iterator == 16) g.drawImage(explosion16,  mover.getX(), mover.getY(), null);
+    else if (iterator == 17) g.drawImage(explosion17,  mover.getX(), mover.getY(), null);
+    else if (iterator == 18) g.drawImage(explosion18,  mover.getX(), mover.getY(), null);
+    else if (iterator == 19) g.drawImage(explosion19,  mover.getX(), mover.getY(), null);
+    else if (iterator == 20) g.drawImage(explosion20,  mover.getX(), mover.getY(), null);
+    else if (iterator == 21) g.drawImage(explosion21,  mover.getX(), mover.getY(), null);
+    else if (iterator == 22) g.drawImage(explosion22,  mover.getX(), mover.getY(), null);
+    else if (iterator == 23) g.drawImage(explosion23,  mover.getX(), mover.getY(), null);
+    else if (iterator == 24) g.drawImage(explosion24,  mover.getX(), mover.getY(), null);
+    else if (iterator == 25) g.drawImage(explosion25,  mover.getX(), mover.getY(), null);
+    else if (iterator == 26) g.drawImage(explosion26,  mover.getX(), mover.getY(), null);
+    else if (iterator == 27) g.drawImage(explosion27,  mover.getX(), mover.getY(), null);
+    else if (iterator == 28) g.drawImage(explosion28,  mover.getX(), mover.getY(), null);
+    else if (iterator == 29) g.drawImage(explosion29,  mover.getX(), mover.getY(), null);
+    if(iterator<30)
     {
-      currentTrapImage = explosion30;
+      iterator++;
+      getExplosionEffect(g,tile,imageLoader, mover);
+    }
+
+    else if (iterator == 30)
+    { g.drawImage(explosion30, (int) tile.getCenterX(), (int) tile.getCenterY(), null);
+      tile.removeTrap();
+      imageLoader.createBackground();
       iterator=0;
     }
-    iterator++;
-    return currentTrapImage;
   }
 }
