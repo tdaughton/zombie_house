@@ -160,12 +160,33 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     int movement = 5;
     if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) movement = 3 * movement;
+    //check diagonal movements
+    if ((keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) && (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]))
+    {
+      zModel.movePlayer(movement-4, -movement+4, GridOrientation.NORTHEAST);
+    }
+    if ((keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) && (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]))
+    {
+      zModel.movePlayer(movement-4, movement-4, GridOrientation.SOUTHEAST);
+    }
+    if ((keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) && (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]))
+    {
+      zModel.movePlayer(-movement+4, -movement-4, GridOrientation.NORTHWEST);
+    }
+    if ((keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) && (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]))
+    {
+      zModel.movePlayer(-movement+4, -movement-4, GridOrientation.SOUTHWEST);
+    }
+    //check cardinal movements
     if (keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) zModel.movePlayer(0 ,-movement, GridOrientation.NORTH);
     if (keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) zModel.movePlayer(0, movement, GridOrientation.SOUTH);
     if (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]) zModel.movePlayer(-movement, 0, GridOrientation.WEST);
     if (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]) zModel.movePlayer(movement, 0, GridOrientation.EAST);
 
-    if (stepCount % 16 == 0)
+
+    //Edits by Tess: TC, I changed this a little bit so that when he was running his footsteps were a little quicker.
+    //Might be a little glitchy though, so feel free to edit.
+    if (stepCount % 16 == 0 || stepCount > 16)
     {
       this.gameSounds.leftFootStep();
       stepCount = 0;
@@ -174,6 +195,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     {
       this.gameSounds.rightFootStep();
     }
-    stepCount++;
+    if((keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT])) stepCount+=2;
+    else stepCount++;
+
+
   }
 }

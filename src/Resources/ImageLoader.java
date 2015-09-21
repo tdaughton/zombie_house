@@ -21,6 +21,7 @@ public class ImageLoader
   private BufferedImage outsideImage;
   private BufferedImage background;
   private ZombieHouseModel zModel;
+  private TrapLoader trapLoader = new TrapLoader();
 
   private int cols;
   private int rows;
@@ -31,7 +32,7 @@ public class ImageLoader
     this.MAX_SCREEN_WIDTH = MAX_SCREEN_WIDTH;
     this.zModel = zModel;
     readImages();
-    initializeMap(40,40);
+    initializeMap(40, 40);
   }
 
   public void initializeMap(int cols, int rows)
@@ -85,6 +86,12 @@ public class ImageLoader
         {
           g.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
+
+        if(grid[i][j].hasTrap())
+        {
+          g.drawImage(trapLoader.getTrap(), (int) grid[i][j].getCenterX(), (int) grid[i][j].getCenterY(),null);
+        }
+
         xCoord += tileWidth;
       }
       yCoord += tileHeight;

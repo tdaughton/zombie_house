@@ -17,9 +17,7 @@ import java.awt.image.BufferedImage;
 public class SpriteLoader
 {
   public BufferedImage playerSheetRun;
-  public BufferedImage playerSheetIdle;
   private int iterator = 1;
-  public BufferedImage idle1;
 
   public BufferedImage run1;
   public BufferedImage run2;
@@ -40,11 +38,11 @@ public class SpriteLoader
   public BufferedImage subPlayerImage;
 
   public SpriteLoader()
-  {
-    currentPlayerImage = idle1;
-    subPlayerImage = currentPlayerImage;
-    this.loadSprites();
+  { this.loadSprites();
     this.setIndividualFrames();
+    run6 = playerSheetRun.getSubimage(0, 144, 93, 110);
+    currentPlayerImage = run6;
+    subPlayerImage = currentPlayerImage;
   }
 
   private void loadSprites()
@@ -52,7 +50,6 @@ public class SpriteLoader
     try
     {
       playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
-      playerSheetIdle = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/idle.png"));
     }
     catch (IOException e)
     {
@@ -61,25 +58,20 @@ public class SpriteLoader
   }
 
   private void setIndividualFrames()
-  {
-    idle1 = playerSheetIdle.getSubimage(0, 0, 64, 49);
-    currentPlayerImage = idle1;
-    subPlayerImage = currentPlayerImage;
-    run1 = playerSheetRun.getSubimage(0, 0, 59, 73);
-    run2 = playerSheetRun.getSubimage(86, 0, 59, 73);
-    run3 = playerSheetRun.getSubimage(173, 0, 59, 73);
-    run4 = playerSheetRun.getSubimage(261, 0, 59, 73);
-    run5 = playerSheetRun.getSubimage(348, 0, 57, 73);
-    run6 = playerSheetRun.getSubimage(0, 99, 59, 73);
-    run7 = playerSheetRun.getSubimage(86, 99, 59, 73);
-    run8 = playerSheetRun.getSubimage(174, 99, 59, 73);
-    run9 = playerSheetRun.getSubimage(261, 99, 59, 73);
-    run10 = playerSheetRun.getSubimage(348, 99, 57, 73);
-    run11 = playerSheetRun.getSubimage(0, 196, 59, 71);
-    run12 = playerSheetRun.getSubimage(86, 196, 59, 71);
-    run13 = playerSheetRun.getSubimage(174, 196, 59, 71);
-    run14 = playerSheetRun.getSubimage(261, 196, 59, 71);
-    run15 = playerSheetRun.getSubimage(348, 196, 57, 71);
+  { run1 = playerSheetRun.getSubimage(0, 0, 93, 100);
+    run2 = playerSheetRun.getSubimage(123, 0, 93, 110);
+    run3 = playerSheetRun.getSubimage(249, 0, 93, 110);
+    run4 = playerSheetRun.getSubimage(371, 0, 93, 110);
+    run5 = playerSheetRun.getSubimage(495, 0, 93, 110);
+    run7 = playerSheetRun.getSubimage(123, 144, 93, 110);
+    run8 = playerSheetRun.getSubimage(249, 144, 93, 110);
+    run9 = playerSheetRun.getSubimage(371, 144, 93, 110);
+    run10 = playerSheetRun.getSubimage(495, 144, 93, 110);
+    run11 = playerSheetRun.getSubimage(0, 279, 93, 110);
+    run12 = playerSheetRun.getSubimage(123, 279, 93, 110);
+    run13 = playerSheetRun.getSubimage(249, 279, 93, 110);
+    run14 = playerSheetRun.getSubimage(371, 279, 93, 110);
+    run15 = playerSheetRun.getSubimage(495, 279, 93, 110);
   }
 
   public void getRotatingRun()
@@ -117,7 +109,12 @@ public class SpriteLoader
     if(currentOrientation== GridOrientation.NORTH) rotateDegrees=0;
     else if(currentOrientation== GridOrientation.SOUTH) rotateDegrees=180;
     else if(currentOrientation== GridOrientation.EAST) rotateDegrees=90;
-    else if(currentOrientation== GridOrientation.WEST) rotateDegrees=-90;
+    else if(currentOrientation== GridOrientation.WEST) rotateDegrees=270;
+    else if(currentOrientation== GridOrientation.NORTHEAST) rotateDegrees=45;
+    else if(currentOrientation== GridOrientation.SOUTHEAST) rotateDegrees=135;
+    else if(currentOrientation== GridOrientation.NORTHWEST) rotateDegrees=315;
+    else if(currentOrientation== GridOrientation.SOUTHWEST) rotateDegrees=-225;
+
 
     transform.rotate(Math.toRadians(rotateDegrees), currentPlayerImage.getWidth() / 2, currentPlayerImage
             .getHeight() / 2);

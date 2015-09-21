@@ -17,6 +17,7 @@ public class Tile extends Rectangle
   protected int gridCol;
   protected boolean occupied;
   protected boolean movable;
+  protected boolean hasTrap;
 
   private Trap trap;
 
@@ -26,6 +27,7 @@ public class Tile extends Rectangle
     this.gridRow = gridRow;
     this.gridCol = gridCol;
     this.movable = false;
+    this.hasTrap=false;
 
     this.trap = null;
   }
@@ -112,20 +114,18 @@ public class Tile extends Rectangle
   public void removeTrap()
   {
     trap = null;
+    this.hasTrap=false;
   }
 
   public void installTrap()
   {
     trap = new Trap(x, y, false);
+    this.hasTrap = true;
   }
 
   public Trap getTrap()
   {
     return trap;
   }
-
-  public boolean hasTrap()
-  {
-    return trap != null;
-  }
+  public boolean hasTrap() { return this.hasTrap;}
 }

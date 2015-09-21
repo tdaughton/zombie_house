@@ -19,6 +19,7 @@ public class Movable
   protected Tile location;
   protected Tile[][] grid;
   protected Enum playerOrientation;
+  protected boolean explosionTriggered;
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
 
@@ -28,6 +29,7 @@ public class Movable
   public Movable()
   {
     circle = new Circle(0, 0, 1);
+    explosionTriggered=false;
   }
 
   /**
@@ -189,6 +191,7 @@ public class Movable
     moveChecker.circle.setRadius(circle.getRadius());
 
     boolean canMove = nextTile.isMovable();
+    if(nextTile.hasTrap) explosionTriggered=true;
     boolean intersectsWall = moveChecker.intersects(nextTile);
     return (!intersectsWall || canMove);
   }
@@ -215,5 +218,15 @@ public class Movable
     dist = Math.sqrt(Math.pow((x - xNew), 2) + Math.pow((y - yNew), 2));
 
     return dist;
+  }
+
+  public boolean explosionTriggered()
+  {
+    return this.explosionTriggered;
+  }
+
+  public void explosionTerminated()
+  {
+    this.explosionTriggered=false;
   }
 }

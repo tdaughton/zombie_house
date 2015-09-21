@@ -5,9 +5,8 @@
 import Resources.*;
 import model.*;
 import javax.swing.JPanel;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.Dimension;
-import java.awt.Graphics;
 
 public class ZombieHouseViewer extends JPanel
 {
@@ -16,6 +15,9 @@ public class ZombieHouseViewer extends JPanel
   private int currentScreenHeight;
   private BufferedImage background;
   private ZombieHouseModel zModel;
+  private ImageLoader imageLoader;
+  private SoundLoader soundLoader;
+  private TrapLoader trapLoader;
   private Player playerSprite;
   private int negXOffSet = 0;
   private int negYOffSet = 0;
@@ -31,7 +33,9 @@ public class ZombieHouseViewer extends JPanel
     this.zModel = zModel;
     this.currentScreenWidth = (int)userScreenSize.getWidth();
     this.currentScreenHeight = (int)userScreenSize.getHeight();
-    ImageLoader imageLoader = new ImageLoader(this.zModel, this.currentScreenWidth, this.currentScreenHeight);
+    imageLoader = new ImageLoader(this.zModel, this.currentScreenWidth, this.currentScreenHeight);
+    trapLoader=new TrapLoader();
+    soundLoader=new SoundLoader();
     this.background = imageLoader.getBackground();
     this.playerSprite = this.zModel.getPlayer();
   }
@@ -96,6 +100,7 @@ public class ZombieHouseViewer extends JPanel
   {
     SpriteLoader sprites = playerSprite.getFrames();
     g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2, this.getHeight() / 2, null);
+
   }
 
   /**
@@ -106,6 +111,12 @@ public class ZombieHouseViewer extends JPanel
   public void paintComponent(Graphics g)
   {
     g.drawImage(this.getVisibleBuffer(), negXOffSet, negYOffSet, null);
+    if(playerSprite.explosionTriggered())
+    { //soundLoader.playExplosionEffect();
+      g.drawImage(trapLoader.getExplosionEffect(), this.getWidth()/2,this.getHeight()/2, null);
+      //playerSprite.getCurrentTile().removeTrap();
+      playerSprite.explosionTerminated();
+    }
     drawSprite(g);
   }
 }

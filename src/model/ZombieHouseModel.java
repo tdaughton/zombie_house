@@ -7,7 +7,7 @@ package model;
 
 import java.awt.*;
 import java.util.Random;
-import java.util.Collection;
+import java.util.ArrayList;
 
 public class ZombieHouseModel
 {
@@ -20,8 +20,8 @@ public class ZombieHouseModel
   private static final double trapSpawnRate = 0.01;
   public Random rand = new Random();
   private Player playerCharacter;
-  private Collection<Zombie> zombies;
-  private Collection<Trap> traps;
+  private ArrayList<Zombie> zombies;
+  private ArrayList<Trap> traps;
 
   protected Map map;
 
@@ -29,11 +29,10 @@ public class ZombieHouseModel
 
   public ZombieHouseModel()
   {
+    traps = new ArrayList<>();
     MapGenerator mapGen = new MapGenerator(40, 40);
     //grid = this.translateTileImages(new GridReader().readGrid(), ROWS, COLS);
     grid = this.translateTileImages(mapGen.getMap(), ROWS, COLS);
-    playerCharacter = this.getRandomStart(grid);
-
     map = new Map(grid, ROWS, COLS, MAX_SCREEN_WIDTH / 12, MAX_SCREEN_HEIGHT / 10);
   }
 
@@ -62,6 +61,8 @@ public class ZombieHouseModel
         tiles[i][j].setBounds(j * tileWidth, i * tileHeight, tileWidth, tileHeight);
       }
     }
+    this.setRandomTraps(tiles);
+    playerCharacter=this.getRandomStart(tiles);
     return tiles;
   }
 
@@ -77,11 +78,29 @@ public class ZombieHouseModel
 
     if(map[x][y] instanceof Floor)
     {
-      playerCharacter = new Player(map[x][y].getCenterTileX(),map[x][y].getCenterTileY(),60,map[x][y],
+      playerCharacter = new Player(map[x][y].getCenterTileX(),map[x][y].getCenterTileY(),40,map[x][y],
           map,GridOrientation.pickRandomOrientation());
     }
     else getRandomStart(map);
     return playerCharacter;
+  }
+
+  /**
+   * Places random traps throughout the map
+   * @param map  2D Tile array of the Zombie House
+   */
+  private void setRandomTraps(Tile[][] map)
+  {
+    int x= rand.nextInt(40);
+    int y = rand.nextInt(40);
+
+    if(map[x][y] instanceof Floor && traps.size()<100)
+    {
+      Trap trap = new Trap((int) map[x][y].getCenterX(),(int) map[x][y].getCenterY(), true);
+      traps.add(trap);
+      map[x][y].installTrap();
+    }
+    else setRandomTraps(map);
   }
 
   /**

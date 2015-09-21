@@ -12,6 +12,7 @@ public class SoundLoader
   private Clip pcRightFoot;
   private Clip pcLeftFoot;
   private Clip backgroundMusic;
+  private Clip explosion;
 
   /**
    * Default constructor. Loads all (three) known sound files and keep references to them.
@@ -21,6 +22,7 @@ public class SoundLoader
     pcRightFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav");
     pcLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav");
     backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
+    //explosion = openWavByResourcePath("Resources/sound_resources/boom_pack/boom6.wav");
   }
 
   /**
@@ -88,4 +90,9 @@ public class SoundLoader
   {
     if (backgroundMusic.isRunning()) backgroundMusic.stop();
   }
+
+  public void playExplosionEffect()
+  { explosion.start();
+  }
+
 }
