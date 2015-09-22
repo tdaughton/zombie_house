@@ -55,7 +55,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     prevSeconds = currSeconds;
     currSeconds = System.nanoTime();
-    deltaSeconds = (currSeconds - prevSeconds) / 1000000000;
+    deltaSeconds = (currSeconds - prevSeconds) / 1000000000.0f;
     zModel.update(deltaSeconds);
     repaint();
   }
@@ -159,10 +159,11 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    */
   private void moveKeys()
   {
-    double movement = 5;
+    double movement = 1.0f;
+    boolean boost = false;
     int dir = 5;
 
-    if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) movement = 2 * movement;
+    if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) boost = true;//movement = 2 * movement;
     if (keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) dir += 3;
     if (keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) dir -= 3;
     if (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]) dir -= 1;
@@ -172,31 +173,31 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     switch (dir)
     {
       case 7:
-        zModel.movePlayer(-movement, -movement, GridOrientation.NORTHWEST);
+        zModel.movePlayer(-movement, -movement, GridOrientation.NORTHWEST, boost);
         break;
       case 8:
-        zModel.movePlayer(0, -movement, GridOrientation.NORTH);
+        zModel.movePlayer(0, -movement, GridOrientation.NORTH, boost);
         break;
       case 9:
-        zModel.movePlayer(movement, -movement, GridOrientation.NORTHEAST);
+        zModel.movePlayer(movement, -movement, GridOrientation.NORTHEAST, boost);
         break;
       case 4:
-        zModel.movePlayer(-movement, 0, GridOrientation.WEST);
+        zModel.movePlayer(-movement, 0, GridOrientation.WEST, boost);
         break;
       case 5:
       default:
         return;
       case 6:
-        zModel.movePlayer(movement, 0, GridOrientation.EAST);
+        zModel.movePlayer(movement, 0, GridOrientation.EAST, boost);
         break;
       case 1:
-        zModel.movePlayer(-movement, movement, GridOrientation.SOUTHWEST);
+        zModel.movePlayer(-movement, movement, GridOrientation.SOUTHWEST, boost);
         break;
       case 2:
-        zModel.movePlayer(0, movement, GridOrientation.SOUTH);
+        zModel.movePlayer(0, movement, GridOrientation.SOUTH, boost);
         break;
       case 3:
-        zModel.movePlayer(movement, movement, GridOrientation.SOUTHEAST);
+        zModel.movePlayer(movement, movement, GridOrientation.SOUTHEAST, boost);
         break;
     }
 

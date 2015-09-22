@@ -40,7 +40,7 @@ public class Movable
    * @param grid                 Reference to Zombie House map
    * @param playerOrientation    8-way orientation
    */
-  public Movable(int x, int y, int radius, Tile location, Tile[][] grid, Enum playerOrientation)
+  public Movable(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation)
   {
     //this.radius = radius;
     //this.x = x + radius;

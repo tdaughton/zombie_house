@@ -18,14 +18,13 @@ public class ZombieHouseModel
   protected final static int COLS = 40;
   private static final double zombieSpawnRate = 0.01;
   private static final double trapSpawnRate = 0.01;
-  public Random rand = new Random();
+  private Random rand = new Random();
   private Player playerCharacter;
   private ArrayList<Zombie> zombies;
   private ArrayList<Trap> traps;
-
-  protected Map map;
-
+  private Map map;
   private Tile grid[][];
+  private double deltaSeconds;
 
   public ZombieHouseModel()
   {
@@ -106,14 +105,15 @@ public class ZombieHouseModel
 
   /**
    * This method takes a displacement as int xy-coordinate pair and an orientation and tells the Player object to move
-   * @param dX  X-displacement (in pixels)
-   * @param dY  Y-displacement (in pixels)
-   * @param gO  orientation on the grid
+   * @param dX       X-displacement (in pixels)
+   * @param dY       Y-displacement (in pixels)
+   * @param dir      orientation on the grid
    */
-  public void movePlayer(double dX, double dY, Enum gO)
+  public void movePlayer(double dX, double dY, Enum dir, boolean running)
   {
-    playerCharacter.move(dX, dY, playerCharacter.getCurrentTile(), gO);
-    playerCharacter.getFrames().getRotatingRun();
+    playerCharacter.walk(dX, dY, dir, running, deltaSeconds);
+    //playerCharacter.move(dX, dY, playerCharacter.getCurrentTile(), dir);
+    //playerCharacter.getFrames().getRotatingRun();
   }
 
   /**
@@ -136,10 +136,11 @@ public class ZombieHouseModel
 
   /**
    * This method dispatches time-based events among game agents
-   * @param deltaSeconds  time elapsed since last update
+   * @param timeElapsed  time elapsed since last update
    */
-  public void update(double deltaSeconds)
+  public void update(double timeElapsed)
   {
+    this.deltaSeconds = timeElapsed;
     //TODO: update zombies
     //TODO: update player
     //TODO: check zombie-zombie intersections
