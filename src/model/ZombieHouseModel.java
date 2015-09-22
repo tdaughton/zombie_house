@@ -110,7 +110,7 @@ public class ZombieHouseModel
    * @param dY  Y-displacement (in pixels)
    * @param gO  orientation on the grid
    */
-  public void movePlayer(int dX, int dY, Enum gO)
+  public void movePlayer(double dX, double dY, Enum gO)
   {
     playerCharacter.move(dX, dY, playerCharacter.getCurrentTile(), gO);
     playerCharacter.getFrames().getRotatingRun();

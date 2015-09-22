@@ -153,7 +153,7 @@ public class Movable
    * @param current      reference to current Tile
    * @param orientation  Orientation after moving
    */
-  public void move(int dX, int dY, Tile current, Enum orientation)
+  public void move(double dX, double dY, Tile current, Enum orientation)
   {
     if (canMoveTo(dX, dY))
     {
