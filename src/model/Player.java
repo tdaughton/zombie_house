@@ -20,6 +20,7 @@ public class Player extends Movable
   // then we can use HashTable<String itemName, ArrayList<Item>> or something
   // like that.
   private int numberOfTraps;
+  private int x, y;
 
   /**
    * Full constructor
