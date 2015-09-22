@@ -16,7 +16,6 @@ public class ZombieHouseViewer extends JPanel
   private BufferedImage background;
   private ZombieHouseModel zModel;
   private ImageLoader imageLoader;
-  private SoundLoader soundLoader;
   private TrapLoader trapLoader;
   private Player playerSprite;
   private int negXOffSet = 0;
@@ -35,7 +34,6 @@ public class ZombieHouseViewer extends JPanel
     this.currentScreenHeight = (int)userScreenSize.getHeight();
     imageLoader = new ImageLoader(this.zModel, this.currentScreenWidth, this.currentScreenHeight);
     trapLoader=new TrapLoader();
-    soundLoader=new SoundLoader();
     this.background = imageLoader.getBackground();
     this.playerSprite = this.zModel.getPlayer();
   }
@@ -98,9 +96,10 @@ public class ZombieHouseViewer extends JPanel
    */
   private void drawSprite(Graphics g)
   {
+    //g.setColor(Color.RED);
+    //g.drawOval(this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), playerSprite.getRadius() * 2, playerSprite.getRadius() * 2);
     SpriteLoader sprites = playerSprite.getFrames();
-    g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2, this.getHeight() / 2, null);
-
+    g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), null);
   }
 
   private void drawTraps(Graphics g)
