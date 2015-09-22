@@ -79,6 +79,8 @@ public class ImageLoader
         else if (grid[i][j] instanceof Wall)
         {
           g.drawImage(this.wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          //g.setColor(Color.BLUE);
+          //g.drawRect(xCoord, yCoord, tileWidth, tileHeight);
         }
         else if (grid[i][j] instanceof Outside)
         {
