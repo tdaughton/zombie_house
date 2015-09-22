@@ -18,7 +18,7 @@ public class SpriteLoader
 {
   public BufferedImage playerSheetRun;
   private int iterator = 1;
-
+  //public BufferedImage[] run;
   public BufferedImage run1;
   public BufferedImage run2;
   public BufferedImage run3;
@@ -38,9 +38,12 @@ public class SpriteLoader
   public BufferedImage subPlayerImage;
 
   public SpriteLoader()
-  { this.loadSprites();
+  {
+    //run = new BufferedImage[15];
+    this.loadSprites();
     this.setIndividualFrames();
     run6 = playerSheetRun.getSubimage(0, 144, 93, 110);
+    //currentPlayerImage = run[5];
     currentPlayerImage = run6;
     subPlayerImage = currentPlayerImage;
   }
@@ -58,7 +61,23 @@ public class SpriteLoader
   }
 
   private void setIndividualFrames()
-  { run1 = playerSheetRun.getSubimage(0, 0, 93, 100);
+  {
+    /*run[0] = playerSheetRun.getSubimage(0, 0, 93, 100);
+    run[1] = playerSheetRun.getSubimage(123, 0, 93, 110);
+    run[2] = playerSheetRun.getSubimage(249, 0, 93, 110);
+    run[3] = playerSheetRun.getSubimage(371, 0, 93, 110);
+    run[4] = playerSheetRun.getSubimage(495, 0, 93, 110);
+    run[5] = playerSheetRun.getSubimage(0, 144, 93, 110);
+    run[6] = playerSheetRun.getSubimage(123, 144, 93, 110);
+    run[7] = playerSheetRun.getSubimage(249, 144, 93, 110);
+    run[8] = playerSheetRun.getSubimage(371, 144, 93, 110);
+    run[9] = playerSheetRun.getSubimage(495, 144, 93, 110);
+    run[10] = playerSheetRun.getSubimage(0, 279, 93, 110);
+    run[11] = playerSheetRun.getSubimage(123, 279, 93, 110);
+    run[12] = playerSheetRun.getSubimage(249, 279, 93, 110);
+    run[13] = playerSheetRun.getSubimage(371, 279, 93, 110);
+    run[14] = playerSheetRun.getSubimage(495, 279, 93, 110);*/
+    run1 = playerSheetRun.getSubimage(0, 0, 93, 100);
     run2 = playerSheetRun.getSubimage(123, 0, 93, 110);
     run3 = playerSheetRun.getSubimage(249, 0, 93, 110);
     run4 = playerSheetRun.getSubimage(371, 0, 93, 110);
@@ -76,6 +95,8 @@ public class SpriteLoader
 
   public void getRotatingRun()
   {
+    //if (iterator > 14) iterator = 0;
+    //currentPlayerImage = run[iterator];
     if (iterator == 1) currentPlayerImage = run1;
     else if (iterator == 2) currentPlayerImage = run2;
     else if (iterator == 3) currentPlayerImage = run3;
@@ -113,11 +134,11 @@ public class SpriteLoader
     else if(currentOrientation== GridOrientation.NORTHEAST) rotateDegrees=45;
     else if(currentOrientation== GridOrientation.SOUTHEAST) rotateDegrees=135;
     else if(currentOrientation== GridOrientation.NORTHWEST) rotateDegrees=315;
-    else if(currentOrientation== GridOrientation.SOUTHWEST) rotateDegrees=-225;
+    else if(currentOrientation== GridOrientation.SOUTHWEST) rotateDegrees=225;
 
 
-    transform.rotate(Math.toRadians(rotateDegrees), currentPlayerImage.getWidth() / 2, currentPlayerImage
-            .getHeight() / 2);
+    transform.rotate(Math.toRadians(rotateDegrees), 55, 55);
+    //transform.rotate(Math.toRadians(rotateDegrees), currentPlayerImage.getWidth() / 2, currentPlayerImage.getHeight() / 2);
     AffineTransformOp rotate = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
     currentPlayerImage=rotate.filter(subPlayerImage,null);
 
