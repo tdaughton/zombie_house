@@ -49,10 +49,6 @@ public class Pathfinder
       current = frontier.poll();
 
       if(current == end) break;
-      if(map.getNeighbors((int)current.getX(), (int)current.getY()).isEmpty())
-      { // Since neighbors indicate tiles movable, it is possible to have 0
-        break; // in that case it should escape.
-      }
 
       for(Tile next :map.getNeighbors((int)current.getX(), (int)current.getY()))
       {// If there are tiles with different cost, add next.getCost() instead of 1.
@@ -60,6 +56,7 @@ public class Pathfinder
 
         if(!costSoFar.containsKey(next) || newCost < costSoFar.get(next))
         {
+          //TODO: It should be able to find out when there is no way to get to the end.
           costSoFar.put(next, newCost);
 
           int heuristic = heuristic((int) end.getX(), (int) end.getY(),
@@ -75,15 +72,6 @@ public class Pathfinder
     //System.out.println(costSoFar.get(end));
 
     return cameFrom;
-  }
-
-  //============================================================================
-  // This only helps to print out the cost. This is not very important part
-  // of the class. I will leave this to test code in the future.
-  //============================================================================
-  public int getCost()
-  {
-    return cost;
   }
 
   //============================================================================
