@@ -18,6 +18,7 @@ public class ZombieHouseViewer extends JPanel
   private ImageLoader imageLoader;
   private SoundLoader soundLoader;
   private TrapLoader trapLoader;
+  private LightSource lightSource;
   private Player playerSprite;
   private int negXOffSet = 0;
   private int negYOffSet = 0;
@@ -38,6 +39,8 @@ public class ZombieHouseViewer extends JPanel
     soundLoader=new SoundLoader();
     this.background = imageLoader.getBackground();
     this.playerSprite = this.zModel.getPlayer();
+    this.lightSource = new LightSource(playerSprite,zModel.getMap().getGrid());
+
   }
 
   /**
@@ -123,6 +126,19 @@ public class ZombieHouseViewer extends JPanel
     }
   }
 
+  private void drawLight(Graphics g)
+  {
+    lightSource.setPolygon(this.currentScreenWidth, this.currentScreenHeight);
+    Polygon light = lightSource.getPolygon();
+    Graphics2D g2 = (Graphics2D) g;
+    g2.draw(light);
+    GradientPaint gradientPaint=  new GradientPaint(this.getWidth()/2,this.getHeight()/2,
+                                                Color.WHITE, this.getWidth()/2+300, this.getHeight()/2+300, Color.BLACK, true );
+    g2.setPaint(gradientPaint);
+    g2.fill(light);
+
+  }
+
   /**
    * Overrides JPanel paintComponent to display gameplay elements
    * @param g
@@ -131,6 +147,7 @@ public class ZombieHouseViewer extends JPanel
   public void paintComponent(Graphics g)
   {
     g.drawImage(this.getVisibleBuffer(), negXOffSet, negYOffSet, null);
+    drawLight(g);
     drawSprite(g);
     drawTraps(g);
   }

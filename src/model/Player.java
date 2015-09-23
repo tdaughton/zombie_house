@@ -64,6 +64,12 @@ public class Player extends Movable
   {
     return numberOfTraps;
   }
+  public double getPlayerSight()
+  {
+    return DIST_SIGHT;
+  }
+
+
 
   private void setX(int x1)
   {
