@@ -55,7 +55,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     prevSeconds = currSeconds;
     currSeconds = System.nanoTime();
-    deltaSeconds = (currSeconds - prevSeconds) / 1000000000;
+    deltaSeconds = (currSeconds - prevSeconds) / 1000000000.0f;
     zModel.update(deltaSeconds);
     repaint();
   }
@@ -155,50 +155,63 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
 
   /**
    * This method processes currently pressed keys to signal the Player to move. A step counter is maintained to play footstep sounds.
+   * Player orientation is calculated by (computer, as opposed to phone) Numpad position.
    */
   private void moveKeys()
   {
-    int movement = 5;
-    if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) movement = 3 * movement;
-    //check diagonal movements
-    //TODO these are moving too quickly and also the player orientation is not working correctly
-    if ((keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) && (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]))
-    {
-      zModel.movePlayer(movement-4, -movement+4, GridOrientation.NORTHEAST);
-    }
-    if ((keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) && (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]))
-    {
-      zModel.movePlayer(movement-4, movement-4, GridOrientation.SOUTHEAST);
-    }
-    if ((keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) && (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]))
-    {
-      zModel.movePlayer(-movement+4, -movement-4, GridOrientation.NORTHWEST);
-    }
-    if ((keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) && (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]))
-    {
-      zModel.movePlayer(-movement+4, -movement-4, GridOrientation.SOUTHWEST);
-    }
-    //check cardinal movements
-    if (keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) zModel.movePlayer(0 ,-movement, GridOrientation.NORTH);
-    if (keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) zModel.movePlayer(0, movement, GridOrientation.SOUTH);
-    if (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]) zModel.movePlayer(-movement, 0, GridOrientation.WEST);
-    if (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]) zModel.movePlayer(movement, 0, GridOrientation.EAST);
+    double movement = 1.0f;
+    boolean boost = false;
+    int dir = 5;
 
+    if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) boost = true;//movement = 2 * movement;
+    if (keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) dir += 3;
+    if (keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) dir -= 3;
+    if (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]) dir -= 1;
+    if (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]) dir += 1;
 
-    //Edits by Tess: TC, I changed this a little bit so that when he was running his footsteps were a little quicker.
-    //Might be a little glitchy though, so feel free to edit.
-    if (stepCount % 16 == 0 || stepCount > 16)
+    if (dir % 2 != 0) movement = movement / Math.sqrt(2);
+    switch (dir)
+    {
+      case 7:
+        zModel.movePlayer(-movement, -movement, GridOrientation.NORTHWEST, boost);
+        break;
+      case 8:
+        zModel.movePlayer(0, -movement, GridOrientation.NORTH, boost);
+        break;
+      case 9:
+        zModel.movePlayer(movement, -movement, GridOrientation.NORTHEAST, boost);
+        break;
+      case 4:
+        zModel.movePlayer(-movement, 0, GridOrientation.WEST, boost);
+        break;
+      case 5:
+      default:
+        return;
+      case 6:
+        zModel.movePlayer(movement, 0, GridOrientation.EAST, boost);
+        break;
+      case 1:
+        zModel.movePlayer(-movement, movement, GridOrientation.SOUTHWEST, boost);
+        break;
+      case 2:
+        zModel.movePlayer(0, movement, GridOrientation.SOUTH, boost);
+        break;
+      case 3:
+        zModel.movePlayer(movement, movement, GridOrientation.SOUTHEAST, boost);
+        break;
+    }
+
+    if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) stepCount += 2;
+    else stepCount += 1;
+
+    if (stepCount > 14)
     {
       this.gameSounds.leftFootStep();
       stepCount = 0;
     }
-    if (stepCount % 16 == 8)
+    if (stepCount % 15 == 7)
     {
       this.gameSounds.rightFootStep();
     }
-    if((keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT])) stepCount+=2;
-    else stepCount++;
-
-
   }
 }

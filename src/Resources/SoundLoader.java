@@ -1,5 +1,6 @@
 /**
  * Created by Tess Daughton, September 13th 2015
+ * Tutorial: http://www3.ntu.edu.sg/home/ehchua/programming/java/J8c_PlayingSound.html
  */
 
 package Resources;
@@ -91,8 +92,13 @@ public class SoundLoader
     if (backgroundMusic.isRunning()) backgroundMusic.stop();
   }
 
+  /**
+   * Plays sound effect for explosion
+   */
   public void playExplosionEffect()
-  { explosion.start();
+  {
+    if(explosion.isRunning()) explosion.stop();
+    explosion.setFramePosition(0);
+    explosion.start();
   }
-
 }

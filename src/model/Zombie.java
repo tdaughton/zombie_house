@@ -28,6 +28,7 @@ public class Zombie extends Movable implements Alive
   private ArrayList<Tile> path;
   private WalkType wType;
   private double theta;
+  private int x, y;
 
   // I thought maybe depending on the types of zombie, how much damage they take
   // and how much health they recover each second may differ. If makes the game

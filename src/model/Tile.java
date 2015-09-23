@@ -5,12 +5,18 @@
 
 package model;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
-public class Tile extends Rectangle
+
+//==============================================================================
+// I implemented comparable interface to implement priority queue. - Miri :)
+//==============================================================================
+public class Tile extends Rectangle implements Comparable<Tile>
 {
   protected int x, y;
   protected int type;
+
+  protected int priority; // priority will be calculated by the pathfinder.
 
   //private Rectangle bounds;
   protected int gridRow;
@@ -128,4 +134,22 @@ public class Tile extends Rectangle
     return trap;
   }
   public boolean hasTrap() { return this.hasTrap;}
+
+  //============================================================================
+  // Setter and getter of priority. Priority will be set and called by the
+  // pathfinder.
+  //============================================================================
+  public int getPriority() { return priority; }
+  public void setPriority(int priority) { this.priority = priority; }
+
+  //============================================================================
+  // Compare priority with another tile.
+  //============================================================================
+  @Override
+  public int compareTo(Tile anotherTile)
+  {
+    if(this.priority < anotherTile.getPriority()) return -1;
+    if(this.priority > anotherTile.getPriority()) return 1;
+    return 0;
+  }
 }

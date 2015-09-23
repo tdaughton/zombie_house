@@ -5,6 +5,7 @@
 
 package model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Map
@@ -83,5 +84,21 @@ public class Map
   public Tile[][] getGrid()
   {
     return this.grid;
+  }
+
+  //============================================================================
+  // This will return adjacent tiles of grid[y][x]. One tile will have maximum
+  // 4 neighboring tiles. (Zombies move only in 4 directions.)
+  //============================================================================
+  public ArrayList<Tile> getNeighbors(int x, int y)
+  {
+    ArrayList<Tile> neighbors = new ArrayList<>();
+
+    if(x-1 >= 0 && grid[y][x-1].movable) neighbors.add(grid[y][x-1]);
+    if(x+1 < COLS && grid[y][x+1].movable) neighbors.add(grid[y][x+1]);
+    if(y-1 >= 0 && grid[y-1][x].movable) neighbors.add(grid[y-1][x]);
+    if(y+1 < ROWS && grid[y+1][x].movable) neighbors.add(grid[y+1][x]);
+
+    return neighbors;
   }
 }

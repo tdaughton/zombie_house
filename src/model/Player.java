@@ -20,6 +20,7 @@ public class Player extends Movable
   // then we can use HashTable<String itemName, ArrayList<Item>> or something
   // like that.
   private int numberOfTraps;
+  private int x, y;
 
   /**
    * Full constructor
@@ -29,7 +30,7 @@ public class Player extends Movable
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Player(int x, int y, int radius, Tile location, Tile[][] grid, Enum playerOrientation)
+  public Player(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation)
   {
     super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
     //currently SpriteLoader only handles player sprites
@@ -44,6 +45,14 @@ public class Player extends Movable
   public SpriteLoader getFrames()
   {
     return frames;
+  }
+
+  public void walk(double dX, double dY, Enum direction, boolean running, double timeElapsed)
+  {
+    double xDistance = (running ? this.SPEED_MULT : 1.0f) * this.SPEED_WALK * location.getWidth() * timeElapsed * dX;
+    double yDistance = (running ? this.SPEED_MULT : 1.0f) * this.SPEED_WALK * location.getHeight() * timeElapsed * dY;
+    super.move(xDistance, yDistance, this.location, direction);
+    frames.getRotatingRun();
   }
 
   //============================================================================

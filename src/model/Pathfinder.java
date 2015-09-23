@@ -1,15 +1,17 @@
 package model;
 
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 
 //==============================================================================
 // Miri Ryu
 // CS351L-001
 //
-// This is the pathfinder class. This is not completely implemented to for our
-// project. I commentized everthing because it will return error. I will try to
-// implement this for zombies.
+// Pathfinder will pass path for each zombies to move. Zombies should get a
+// pathfinder when they are 'around' player. While zombies are 'around' player,
+// and player moves, zombies should get new path from their current tile to the
+// player. (use aStarSearch method)
 //==============================================================================
 public class Pathfinder
 {
@@ -25,7 +27,7 @@ public class Pathfinder
   {
     this.map = map;
   }
-/**
+
   //============================================================================
   // This is the a star search algorithm.
   //============================================================================
@@ -48,34 +50,28 @@ public class Pathfinder
 
       if(current == end) break;
 
-      for(Tile next : map.getNeighbors(current.getX(), current.getY()))
-      {
-        int newCost = costSoFar.get(current) + next.getCost();
+      for(Tile next :map.getNeighbors((int)current.getX(), (int)current.getY()))
+      {// If there are tiles with different cost, add next.getCost() instead of 1.
+        int newCost = costSoFar.get(current) + 1;
 
         if(!costSoFar.containsKey(next) || newCost < costSoFar.get(next))
         {
+          //TODO: It should be able to find out when there is no way to get to the end.
           costSoFar.put(next, newCost);
-          int priority = newCost + heuristic(end.getX(), end.getY(), next.getX(), next.getY());
+
+          int heuristic = heuristic((int) end.getX(), (int) end.getY(),
+                                    (int) next.getX(), (int) next.getY());
+          int priority = newCost + heuristic;
+
           next.setPriority(priority);
           frontier.add(next);
           cameFrom.put(next, current);
         }
       }
     }
-
-    System.out.println(costSoFar.get(end));
+    //System.out.println(costSoFar.get(end));
 
     return cameFrom;
-  }
-*/
-
-  //============================================================================
-  // This only helps to print out the cost. This is not very important part
-  // of the class. I will leave this to test code in the future.
-  //============================================================================
-  public int getCost()
-  {
-    return cost;
   }
 
   //============================================================================
