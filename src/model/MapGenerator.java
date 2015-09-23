@@ -80,9 +80,7 @@ public class MapGenerator
     generateRandomRoom();
     generateRandomHallway();
     generateDoorways();
-    //printMap();
-    //removeUnusedHallways();
-    //printMap();
+    removeUnusedHallways();
     translateIntoDisplayableMap();
     //printMap();
   }
@@ -118,7 +116,7 @@ public class MapGenerator
     {
       for(int j=0; j<col; j++)
       {
-        if(map[i][j] == 4)
+        if(map[i][j] == 4 && !isConnectingDoorway(j, i))
         {
           removeHallways(j, i);
         }
@@ -127,18 +125,62 @@ public class MapGenerator
   }
 
   //============================================================================
-  //
+  // This will remove hallways at
+  // 1. intersection (where two or more hallways intersect each other)
+  // 2. door (the end of the hallway)
   //============================================================================
   private void removeHallways(int x, int y)
   {
+    if(isIntersection(x, y)) return;
+
     map[y][x] = 0;
 
-    if(x-1 >= 0 && map[y][x-1] == 2) removeHallways(x-1, y);
-    if(x+1 < col-1 && map[y][x+1] == 2) removeHallways(x+1, y);
-    if(y-1 >= 0 && map[y-1][x] == 2) removeHallways(x, y-1);
-    if(y+1 < row-1 && map[y+1][x] == 2) removeHallways(x, y+1);
+    if(x-1 >= 0 && map[y][x-1] == 2)
+    {
+      removeHallways(x-1, y);
+    }
+    else if(x+1 < col-1 && map[y][x+1] == 2)
+    {
+      removeHallways(x+1, y);
+    }
+    else if(y-1 >= 0 && map[y-1][x] == 2)
+    {
+      removeHallways(x, y-1);
+    }
+    else if(y+1 < row-1 && map[y+1][x] == 2)
+    {
+      removeHallways(x, y+1);
+    }
+  }
 
-    return;
+  //============================================================================
+  // If the end of hallway tile is only the one connected to the room, it should
+  // not be removed.
+  //============================================================================
+  private boolean isConnectingDoorway(int x, int y)
+  {
+    return ((y-1 > 0 && map[y-1][x] == 8) || (y+2 < row && map[y+1][x] == 8) ||
+            (x-1 > 0 && map[y][x-1] == 8) || (x+2 < col && map[y][x+1] == 8)) &&
+           ((y-1 > 0 && map[y-1][x] == 2) || (y+2 < row && map[y+1][x] == 2) ||
+            (x-1 > 0 && map[y][x-1] == 2) || (x+2 < col && map[y][x+1] == 2));
+  }
+
+  //============================================================================
+  // If the hallway goes to multiple direction at the point, it will stop
+  // removing hallway tile there.
+  //============================================================================
+  private boolean isIntersection(int x, int y)
+  {
+    boolean a, b, c, d;
+
+    // is the hallway continuing
+    a = y-1 > 0 && map[y-1][x] == 2; // to the north?
+    b = y+2 < row && map[y+1][x] == 2; // to the south?
+    c = x-1 > 0 && map[y][x-1] == 2; // to the west?
+    d = x+2 < col && map[y][x+1] == 2; // to the east?
+
+    // return true if at least 2 of them are true
+    return a?  b || c || d : b? c || d : c && d;
   }
 
   //============================================================================
