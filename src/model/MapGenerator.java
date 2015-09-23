@@ -81,17 +81,23 @@ public class MapGenerator
     generateRandomHallway();
     generateDoorways();
     //printMap();
-    removeUnusedHallways();
+    //removeUnusedHallways();
     //printMap();
     translateIntoDisplayableMap();
     //printMap();
   }
 
+  //============================================================================
+  // Return the map.
+  //============================================================================
   public int[][] getMap()
   {
     return map;
   }
 
+  //============================================================================
+  // Search for end of the hallway and start removing.
+  //============================================================================
   private void translateIntoDisplayableMap()
   {
     for(int i=0; i<row; i++)
@@ -103,21 +109,11 @@ public class MapGenerator
     }
   }
 
-
   //============================================================================
   // Search for end of the hallway and start removing.
   //============================================================================
   private void removeUnusedHallways()
   {
-    countEndofHallways();
-  }
-
-  //============================================================================
-  // Search for end of the hallway and start removing.
-  //============================================================================
-  private int countEndofHallways()
-  {
-    int countEndOfHallway = 0;
     for(int i=0; i<row; i++)
     {
       for(int j=0; j<col; j++)
@@ -128,16 +124,19 @@ public class MapGenerator
         }
       }
     }
-    return countEndOfHallway;
   }
 
+  //============================================================================
+  //
+  //============================================================================
   private void removeHallways(int x, int y)
   {
     map[y][x] = 0;
+
     if(x-1 >= 0 && map[y][x-1] == 2) removeHallways(x-1, y);
-    else if(x+1 < col-1 && map[y][x+1] == 2) removeHallways(x+1, y);
-    else if(y-1 >= 0 && map[y-1][x] == 2) removeHallways(x, y-1);
-    else if(y+1 < row-1 && map[y+1][x] == 2) removeHallways(x, y+1);
+    if(x+1 < col-1 && map[y][x+1] == 2) removeHallways(x+1, y);
+    if(y-1 >= 0 && map[y-1][x] == 2) removeHallways(x, y-1);
+    if(y+1 < row-1 && map[y+1][x] == 2) removeHallways(x, y+1);
 
     return;
   }
@@ -159,7 +158,6 @@ public class MapGenerator
     ArrayList<Character> availableSides = getAvailableSides(room);
 
     int numDoors = 1 + random.nextInt(availableSides.size()-1);
-    int x, y;
 
     Collections.shuffle(availableSides);
 
@@ -287,6 +285,12 @@ public class MapGenerator
     int xInc = (random.nextInt(1) > 0) ? 1 : -1;
     int yInc = (random.nextInt(1) > 0) ? 1 : -1;
 
+    if (!isExtendable(x, y, 0, yInc) && !isExtendable(x, y, xInc, 0) &&
+        !isExtendable(x, y, -xInc, 0) && !isExtendable(x, y, 0, -yInc))
+    {
+      map[y][x] = 4;
+      return;
+    }
     if (isExtendable(x, y, 0, yInc))
     {
       map[y + yInc][x] = 2;
@@ -294,28 +298,27 @@ public class MapGenerator
 
       extendHallway(x, y + yInc * 2);
     }
-    else if (isExtendable(x, y, xInc, 0))
+    if (isExtendable(x, y, xInc, 0))
     {
       map[y][x + xInc] = 2;
       map[y][x + xInc * 2] = 2;
 
       extendHallway(x + xInc * 2, y);
     }
-    else if (isExtendable(x, y, -xInc, 0))
+    if (isExtendable(x, y, -xInc, 0))
     {
       map[y][x - xInc] = 2;
       map[y][x - xInc * 2] = 2;
 
       extendHallway(x - xInc * 2, y);
     }
-    else if (isExtendable(x, y, 0, -yInc))
+    if (isExtendable(x, y, 0, -yInc))
     {
       map[y - yInc][x] = 2;
       map[y - yInc * 2][x] = 2;
 
       extendHallway(x, y - yInc * 2);
     }
-    else map[y][x] = 4;
   }
 
   //============================================================================
