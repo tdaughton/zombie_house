@@ -88,12 +88,10 @@ public class MapGenerator
   }
 
   //============================================================================
-  // This will only return the finalized map composed only with 0, 1, 2, 4(to do).
+  // This will only return the finalized map composed only with
+  // 0(Wall), 1(Floor), 2(Exit), 4(Nowhere, not added yet).
   //============================================================================
-  public int[][] getMap()
-  {
-    return map;
-  }
+  public int[][] getMap() { return map; }
 
   //============================================================================
   // Map can be printed from any other class for testing.
@@ -544,11 +542,16 @@ public class MapGenerator
   }
 
   /**
-   * Testing script
+   * Test script. This is how to use this class.
+   *
    * @param args do nothing
    */
   public static void main(String[] args)
   {
     MapGenerator mg = new MapGenerator(48, 41);
+    // int[][] map = mg.getMap();
+    // to get new maze map.
+    // mg.printMap();
+    // to print out the map on the command line. Use only to test the map.
   }
 }
