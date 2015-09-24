@@ -1,5 +1,5 @@
 /**
- * Created by whoever whenever
+ * Created by Tess, TC, and Miri
  * Jar entry point for Zombie House
  */
 

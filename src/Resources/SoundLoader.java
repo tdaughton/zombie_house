@@ -1,5 +1,6 @@
 /**
  * Created by Tess Daughton, September 13th 2015
+ * SoundLoader is used for loading and playing all of ZombieHouse sound effects
  * Tutorial: http://www3.ntu.edu.sg/home/ehchua/programming/java/J8c_PlayingSound.html
  */
 

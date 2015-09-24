@@ -3,12 +3,18 @@
  * Created by Tess Daughton, September 16th, 2015
  */
 package model;
-
 import java.util.Random;
+
+/**
+ * Contains all possible grid orientations for a movable object inside of the ZombieHouseModel
+ */
 public enum GridOrientation
 { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST,SOUTHWEST;
 
-
+  /**
+   * Used to randomly orient Zombies and Player upon spawning
+   * @return some grid orientation
+   */
   public static GridOrientation pickRandomOrientation()
   {
     Random rand = new Random();

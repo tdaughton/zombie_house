@@ -17,6 +17,14 @@ public class Map
   private int tileHeight;
   private int tileWidth;
 
+  /**
+   * Represents the house
+   * @param grid
+   * @param rows
+   * @param cols
+   * @param width
+   * @param height
+   */
   public Map(Tile[][] grid, int rows, int cols, int width, int height)
   {
     this.COLS = cols;

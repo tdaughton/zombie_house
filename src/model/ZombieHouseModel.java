@@ -14,8 +14,10 @@ public class ZombieHouseModel
   private static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   protected final static int MAX_SCREEN_WIDTH = (int)userScreenSize.getWidth();
   protected final static int MAX_SCREEN_HEIGHT = (int)userScreenSize.getHeight();
-  protected final static int ROWS = 40;
-  protected final static int COLS = 40;
+  protected final static int VISIBLE_X_TILES = 12;
+  protected final static int VISIBLE_Y_TILES = 10;
+  public final static int ROWS = 40;
+  public final static int COLS = 40;
   private static final double zombieSpawnRate = 0.01;
   private static final double trapSpawnRate = 0.01;
   private Random rand = new Random();
@@ -25,32 +27,34 @@ public class ZombieHouseModel
   private Map map;
   private Tile grid[][];
   private double deltaSeconds;
+  private int currentScreenWidth;
+  private int currentScreenHeight;
 
   public ZombieHouseModel()
   {
     traps = new ArrayList<>();
     MapGenerator mapGen = new MapGenerator(40, 40);
+    this.currentScreenWidth = MAX_SCREEN_WIDTH;
+    this.currentScreenHeight = MAX_SCREEN_HEIGHT;
     //grid = this.translateTileImages(new GridReader().readGrid(), ROWS, COLS);
-    grid = this.translateTileImages(mapGen.getMap(), ROWS, COLS);
-    map = new Map(grid, ROWS, COLS, MAX_SCREEN_WIDTH / 12, MAX_SCREEN_HEIGHT / 10);
+    grid = this.translateTileImages(mapGen.getMap(), currentScreenWidth/VISIBLE_X_TILES, currentScreenHeight/VISIBLE_Y_TILES );
+    map = new Map(grid, ROWS, COLS, currentScreenWidth/VISIBLE_X_TILES, currentScreenHeight/VISIBLE_Y_TILES);
   }
 
   /**
    * This method translates a 2D int array into a 2D Tile array
    * @param grid  input 2D int array representing some tile types
-   * @param rows  height of input/output arrays
-   * @param cols  width of input/output arrays
+   * @param tileWidth  height of tile
+   * @param tileHeight  width of tile
    * @return  a 2D Tile array representing the Zombie House
    */
-  private Tile[][] translateTileImages(int[][] grid, int rows, int cols)
+  private Tile[][] translateTileImages(int[][] grid, int tileWidth, int tileHeight)
   {
-    Tile[][] tiles = new Tile[rows][cols];
-    int tileWidth = MAX_SCREEN_WIDTH/12;
-    int tileHeight = MAX_SCREEN_HEIGHT/10;
+    Tile[][] tiles = new Tile[ROWS][COLS];
 
-    for (int i = 0; i < rows; i++)
+    for (int i = 0; i < ROWS; i++)
     {
-      for (int j = 0; j < cols; j++)
+      for (int j = 0; j < COLS; j++)
       {
 //        if (grid[i][j] == 48) tiles[i][j] = new Outside(i, j, tiles);
 //        else if (grid[i][j] == 49) tiles[i][j] = new Floor(i, j, tiles);
@@ -82,6 +86,28 @@ public class ZombieHouseModel
     }
     else getRandomStart(map);
     return playerCharacter;
+  }
+
+
+
+  /**
+   * Called inside actionPerformed in ZombieHouseFrame to periodically update frame width
+   * Setter for window width
+   * @param x  new width (in pixels)
+   */
+  public void setCurrentScreenWidth(int x)
+  {
+    this.currentScreenWidth = x;
+  }
+
+  /**
+   * Called inside actionPerformed in ZombieHouseFrame to periodically update frame height
+   * Setter for window height
+   * @param y  new height (in pixels)
+   */
+  public void setCurrentScreenHeight(int y)
+  {
+    this.currentScreenHeight = y;
   }
 
   /**

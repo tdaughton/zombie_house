@@ -1,18 +1,14 @@
 /**
  * Created by Tess Daughton, September 21st 2015
- * Will use this class in combination with LinearGradientPaint class (Hopefully!)
- * to render Player's light source
+ * LightSource creates a Polygon to render a light source around the player
  */
-import java.awt.*;
-
 import model.Player;
 import model.Tile;
+import java.awt.Polygon;
 import java.awt.geom.Point2D;
-//import java.awt.MultipleGradientPaint.CycleMethod;
 
 public class LightSource extends Polygon
 {
-
   private Tile[][] grid;
   private Tile playerTile;
   private double playerSight;
@@ -22,14 +18,24 @@ public class LightSource extends Polygon
   private Point2D center;
   private float radius;
 
+  /**
+   * Constructor
+   * @param player  takes the Player object to obtain current tile and player's sight abilities for radii of polygon
+   * @param map     takes the Tile[][] map to check for obstacles to create shadows around
+   */
   public LightSource(Player player, Tile[][] map)
   {
     this.grid = map;
     this.playerTile = player.getCurrentTile();
     this.playerSight = player.getPlayerSight();
-
   }
 
+  /**
+   * Creates a polygon based on the player's sight and position in the board, as well as surrounding tiles
+   * (i.e. possible obstacles and walls need shadows)
+   * @param width  of the JPanel
+   * @param height of the JPanel
+   */
   protected void setPolygon(int width, int height)
   {
     this.light = new Polygon();
@@ -43,7 +49,7 @@ public class LightSource extends Polygon
 
     for (int deg = 0; deg < 360; deg++)
     {
-      System.out.println("(" + (((int) (Math.cos(Math.toRadians(deg))) * radius) + playerX) + ", " + (((int) (Math.sin(Math.toRadians(deg))) * radius) + playerY) + ")");
+//      System.out.println("(" + (((int) (Math.cos(Math.toRadians(deg))) * radius) + playerX) + ", " + (((int) (Math.sin(Math.toRadians(deg))) * radius) + playerY) + ")");
       double x = playerX + (Math.cos(Math.toRadians(deg))) * radius;
       double y = playerY + (Math.sin(Math.toRadians(deg))) * radius;
       light.addPoint((int)x, (int) y);
@@ -51,16 +57,28 @@ public class LightSource extends Polygon
     }
   }
 
+  /**
+   * getter for the ZombieHouseViewer class to utilize when rendering the light source
+   * @return lightSource polygon
+   */
   protected Polygon getPolygon()
   {
     return this.light;
   }
 
+  /**
+   * getter for the ZombieHouseViewer class to utilize when rendering the light source
+   * @return radius
+   */
   protected float getRadius()
   {
     return this.radius;
   }
 
+  /**
+   * getter for the ZombieHouseViewer class to utilize when rendering the light source
+   * @return centerPoint
+   */
   protected Point2D getCenter()
   {
     return this.center;

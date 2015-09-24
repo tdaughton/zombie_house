@@ -1,5 +1,6 @@
 /**
  * Created by Tess Daughton, September 13th 2015
+ * ImageLoader loads the Tile images and creates a BufferedImage map
  */
 
 package Resources;
@@ -27,24 +28,30 @@ public class ImageLoader
   private int cols;
   private int rows;
 
+  /**
+   * Constructor
+   * ImageLoader reads in the three image files for tiles necessary to create a map
+   * Then creates the background BufferedImage
+   * @param zModel
+   * @param MAX_SCREEN_WIDTH
+   * @param MAX_SCREEN_HEIGHT
+   */
   public ImageLoader(ZombieHouseModel zModel, int MAX_SCREEN_WIDTH, int MAX_SCREEN_HEIGHT)
   {
     this.MAX_SCREEN_HEIGHT = MAX_SCREEN_HEIGHT;
     this.MAX_SCREEN_WIDTH = MAX_SCREEN_WIDTH;
     this.zModel = zModel;
     this.grid = zModel.getMap().getGrid();
-    readImages();
-    initializeMap(40, 40);
-  }
-
-  public void initializeMap(int cols, int rows)
-  {
-    this.cols = cols;
-    this.rows = rows;
-
+    this.cols = ZombieHouseModel.COLS;
+    this.rows = ZombieHouseModel.ROWS;
+    this.readImages();
     this.createBackground();
   }
 
+
+  /**
+   * Uses a resource stream to load the tile images
+   */
   protected void readImages()
   {
     try
@@ -59,6 +66,9 @@ public class ImageLoader
     }
   }
 
+  /**
+   * Creates the background BufferedImage based on screen dimensions and tile rows/cols
+   */
   public void createBackground()
   {
     int tileWidth = this.MAX_SCREEN_WIDTH / 12;
@@ -79,8 +89,6 @@ public class ImageLoader
         else if (grid[i][j] instanceof Wall)
         {
           g.drawImage(this.wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
-          //g.setColor(Color.BLUE);
-          //g.drawRect(xCoord, yCoord, tileWidth, tileHeight);
         }
         else if (grid[i][j] instanceof Outside)
         {
@@ -97,6 +105,10 @@ public class ImageLoader
     }
   }
 
+  /**
+   * getter for background image
+   * @return
+   */
   public BufferedImage getBackground()
   {
     return this.background;

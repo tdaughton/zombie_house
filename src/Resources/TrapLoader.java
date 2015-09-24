@@ -1,3 +1,10 @@
+/**
+ * Created by Tess Daughton, September 20th 2015
+ * TrapLoader accesses an animation sheet for the explosion of the trap and
+ * divides it into subimages to play as a loop for the animation of the explosion
+ * TrapLoader also loads an image of a "bomb" which is how the trap is currently being represented, prior to explosion of course.
+ */
+
 package Resources;
 
 import model.Tile;
@@ -7,9 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.awt.Graphics;
 
-/**
- * Created by Tess Daughton, September 20th 2015
- */
 public class TrapLoader
 {
 
@@ -49,6 +53,13 @@ public class TrapLoader
   private int iterator=0;
 
 
+  /**
+   * Constructor
+   * Loads the explosion animation sheet and the image for the un-detonated trap
+   * Creates subimages from the explosion animation sheet
+   * Sets a variable called currentTrapImage to keep track of which image is currently being used to represent
+   * the trap (useful for when the animation is underway)
+   */
   public TrapLoader()
   {
     this.readImages();
@@ -57,7 +68,9 @@ public class TrapLoader
 
   }
 
-
+  /**
+   * Uses a resource stream to load the animation sheet and trap image
+   */
   private void readImages()
   {
     try
@@ -70,12 +83,19 @@ public class TrapLoader
     }
   }
 
-  public BufferedImage getTrap()
+  /**
+   * getter for trap buffered image
+   * @return trap image
+   */
+  public BufferedImage getCurrentTrapImage()
   {
-    return this.trap;
+    return this.currentTrapImage;
   }
 
-
+  /**
+   * sections the animation sheet into individual frames to loop
+   * during the explosion animation
+   */
   private void setExplosionSheet()
   {
     explosion1 = explosionSheet.getSubimage(163,5, 135, 125);
@@ -110,6 +130,13 @@ public class TrapLoader
     explosion30 = explosionSheet.getSubimage(907, 478, 135, 125);
     }
 
+  /**
+   * Cycles through the BufferedImages of the explosion animation using a class variable iterator
+   * @param g   Graphics object for viewer panel
+   * @param tile  Tile that the trap is being endered on
+   * @param imageLoader null
+   * @param mover   Movable object that triggered the trap
+   */
   public void getExplosionEffect(Graphics g, Tile tile, ImageLoader imageLoader, Movable mover )
   {
     if (iterator == 1) g.drawImage(explosion1, mover.getX(), mover.getY(), null);

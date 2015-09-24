@@ -1,6 +1,7 @@
 /**
  * Created by Tess Daughton, Sunday September 13th, 2015
- * This class will start the game and utilize a thread manager to run it.
+ * ZombieHouseFrame contains both the ZombieHouseModel and ZombieHouseViewer objects
+ * and acts as an intermediary between the two.
  */
 
 import Resources.SoundLoader;
@@ -24,6 +25,14 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private double deltaSeconds;
   private int stepCount;
 
+  /**
+   * Constructor
+   * Creates a ZombieHouseModel and a ZombieHouseViewer
+   * Creates a JFrame with the maximum possible dimensions of the current user
+   * Adds the ZombieHouseViewer panel into the frame
+   * Initializes and starts a timer
+   * Listens for keys pressed to dictate movement to model
+   */
   public ZombieHouseFrame()
   {
     super();
@@ -40,6 +49,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     this.setVisible(true);
 
     this.timer = new Timer(16, this);
+    this.timer.setInitialDelay(1000);
     this.timer.start();
     this.currSeconds = System.nanoTime();
 
@@ -50,9 +60,17 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     this.addComponentListener(this);
   }
 
+
   @Override
+  /**
+   * actionPerformed updates currentScreen dimensions for resizing inside of ZombieHouseViewer
+   * keeps track of time specifications
+   * updates the model every 1/60 of a second
+   * repaints the viewer when an update has been made inside of model
+   **/
   public void actionPerformed(ActionEvent e)
   {
+    this.notifyScreenSizes(); 
     prevSeconds = currSeconds;
     currSeconds = System.nanoTime();
     deltaSeconds = (currSeconds - prevSeconds) / 1000000000.0f;
@@ -114,6 +132,18 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
       default:
         break;
     }
+  }
+
+  /**
+   * Called inside actionPerformed to periodically update the
+   * currentScreenWidth and currentScreenHeight inside of the Viewer and Model
+   */
+  private void notifyScreenSizes()
+  {
+    this.zView.setCurrentScreenHeight(this.getHeight());
+    this.zView.setCurrentScreenWidth(this.getWidth());
+    this.zModel.setCurrentScreenHeight(this.getHeight());
+    this.zModel.setCurrentScreenWidth(this.getWidth());
   }
 
   /**

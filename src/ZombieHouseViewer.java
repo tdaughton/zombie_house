@@ -1,5 +1,10 @@
 /**
- * Created by L301126 on 9/18/15.
+ * Created by Tess Daughton, September 18th, 2015
+ * The ZombieHouse panel class performs the following functions:
+ * - drawing the relevant subimage of the BufferedImage background
+ * - renders the Player in the center of the subimage
+ * - renders a circular light source with radius of player sight around the player
+ * - keeps track of the ZombieHouseFrame's current height and width
  */
 
 import Resources.*;
@@ -11,7 +16,6 @@ import java.awt.geom.Area;
 
 public class ZombieHouseViewer extends JPanel
 {
-  //TODO:  establish screen width/height somehow
   private int currentScreenWidth;
   private int currentScreenHeight;
   private BufferedImage background;
@@ -32,8 +36,8 @@ public class ZombieHouseViewer extends JPanel
   {
     super();
     this.zModel = zModel;
-    this.currentScreenWidth = (int)userScreenSize.getWidth();
-    this.currentScreenHeight = (int)userScreenSize.getHeight();
+    this.currentScreenWidth = (int) userScreenSize.getWidth();
+    this.currentScreenHeight = (int) userScreenSize.getHeight();
     imageLoader = new ImageLoader(this.zModel, this.currentScreenWidth, this.currentScreenHeight);
     trapLoader=new TrapLoader();
     this.background = imageLoader.getBackground();
@@ -43,6 +47,7 @@ public class ZombieHouseViewer extends JPanel
   }
 
   /**
+   * Called inside actionPerformed in ZombieHouseFrame to periodically update frame width
    * Setter for window width
    * @param x  new width (in pixels)
    */
@@ -52,6 +57,7 @@ public class ZombieHouseViewer extends JPanel
   }
 
   /**
+   * Called inside actionPerformed in ZombieHouseFrame to periodically update frame height
    * Setter for window height
    * @param y  new height (in pixels)
    */
@@ -99,13 +105,17 @@ public class ZombieHouseViewer extends JPanel
    * @param g  Graphics system reference
    */
   private void drawSprite(Graphics g)
-  {
-    //g.setColor(Color.RED);
-    //g.drawOval(this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), playerSprite.getRadius() * 2, playerSprite.getRadius() * 2);
-    SpriteLoader sprites = playerSprite.getFrames();
+  { SpriteLoader sprites = playerSprite.getFrames();
     g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), null);
   }
 
+  /**
+   * Renders the traps with the graphics object of the background BufferedImage
+   * If a trap has a true value for boolean explosion triggered, an explosion animation is played
+   * and the trap is removed from the abstract Tile grid.
+   * The background BufferedImage is re-created so that the detonated trap will no longer be rendered.
+   * @param g   Graphics system reference
+   */
   private void drawTraps(Graphics g)
   {
     g = background.getGraphics();
@@ -116,7 +126,7 @@ public class ZombieHouseViewer extends JPanel
       {
         if (tile.hasTrap())
         {
-          g.drawImage(trapLoader.getTrap(), (int) tile.getCenterX(), (int) tile.getCenterY(), null);
+          g.drawImage(trapLoader.getCurrentTrapImage(), (int) tile.getCenterX(), (int) tile.getCenterY(), null);
           if (tile.getTrap().explosionTriggered())
           {
             //trapLoader.getExplosionEffect(g, tile, imageLoader, tile.getTrap().getMovableTrigger());
@@ -127,6 +137,12 @@ public class ZombieHouseViewer extends JPanel
   }
 
 
+  /**
+   * Utilizes a LightSource object to obtain a Polygon around the Player
+   * Fills Polygon in with RadialGradientPaint to render light source around Player
+   * Utilizes Area class to paint the area outside of the Polygon black (to render darkness)
+   * @param g  Graphics system reference
+   */
   public void drawLight(Graphics g)
   {
     Graphics2D g2 = (Graphics2D) g;
@@ -139,7 +155,7 @@ public class ZombieHouseViewer extends JPanel
     Color [] fade = {new Color(1f,1f,1f,0f), Color.BLACK};
     float [] fCen = {0.0f, 1.0f};
     RadialGradientPaint radialGradientPaint =  new RadialGradientPaint(lightSource.getCenter(), lightSource.getRadius(), fCen, fade,
-                                MultipleGradientPaint.CycleMethod.NO_CYCLE);
+                                                                        MultipleGradientPaint.CycleMethod.NO_CYCLE);
     g2.setPaint(radialGradientPaint);
     g2.draw(light);
     g2.fill(light);
@@ -151,6 +167,10 @@ public class ZombieHouseViewer extends JPanel
 
   /**
    * Overrides JPanel paintComponent to display gameplay elements
+   * Draws visiblebuffer, the subimage of the background that the player is centered on
+   * Renders the sprite in the center of this visible buffer
+   * Draws a light source surrounding the sprite
+   * Renders traps in the map
    * @param g
    */
   @Override

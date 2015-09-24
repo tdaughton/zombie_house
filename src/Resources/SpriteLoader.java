@@ -37,6 +37,13 @@ public class SpriteLoader
   public BufferedImage currentPlayerImage;
   public BufferedImage subPlayerImage;
 
+  /**
+   * Constructor
+   * Loads the running animation sheet and the idle image for the sprite
+   * Creates subimages from the running animation sheet
+   * Sets a variable called currentPlayerImage to keep track of which image is currently being used to represent
+   * the player (useful for when the animation is underway)
+   */
   public SpriteLoader()
   {
     //run = new BufferedImage[15];
@@ -48,6 +55,9 @@ public class SpriteLoader
     subPlayerImage = currentPlayerImage;
   }
 
+  /**
+   * Uses a resource stream to load the animation sheet and player image
+   */
   private void loadSprites()
   {
     try
@@ -60,6 +70,10 @@ public class SpriteLoader
     }
   }
 
+  /**
+   * sections the animation sheet into individual frames to loop
+   * during the movement animation
+   */
   private void setIndividualFrames()
   {
     /*run[0] = playerSheetRun.getSubimage(0, 0, 93, 100);
@@ -93,6 +107,10 @@ public class SpriteLoader
     run15 = playerSheetRun.getSubimage(495, 279, 93, 110);
   }
 
+  /**
+   * Cycles through the BufferedImages of the movement animation using a class variable iterator
+   * changes the value of currentPlayerImage based on the current point in the animation
+   */
   public void getRotatingRun()
   {
     //if (iterator > 14) iterator = 0;
@@ -121,6 +139,11 @@ public class SpriteLoader
     subPlayerImage = currentPlayerImage;
   }
 
+  /**
+   * currentPlayerImage is rotated depending on the map direction the player is facing
+   * @param sprite
+   * @return Returns the currentPlayerImage based on the sprite's physical orientation in the map
+   */
   public BufferedImage getCurrentPlayerImage(Player sprite)
   {
     Enum currentOrientation = sprite.getPlayerOrientation();
@@ -138,7 +161,6 @@ public class SpriteLoader
 
 
     transform.rotate(Math.toRadians(rotateDegrees), 55, 55);
-    //transform.rotate(Math.toRadians(rotateDegrees), currentPlayerImage.getWidth() / 2, currentPlayerImage.getHeight() / 2);
     AffineTransformOp rotate = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
     currentPlayerImage=rotate.filter(subPlayerImage,null);
 
