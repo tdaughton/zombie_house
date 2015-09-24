@@ -1,7 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.Stack;
 
 
 //==============================================================================
@@ -31,10 +33,11 @@ public class Pathfinder
   //============================================================================
   // This is the a star search algorithm.
   //============================================================================
-  public HashMap<Tile, Tile> aStarSearch(Tile start, Tile end)
+  public ArrayList<Tile> aStarSearch(Tile start, Tile target)
   {
     HashMap<Tile, Tile> cameFrom = new HashMap<>();
     PriorityQueue<Tile> frontier = new PriorityQueue<>();
+    ArrayList<Tile> path = new ArrayList<>();
 
     Tile current;
     costSoFar = new HashMap<>();
@@ -48,7 +51,7 @@ public class Pathfinder
     {
       current = frontier.poll();
 
-      if(current == end) break;
+      if(current == target) break;
 
       for(Tile next :map.getNeighbors((int)current.getX(), (int)current.getY()))
       {// If there are tiles with different cost, add next.getCost() instead of 1.
@@ -56,10 +59,10 @@ public class Pathfinder
 
         if(!costSoFar.containsKey(next) || newCost < costSoFar.get(next))
         {
-          //TODO: It should be able to find out when there is no way to get to the end.
+          //TODO: It should be able to find out when there is no way to get to the target.
           costSoFar.put(next, newCost);
 
-          int heuristic = heuristic((int) end.getX(), (int) end.getY(),
+          int heuristic = heuristic((int) target.getX(), (int) target.getY(),
                                     (int) next.getX(), (int) next.getY());
           int priority = newCost + heuristic;
 
@@ -69,9 +72,10 @@ public class Pathfinder
         }
       }
     }
-    //System.out.println(costSoFar.get(end));
+    //System.out.println(costSoFar.get(target));
 
-    return cameFrom;
+    //return convertIntoStack(cameFrom, target);
+    return convertIntoArrayList(cameFrom, target);
   }
 
   //============================================================================
@@ -80,5 +84,50 @@ public class Pathfinder
   private int heuristic(int x1, int y1, int x2, int y2)
   {
     return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+  }
+
+  //============================================================================
+  // Convert cameFrom into ArrayList of Tile because it is easier to iterate for
+  // zombie classes.
+  //============================================================================
+  private ArrayList<Tile> convertIntoArrayList(HashMap<Tile, Tile> cameFrom,
+                                               Tile target)
+  {
+    ArrayList<Tile> path = new ArrayList<>();
+    Tile current, next;
+    current = target;
+
+    while(cameFrom.get(current) != null)
+    {
+      // Iterate through the HashMap until it gets to the start point.
+      // But the start point is not going to be included in the path.
+      next = cameFrom.get(current);
+      path.add(current);
+      current = next;
+    }
+
+    return path;
+  }
+
+  //============================================================================
+  // Convert cameFrom into Stack of Tile because it is easier to control.
+  //============================================================================
+  private Stack<Tile> convertIntoStack(HashMap<Tile, Tile> cameFrom,
+                                       Tile target)
+  {
+    Stack<Tile> path = new Stack<>();
+    Tile current, next;
+    current = target;
+
+    while(cameFrom.get(current) != null)
+    {
+      // Iterate through the HashMap until it gets to the start point.
+      // But the start point is not going to be included in the path.
+      next = cameFrom.get(current);
+      path.push(current);
+      current = next;
+    }
+
+    return path;
   }
 }

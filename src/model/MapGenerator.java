@@ -82,9 +82,25 @@ public class MapGenerator
     generateRandomRoom();
     generateRandomHallway();
     generateDoorways();
+    locateExit();
     removeUnusedHallways();
     translateIntoDisplayableMap();
-    printMap();
+    //printMap();
+  }
+
+  private void locateExit()
+  {
+    for(int i = 0; i < row; i++)
+    {
+      for(int j = 0; j < col; j++)
+      {
+        if(map[i][j] == 4 && random.nextInt(10) > 5)
+        {
+          map[i][j] = 16;
+          return;
+        }
+      }
+    }
   }
 
   //============================================================================
