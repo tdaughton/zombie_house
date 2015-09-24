@@ -4,6 +4,8 @@
 
 package model;
 
+import Resources.SpriteLoader;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -39,6 +41,8 @@ public class Zombie extends Movable implements Alive
   private double defenceRate;
   private double damage;
   private boolean dead;
+  private Enum zombieOrientation;
+  private SpriteLoader frames;
 
   /**
    * Full constructor
@@ -53,15 +57,30 @@ public class Zombie extends Movable implements Alive
     super(x, y, radius, location, grid, zombieOrientation);
     wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
     path = new ArrayList<>();
+    frames = new SpriteLoader();
+    this.zombieOrientation=zombieOrientation;
+  }
+
+
+
+  /**
+   * Getter for Player's animation frames (sprites)
+   * @return
+   */
+  public SpriteLoader getFrames()
+  {
+    return frames;
   }
 
   /**
    * Walk in predetermined direction or path
    */
-  private void walk()
+  protected void walk(Enum direction, boolean running, double timeElapsed)
   {
-    int xNew = (int)(SPEED_WALK * Math.sin(theta));
-    int yNew = (int)(SPEED_WALK * Math.cos(theta));
+    int xNew = this.getX() + (int)(SPEED_WALK * Math.sin(theta));
+    int yNew = this.getY() + (int)(SPEED_WALK * Math.cos(theta));
+    super.move(xNew,yNew,this.location,direction);
+    getFrames().getRotatingZombieWalk();
   }
 
   /**

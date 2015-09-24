@@ -34,6 +34,7 @@ public class Player extends Movable
   {
     super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
     //currently SpriteLoader only handles player sprites
+    this.playerOrientation=playerOrientation;
     frames = new SpriteLoader();
     numberOfTraps = 0;
   }
@@ -49,8 +50,8 @@ public class Player extends Movable
 
   public void walk(double dX, double dY, Enum direction, boolean running, double timeElapsed)
   {
-    double xDistance = (running ? this.SPEED_MULT : 1.0f) * this.SPEED_WALK * location.getWidth() * timeElapsed * dX;
-    double yDistance = (running ? this.SPEED_MULT : 1.0f) * this.SPEED_WALK * location.getHeight() * timeElapsed * dY;
+    double xDistance = (running ? SPEED_MULT : 1.0f) * SPEED_WALK * location.getWidth() * timeElapsed * dX;
+    double yDistance = (running ? SPEED_MULT : 1.0f) * SPEED_WALK * location.getHeight() * timeElapsed * dY;
     super.move(xDistance, yDistance, this.location, direction);
     frames.getRotatingRun();
   }

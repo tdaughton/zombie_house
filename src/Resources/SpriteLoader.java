@@ -7,35 +7,73 @@
 package Resources;
 
 import model.GridOrientation;
+import model.Movable;
+import model.Zombie;
 import model.Player;
 import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class SpriteLoader
 {
-  public BufferedImage playerSheetRun;
-  private int iterator = 1;
+  private BufferedImage playerSheetRun;
+  private int playerIterator = 1;
+  private int zombieIterator = 1;
   //public BufferedImage[] run;
-  public BufferedImage run1;
-  public BufferedImage run2;
-  public BufferedImage run3;
-  public BufferedImage run4;
-  public BufferedImage run5;
-  public BufferedImage run6;
-  public BufferedImage run7;
-  public BufferedImage run8;
-  public BufferedImage run9;
-  public BufferedImage run10;
-  public BufferedImage run11;
-  public BufferedImage run12;
-  public BufferedImage run13;
-  public BufferedImage run14;
-  public BufferedImage run15;
-  public BufferedImage currentPlayerImage;
-  public BufferedImage subPlayerImage;
+  private BufferedImage run1;
+  private BufferedImage run2;
+  private BufferedImage run3;
+  private BufferedImage run4;
+  private BufferedImage run5;
+  private BufferedImage run6;
+  private BufferedImage run7;
+  private BufferedImage run8;
+  private BufferedImage run9;
+  private BufferedImage run10;
+  private BufferedImage run11;
+  private BufferedImage run12;
+  private BufferedImage run13;
+  private BufferedImage run14;
+  private BufferedImage run15;
+  private BufferedImage currentPlayerImage;
+  private BufferedImage subPlayerImage;
+
+  private BufferedImage zombieSheet;
+  private BufferedImage subZombiePlayerImage;
+  private ArrayList<BufferedImage> currentZombieImage = new ArrayList<>(10);
+  private BufferedImage zombie1;
+  private BufferedImage zombie2;
+  private BufferedImage zombie3;
+  private BufferedImage zombie4;
+  private BufferedImage zombie5;
+  private BufferedImage zombie6;
+  private BufferedImage zombie7;
+  private BufferedImage zombie8;
+  private BufferedImage zombie9;
+  private BufferedImage zombie10;
+  private BufferedImage zombie11;
+  private BufferedImage zombie12;
+  private BufferedImage zombie13;
+  private BufferedImage zombie14;
+  private BufferedImage zombie15;
+  private BufferedImage zombie16;
+  private BufferedImage zombie17;
+  private BufferedImage zombie18;
+  private BufferedImage zombie19;
+  private BufferedImage zombie20;
+  private BufferedImage zombie21;
+  private BufferedImage zombie22;
+  private BufferedImage zombie23;
+  private BufferedImage zombie24;
+  private BufferedImage zombie25;
+  private BufferedImage zombie26;
+  private BufferedImage zombie27;
+  private BufferedImage zombie28;
+  private BufferedImage zombie29;
+  private BufferedImage zombie30;
 
   /**
    * Constructor
@@ -48,11 +86,15 @@ public class SpriteLoader
   {
     //run = new BufferedImage[15];
     this.loadSprites();
-    this.setIndividualFrames();
+    this.setIndividualPlayerFrames();
+    this.setIndividualZombieFrames();
     run6 = playerSheetRun.getSubimage(0, 144, 93, 110);
     //currentPlayerImage = run[5];
     currentPlayerImage = run6;
     subPlayerImage = currentPlayerImage;
+   //TODO currently testing zombie sprites need to implement both
+//    currentPlayerImage = zombie1;
+//    subZombiePlayerImage=currentPlayerImage;
   }
 
   /**
@@ -63,6 +105,8 @@ public class SpriteLoader
     try
     {
       playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
+      zombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
+
     }
     catch (IOException e)
     {
@@ -74,7 +118,7 @@ public class SpriteLoader
    * sections the animation sheet into individual frames to loop
    * during the movement animation
    */
-  private void setIndividualFrames()
+  private void setIndividualPlayerFrames()
   {
     /*run[0] = playerSheetRun.getSubimage(0, 0, 93, 100);
     run[1] = playerSheetRun.getSubimage(123, 0, 93, 110);
@@ -107,6 +151,40 @@ public class SpriteLoader
     run15 = playerSheetRun.getSubimage(495, 279, 93, 110);
   }
 
+  private void setIndividualZombieFrames()
+  {
+    zombie1 = zombieSheet.getSubimage(55,9, 110, 130);
+    zombie2 = zombieSheet.getSubimage(241, 9, 110, 130);
+    zombie3 = zombieSheet.getSubimage(456, 9, 110, 130);
+    zombie4 = zombieSheet.getSubimage(666, 9, 110, 130);
+    zombie5 = zombieSheet.getSubimage(878, 9, 110, 130);
+    zombie6 = zombieSheet.getSubimage(1084, 9, 110, 130);
+    zombie7 = zombieSheet.getSubimage(1299, 9, 110, 130);
+    zombie8 = zombieSheet.getSubimage(1511, 9, 110, 130);
+    zombie9 = zombieSheet.getSubimage(1714, 9, 110, 130);
+    zombie10 = zombieSheet.getSubimage(55, 223, 110, 130);
+    zombie11 = zombieSheet.getSubimage(241, 223, 110, 130);
+    zombie12 = zombieSheet.getSubimage(456, 223, 110, 130);
+    zombie13 = zombieSheet.getSubimage(666, 223, 110, 130);
+    zombie14 = zombieSheet.getSubimage(878, 223, 110, 130);
+    zombie15 = zombieSheet.getSubimage(1084, 223, 110, 130);
+    zombie16 = zombieSheet.getSubimage(1299, 223, 110, 130);
+    zombie17 = zombieSheet.getSubimage(1511, 223, 110, 130);
+    zombie18 = zombieSheet.getSubimage(1714, 223, 110, 130);
+    zombie19 = zombieSheet.getSubimage(55, 431, 110, 130);
+    zombie20 = zombieSheet.getSubimage(241, 431, 110, 130);
+    zombie21 = zombieSheet.getSubimage(456, 431, 110, 130);
+    zombie22 = zombieSheet.getSubimage(666, 431, 110, 130);
+    zombie23 = zombieSheet.getSubimage(878, 431, 110, 130);
+    zombie24 = zombieSheet.getSubimage(1084, 431, 110, 130);
+    zombie25 = zombieSheet.getSubimage(1299, 431, 110, 130);
+    zombie26 = zombieSheet.getSubimage(1511, 431, 110, 130);
+    zombie27 = zombieSheet.getSubimage(1714, 431, 110, 130);
+    zombie28 = zombieSheet.getSubimage(55, 641, 110, 130);
+    zombie29 = zombieSheet.getSubimage(241, 641, 110, 130);
+    zombie30 = zombieSheet.getSubimage(456, 641, 110, 130);
+  }
+
   /**
    * Cycles through the BufferedImages of the movement animation using a class variable iterator
    * changes the value of currentPlayerImage based on the current point in the animation
@@ -115,27 +193,72 @@ public class SpriteLoader
   {
     //if (iterator > 14) iterator = 0;
     //currentPlayerImage = run[iterator];
-    if (iterator == 1) currentPlayerImage = run1;
-    else if (iterator == 2) currentPlayerImage = run2;
-    else if (iterator == 3) currentPlayerImage = run3;
-    else if (iterator == 4) currentPlayerImage = run4;
-    else if (iterator == 5) currentPlayerImage = run5;
-    else if (iterator == 6) currentPlayerImage = run6;
-    else if (iterator == 7) currentPlayerImage = run7;
-    else if (iterator == 8) currentPlayerImage = run8;
-    else if (iterator == 9) currentPlayerImage = run9;
-    else if (iterator == 10) currentPlayerImage = run10;
-    else if (iterator == 11) currentPlayerImage = run11;
-    else if (iterator == 12) currentPlayerImage = run12;
-    else if (iterator == 13) currentPlayerImage = run13;
-    else if (iterator == 14) currentPlayerImage = run14;
-    else if (iterator == 15)
+    if (playerIterator == 1) currentPlayerImage = run1;
+    else if (playerIterator == 2) currentPlayerImage = run2;
+    else if (playerIterator == 3) currentPlayerImage = run3;
+    else if (playerIterator == 4) currentPlayerImage = run4;
+    else if (playerIterator == 5) currentPlayerImage = run5;
+    else if (playerIterator == 6) currentPlayerImage = run6;
+    else if (playerIterator == 7) currentPlayerImage = run7;
+    else if (playerIterator == 8) currentPlayerImage = run8;
+    else if (playerIterator == 9) currentPlayerImage = run9;
+    else if (playerIterator == 10) currentPlayerImage = run10;
+    else if (playerIterator == 11) currentPlayerImage = run11;
+    else if (playerIterator == 12) currentPlayerImage = run12;
+    else if (playerIterator == 13) currentPlayerImage = run13;
+    else if (playerIterator == 14) currentPlayerImage = run14;
+    else if (playerIterator == 15)
     {
       currentPlayerImage = run15;
-      iterator=0;
+      playerIterator=0;
     }
 
-    iterator++;
+    playerIterator++;
+    subPlayerImage = currentPlayerImage;
+  }
+
+  /**
+   * Cycles through the BufferedImages of the movement animation using a class variable iterator
+   * changes the value of currentPlayerImage based on the current point in the animation
+   */
+  public void getRotatingZombieWalk()
+  {
+    if (zombieIterator == 1) currentPlayerImage = zombie1;
+    else if (zombieIterator == 2) currentPlayerImage = zombie2;
+    else if (zombieIterator == 3) currentPlayerImage = zombie3;
+    else if (zombieIterator == 4) currentPlayerImage = zombie4;
+    else if (zombieIterator == 5) currentPlayerImage = zombie5;
+    else if (zombieIterator == 6) currentPlayerImage = zombie6;
+    else if (zombieIterator == 7) currentPlayerImage = zombie7;
+    else if (zombieIterator == 8) currentPlayerImage = zombie8;
+    else if (zombieIterator == 9) currentPlayerImage = zombie9;
+    else if (zombieIterator == 10) currentPlayerImage = zombie10;
+    else if (zombieIterator == 11) currentPlayerImage = zombie11;
+    else if (zombieIterator == 12) currentPlayerImage = zombie12;
+    else if (zombieIterator == 13) currentPlayerImage = zombie13;
+    else if (zombieIterator == 14) currentPlayerImage = zombie14;
+    else if (zombieIterator == 15) currentPlayerImage = zombie15;
+    else if (zombieIterator == 16) currentPlayerImage = zombie16;
+    else if (zombieIterator == 17) currentPlayerImage = zombie17;
+    else if (zombieIterator == 18) currentPlayerImage = zombie18;
+    else if (zombieIterator == 19) currentPlayerImage = zombie19;
+    else if (zombieIterator == 20) currentPlayerImage = zombie20;
+    else if (zombieIterator == 21) currentPlayerImage = zombie21;
+    else if (zombieIterator == 22) currentPlayerImage = zombie22;
+    else if (zombieIterator == 23) currentPlayerImage = zombie23;
+    else if (zombieIterator == 24) currentPlayerImage = zombie24;
+    else if (zombieIterator == 25) currentPlayerImage = zombie25;
+    else if (zombieIterator == 26) currentPlayerImage = zombie26;
+    else if (zombieIterator == 27) currentPlayerImage = zombie27;
+    else if (zombieIterator == 28) currentPlayerImage = zombie28;
+    else if (zombieIterator == 29) currentPlayerImage = zombie29;
+    else if (zombieIterator == 30)
+    {
+      currentPlayerImage = zombie30;
+      zombieIterator=0;
+    }
+
+    zombieIterator++;
     subPlayerImage = currentPlayerImage;
   }
 
@@ -144,7 +267,7 @@ public class SpriteLoader
    * @param sprite
    * @return Returns the currentPlayerImage based on the sprite's physical orientation in the map
    */
-  public BufferedImage getCurrentPlayerImage(Player sprite)
+  public BufferedImage getCurrentPlayerImage(Movable sprite)
   {
     Enum currentOrientation = sprite.getPlayerOrientation();
     AffineTransform transform = new AffineTransform();

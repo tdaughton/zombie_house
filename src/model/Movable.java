@@ -42,12 +42,8 @@ public class Movable
    */
   public Movable(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation)
   {
-    //this.radius = radius;
-    //this.x = x + radius;
-    //this.y = y + radius;
     this.location = location;
     this.grid = grid;
-    this.playerOrientation = playerOrientation;
     this.circle = new Circle(x, y, radius);
   }
 

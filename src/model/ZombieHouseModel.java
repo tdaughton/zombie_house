@@ -138,8 +138,17 @@ public class ZombieHouseModel
   public void movePlayer(double dX, double dY, Enum dir, boolean running)
   {
     playerCharacter.walk(dX, dY, dir, running, deltaSeconds);
-    //playerCharacter.move(dX, dY, playerCharacter.getCurrentTile(), dir);
-    //playerCharacter.getFrames().getRotatingRun();
+  }
+
+  /**
+   * This method takes a displacement as int xy-coordinate pair and an orientation and tells the ArrayList of Zombie objects to move
+   */
+  public void moveZombies()
+  {
+    for(Zombie zombie: zombies)
+    {
+      zombie.walk(zombie.getPlayerOrientation(), true, deltaSeconds);
+    }
   }
 
   /**
@@ -167,6 +176,7 @@ public class ZombieHouseModel
   public void update(double timeElapsed)
   {
     this.deltaSeconds = timeElapsed;
+    //this.moveZombies();
     //TODO: update zombies
     //TODO: update player
     //TODO: check zombie-zombie intersections
