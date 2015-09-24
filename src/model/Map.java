@@ -36,6 +36,9 @@ public class Map
     random = new Random();
   }
 
+  protected void setMapGrid (Tile[][] grid)
+  {this.grid = grid;}
+
 
   //============================================================================
   // This will throw one or more traps on the floor(not wall).

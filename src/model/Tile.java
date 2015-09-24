@@ -34,7 +34,6 @@ public class Tile extends Rectangle implements Comparable<Tile>
     this.gridCol = gridCol;
     this.movable = false;
     this.hasTrap=false;
-
     this.trap = null;
   }
 
@@ -99,7 +98,7 @@ public class Tile extends Rectangle implements Comparable<Tile>
 
   public int getType()
   {
-    return type;
+    return this.type;
   }
 
   public void setType(int type)
@@ -114,12 +113,12 @@ public class Tile extends Rectangle implements Comparable<Tile>
   //============================================================================
   public void throwGrabbableTrap()
   {
-    trap = new Trap(x, y, true);
+    this.trap = new Trap(x, y, true);
   }
 
   public void removeTrap()
   {
-    trap = null;
+    this.trap = null;
     this.hasTrap=false;
   }
 
@@ -131,7 +130,7 @@ public class Tile extends Rectangle implements Comparable<Tile>
 
   public Trap getTrap()
   {
-    return trap;
+    return this.trap;
   }
   public boolean hasTrap() { return this.hasTrap;}
 
@@ -139,7 +138,7 @@ public class Tile extends Rectangle implements Comparable<Tile>
   // Setter and getter of priority. Priority will be set and called by the
   // pathfinder.
   //============================================================================
-  public int getPriority() { return priority; }
+  public int getPriority() { return this.priority; }
   public void setPriority(int priority) { this.priority = priority; }
 
   //============================================================================

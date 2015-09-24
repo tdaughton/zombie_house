@@ -2,7 +2,7 @@
  * Created by Tess Daughton, September 13th, 2015
  */
 package model;
-
+import Resources.SoundLoader;
 import javafx.scene.shape.Circle;
 import java.awt.Rectangle;
 import java.util.HashSet;
@@ -20,6 +20,7 @@ public class Movable
   protected Tile location;
   protected Tile[][] grid;
   protected Enum playerOrientation;
+  private SoundLoader soundLoader = new SoundLoader();
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
 
@@ -112,7 +113,6 @@ public class Movable
     boolean intersects = false;
     double r1 = Math.pow(otherMovable.getRadius() - this.circle.getRadius(), 2);
     double r2 = Math.pow(otherMovable.getRadius() + this.circle.getRadius(), 2);
-
     double distance = Math.pow((otherMovable.getCenterX() - this.circle.getCenterX()), 2) +
                        Math.pow((otherMovable.getCenterY() - this.circle.getCenterY()), 2);
 
@@ -161,6 +161,12 @@ public class Movable
       circle.setCenterX(xPos);
       circle.setCenterY(yPos);
       location = grid[gRow][gCol];
+
+      if(location.hasTrap)
+      {
+        soundLoader.playExplosionEffect();
+        location.getTrap().setExplosionTrigger();
+      }
     }
   }
 
@@ -200,10 +206,7 @@ public class Movable
     else if (dY > 0) gRow = gRow + 1;
     Tile nextTile = grid[gRow][gCol];
     boolean canMove = nextTile.isMovable();
-    if(nextTile.hasTrap)
-    {
-      nextTile.getTrap().setExplosionTrigger();
-    }
+
     boolean intersectsWall = moveChecker.intersects(nextTile);
     return (canMove || !intersectsWall);
   }

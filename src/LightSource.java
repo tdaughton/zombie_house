@@ -12,8 +12,8 @@ public class LightSource extends Polygon
   private Tile[][] grid;
   private Tile playerTile;
   private double playerSight;
-  private int playerX;
-  private int playerY;
+  private int originX;
+  private int originY;
   private Polygon light;
   private Point2D center;
   private float radius;
@@ -23,8 +23,10 @@ public class LightSource extends Polygon
    * @param player  takes the Player object to obtain current tile and player's sight abilities for radii of polygon
    * @param map     takes the Tile[][] map to check for obstacles to create shadows around
    */
-  public LightSource(Player player, Tile[][] map)
+  public LightSource(Player player, Tile[][] map, int x, int y)
   {
+    this.originX = x;
+    this.originY = y;
     this.grid = map;
     this.playerTile = player.getCurrentTile();
     this.playerSight = player.getPlayerSight();
@@ -39,9 +41,9 @@ public class LightSource extends Polygon
   protected void setPolygon(int width, int height)
   {
     this.light = new Polygon();
-    this.playerX = width / 2;
-    this.playerY = height / 2;
-    this.center = new Point2D.Float(playerX, playerY);
+    this.originX = width / 2;
+    this.originY = height / 2;
+    this.center = new Point2D.Float(originX, originY);
     int frameWidth = width;
     int frameHeight = height;
     radius = (float) (playerSight * Math.sqrt(((Math.pow(playerTile.getHeight(), 2))
@@ -49,9 +51,8 @@ public class LightSource extends Polygon
 
     for (int deg = 0; deg < 360; deg++)
     {
-//      System.out.println("(" + (((int) (Math.cos(Math.toRadians(deg))) * radius) + playerX) + ", " + (((int) (Math.sin(Math.toRadians(deg))) * radius) + playerY) + ")");
-      double x = playerX + (Math.cos(Math.toRadians(deg))) * radius;
-      double y = playerY + (Math.sin(Math.toRadians(deg))) * radius;
+      double x = originX + (Math.cos(Math.toRadians(deg))) * radius;
+      double y = originY + (Math.sin(Math.toRadians(deg))) * radius;
       light.addPoint((int)x, (int) y);
 
     }

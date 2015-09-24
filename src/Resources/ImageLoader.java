@@ -22,7 +22,6 @@ public class ImageLoader
   private BufferedImage outsideImage;
   private BufferedImage background;
   private ZombieHouseModel zModel;
-  private TrapLoader trapLoader = new TrapLoader();
   private Tile[][] grid;
 
   private int cols;
@@ -59,6 +58,7 @@ public class ImageLoader
       floorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor2.jpg"));
       wallImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall.png"));
       outsideImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/deadgrass.png"));
+      charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.jpg"));
     }
     catch (IOException e)
     {

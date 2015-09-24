@@ -7,6 +7,7 @@
 //==============================================================================
 
 package model;
+import Resources.TrapLoader;
 
 public class Trap
 {
@@ -14,6 +15,7 @@ public class Trap
   private boolean grabbable;
   private boolean explosionTriggered;
   private Movable movableTrigger;
+  private TrapLoader trapLoader;
 
   //============================================================================
   // Creates a trap class with x and y coordinates. Trap is only 1-tile size
@@ -25,6 +27,7 @@ public class Trap
     this.y = y;
     this.grabbable = grabbable;
     this.explosionTriggered = false;
+    this.trapLoader = new TrapLoader();
   }
 
   //============================================================================
@@ -62,4 +65,5 @@ public class Trap
   {
     return this.explosionTriggered;
   }
+  public TrapLoader getTrapLoader() { return this.trapLoader; }
 }

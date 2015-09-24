@@ -2,6 +2,7 @@
  * Created by Tess Daughton, September 13th 2015
  * SoundLoader is used for loading and playing all of ZombieHouse sound effects
  * Tutorial: http://www3.ntu.edu.sg/home/ehchua/programming/java/J8c_PlayingSound.html
+ * http://soundbible.com/473-Explosion-3.html
  */
 
 package Resources;
@@ -24,7 +25,7 @@ public class SoundLoader
     pcRightFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav");
     pcLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav");
     backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
-    explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/boom6.wav");
+    explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/explosion.wav");
   }
 
   /**

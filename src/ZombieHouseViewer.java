@@ -19,14 +19,20 @@ public class ZombieHouseViewer extends JPanel
   private int currentScreenWidth;
   private int currentScreenHeight;
   private BufferedImage background;
+  private BufferedImage foreground1;
+  private BufferedImage foreground2;
+  private BufferedImage currentForegroundSubImage;
   private ZombieHouseModel zModel;
   private ImageLoader imageLoader;
-  private TrapLoader trapLoader;
   private LightSource lightSource;
+  private LightSource explosion;
+  private SoundLoader soundLoader;
   private Player playerSprite;
+  private int switchForeground = 0;
   private int negXOffSet = 0;
   private int negYOffSet = 0;
-
+  private int backgroundWidth;
+  private int backgroundHeight;
   /**
    * Full constructor.
    * @param zModel          the ZombieHouseModel this viewer is supposed to visually present to the user
@@ -38,11 +44,15 @@ public class ZombieHouseViewer extends JPanel
     this.zModel = zModel;
     this.currentScreenWidth = (int) userScreenSize.getWidth();
     this.currentScreenHeight = (int) userScreenSize.getHeight();
-    imageLoader = new ImageLoader(this.zModel, this.currentScreenWidth, this.currentScreenHeight);
-    trapLoader=new TrapLoader();
+    this.imageLoader = new ImageLoader(this.zModel, this.currentScreenWidth, this.currentScreenHeight);
     this.background = imageLoader.getBackground();
+    this.backgroundWidth = background.getWidth();
+    this.backgroundHeight=background.getHeight();
+    this.foreground1 = new BufferedImage(backgroundWidth,backgroundHeight, BufferedImage.TYPE_INT_ARGB);
+    this.foreground2 = new BufferedImage(backgroundWidth,backgroundHeight, BufferedImage.TYPE_INT_ARGB);
     this.playerSprite = this.zModel.getPlayer();
-    this.lightSource = new LightSource(playerSprite,zModel.getMap().getGrid());
+    this.lightSource = new LightSource(playerSprite,zModel.getMap().getGrid(),backgroundWidth/2, backgroundHeight/2);
+    this.soundLoader=new SoundLoader();
 
   }
 
@@ -96,8 +106,22 @@ public class ZombieHouseViewer extends JPanel
     yMax = yMin + this.getHeight();
     if ((yMin + yMax) >= background.getHeight()) yMax = background.getHeight() - yMin;
 
-    background=imageLoader.getBackground();
+    this.currentForegroundSubImage = this.getVisibleTransparentBuffer(xMin, yMin, xMax, yMax);
     return background.getSubimage(xMin, yMin, xMax, yMax);
+  }
+
+  private BufferedImage getVisibleTransparentBuffer(int xMin, int yMin, int xMax, int yMax)
+  {
+    BufferedImage currentForeground;
+    if(switchForeground==0)
+    { currentForeground=this.foreground1;
+      switchForeground=1;
+    }
+    else
+    { currentForeground = this.foreground2;
+      switchForeground=0;
+    }
+    return currentForeground.getSubimage(xMin,yMin,xMax,yMax);
   }
 
   /**
@@ -118,7 +142,20 @@ public class ZombieHouseViewer extends JPanel
    */
   private void drawTraps(Graphics g)
   {
-    g = background.getGraphics();
+    Graphics2D g2;
+    if(switchForeground==1)
+    {
+      g2 = (Graphics2D) foreground1.getGraphics();
+      g2.setBackground(new Color(255,255,255,0));
+      g2.clearRect(0,0,backgroundWidth,backgroundHeight);
+      g = foreground2.getGraphics();
+    }
+    else
+    { g2 = (Graphics2D) foreground2.getGraphics();
+      g2.setBackground(new Color(255,255,255,0));
+      g2.clearRect(0,0,backgroundWidth,backgroundHeight);
+      g = foreground1.getGraphics();
+    }
     Tile[][] tiles = zModel.getMap().getGrid();
     for (Tile[] tileRow : tiles)
     {
@@ -126,10 +163,20 @@ public class ZombieHouseViewer extends JPanel
       {
         if (tile.hasTrap())
         {
-          g.drawImage(trapLoader.getCurrentTrapImage(), (int) tile.getCenterX(), (int) tile.getCenterY(), null);
           if (tile.getTrap().explosionTriggered())
           {
-            //trapLoader.getExplosionEffect(g, tile, imageLoader, tile.getTrap().getMovableTrigger());
+            explosion = new LightSource(playerSprite,zModel.getMap().getGrid(),(int) tile.getCenterX(),(int) tile.getCenterY());
+            drawLight(g,explosion);
+            tile.getTrap().getTrapLoader().getExplosionEffect(tile);
+            if(tile.getTrap()!=null)
+            {
+              g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getX(), (int) tile.getY(), null);
+
+            }
+          }
+          else
+          {
+            g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getCenterX(), (int) tile.getCenterY(), null);
           }
         }
       }
@@ -143,7 +190,7 @@ public class ZombieHouseViewer extends JPanel
    * Utilizes Area class to paint the area outside of the Polygon black (to render darkness)
    * @param g  Graphics system reference
    */
-  public void drawLight(Graphics g)
+  public void drawLight(Graphics g, LightSource lightSource)
   {
     Graphics2D g2 = (Graphics2D) g;
     lightSource.setPolygon(this.currentScreenWidth, this.currentScreenHeight);
@@ -155,7 +202,7 @@ public class ZombieHouseViewer extends JPanel
     Color [] fade = {new Color(1f,1f,1f,0f), Color.BLACK};
     float [] fCen = {0.0f, 1.0f};
     RadialGradientPaint radialGradientPaint =  new RadialGradientPaint(lightSource.getCenter(), lightSource.getRadius(), fCen, fade,
-                                                                        MultipleGradientPaint.CycleMethod.NO_CYCLE);
+        MultipleGradientPaint.CycleMethod.NO_CYCLE);
     g2.setPaint(radialGradientPaint);
     g2.draw(light);
     g2.fill(light);
@@ -177,8 +224,10 @@ public class ZombieHouseViewer extends JPanel
   public void paintComponent(Graphics g)
   {
     g.drawImage(this.getVisibleBuffer(), negXOffSet, negYOffSet, null);
-    this.drawSprite(g);
-    this.drawLight(g);
+    g.drawImage(currentForegroundSubImage, negXOffSet,negYOffSet,null);
     this.drawTraps(g);
+    this.drawSprite(g);
+    this.drawLight(g, lightSource);
+
   }
 }

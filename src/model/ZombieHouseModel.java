@@ -129,6 +129,12 @@ public class ZombieHouseModel
     if(traps.size()<10) setRandomTraps(map);
   }
 
+  public void setMap(Tile[][] grid)
+  {
+    map.setMapGrid(grid);
+  }
+
+
   /**
    * This method takes a displacement as int xy-coordinate pair and an orientation and tells the Player object to move
    * @param dX       X-displacement (in pixels)
