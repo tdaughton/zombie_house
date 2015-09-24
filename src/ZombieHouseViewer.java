@@ -7,6 +7,7 @@ import model.*;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.geom.Area;
 
 public class ZombieHouseViewer extends JPanel
 {
@@ -118,25 +119,35 @@ public class ZombieHouseViewer extends JPanel
           g.drawImage(trapLoader.getTrap(), (int) tile.getCenterX(), (int) tile.getCenterY(), null);
           if (tile.getTrap().explosionTriggered())
           {
-            trapLoader.getExplosionEffect(g, tile, imageLoader, tile.getTrap().getMovableTrigger());
+            //trapLoader.getExplosionEffect(g, tile, imageLoader, tile.getTrap().getMovableTrigger());
           }
         }
       }
     }
   }
 
-  private void drawLight(Graphics g)
+
+  public void drawLight(Graphics g)
   {
+    Graphics2D g2 = (Graphics2D) g;
     lightSource.setPolygon(this.currentScreenWidth, this.currentScreenHeight);
     Polygon light = lightSource.getPolygon();
-    Graphics2D g2 = (Graphics2D) g;
+    Area darkness = new Area(new Rectangle(0,0,this.currentScreenWidth,this.currentScreenHeight));
+    darkness.subtract(new Area(light));
+    g2.setColor(Color.black);
+    g2.fill(darkness);
+    Color [] fade = {new Color(1f,1f,1f,0f), Color.BLACK};
+    float [] fCen = {0.0f, 1.0f};
+    RadialGradientPaint radialGradientPaint =  new RadialGradientPaint(lightSource.getCenter(), lightSource.getRadius(), fCen, fade,
+                                MultipleGradientPaint.CycleMethod.NO_CYCLE);
+    g2.setPaint(radialGradientPaint);
     g2.draw(light);
-    GradientPaint gradientPaint=  new GradientPaint(this.getWidth()/2,this.getHeight()/2,
-                                                Color.WHITE, this.getWidth()/2+300, this.getHeight()/2+300, Color.BLACK, true );
-    g2.setPaint(gradientPaint);
     g2.fill(light);
 
   }
+
+
+
 
   /**
    * Overrides JPanel paintComponent to display gameplay elements
@@ -146,8 +157,8 @@ public class ZombieHouseViewer extends JPanel
   public void paintComponent(Graphics g)
   {
     g.drawImage(this.getVisibleBuffer(), negXOffSet, negYOffSet, null);
-    drawLight(g);
-    drawSprite(g);
-    drawTraps(g);
+    this.drawSprite(g);
+    this.drawLight(g);
+    this.drawTraps(g);
   }
 }
