@@ -88,6 +88,17 @@ public class Zombie extends Movable implements Alive
    */
   private void decisionEngine()
   {
+    // Just in case you want to use Pathfinder here:
+    // Pathfinder pf = new Pathfinder(grid);
+    // ArrayList<Tile> path = pf.aStarSearch(starting tile, target tile);
+    // for(int i=path.size(); i > 0; i++) nextTile = path.get(i) //iterate backward.
+    //
+    // Or we can use stack instead. I think stack may be easier to use.
+    // Stack path = pf.aStarSearch(starting tile, target tile)
+    // path.pop => will return the next tile to go.
+    // If you want to test stack, go to pathfinder and modify return type and
+    // return statement of aStarPathfinder. - Miri
+
     /*int pcX = player.getX();
     int pcY = player.getY();
     if (getDistanceTo(pcX, pcY) < DIST_SMELL)
