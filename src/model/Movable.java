@@ -13,7 +13,8 @@ public class Movable
 {
   private Circle circle;
   private Tile location;
-  private Tile[][] tiles;
+  //private Tile[][] tiles;
+  private ZombieHouseModel zModel;
   private Enum playerOrientation;
 
   //static copy used in boundary checking to avoid multiple instantiation
@@ -33,13 +34,14 @@ public class Movable
    * @param y                    Y coordinate of center point (in pixels)
    * @param radius               Radius of bounding circle (in pixels)
    * @param loc                  Tile location containing center point
-   * @param grid                 Reference to Zombie House map
+   * @param zhModel              Reference to Zombie House map
    * @param playerOrientation    8-way orientation
    */
-  public Movable(double x, double y, double radius, Tile loc, Tile[][] grid, Enum playerOrientation)
+  public Movable(double x, double y, double radius, Tile loc, ZombieHouseModel zhModel, Enum playerOrientation)
   {
     location = loc;
-    tiles = grid;
+    zModel = zhModel;
+    //tiles = grid;
     circle = new Circle(x, y, radius);
   }
 
@@ -150,18 +152,18 @@ public class Movable
     {
       double xPos = circle.getCenterX() + dX;
       double yPos = circle.getCenterY();
-      int gCol = (int)(xPos / location.getWidth());
-      int gRow = (int)(yPos / location.getHeight());
+      int gCol = (int)(xPos / zModel.getTileWidth());
+      int gRow = (int)(yPos / zModel.getTileHeight());
       if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
       {
         playerOrientation = orientation;
         circle.setCenterX(xPos);
         circle.setCenterY(yPos);
-        location = this.tiles[gRow][gCol];
+        location = zModel.getTile(gRow,gCol);
 
         if (location.hasTrap)
         {
-          ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+          zModel.getSoundLoader().playExplosionEffect();
           location.getTrap().setExplosionTrigger();
         }
       }
@@ -172,18 +174,18 @@ public class Movable
     {
       double xPos = circle.getCenterX();
       double yPos = circle.getCenterY() + dY;
-      int gCol = (int)(xPos / location.getWidth());
-      int gRow = (int)(yPos / location.getHeight());
+      int gCol = (int)(xPos / zModel.getTileWidth());
+      int gRow = (int)(yPos / zModel.getTileHeight());
       if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
       {
         playerOrientation = orientation;
         circle.setCenterX(xPos);
         circle.setCenterY(yPos);
-        location = this.tiles[gRow][gCol];
+        location = zModel.getTile(gRow,gCol);
 
         if (location.hasTrap)
         {
-          ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+          zModel.getSoundLoader().playExplosionEffect();
           location.getTrap().setExplosionTrigger();
         }
       }
@@ -205,8 +207,8 @@ public class Movable
     moveChecker.circle.setCenterY(yNew);
     moveChecker.circle.setRadius(circle.getRadius());
 
-    int gCol = this.location.getGridCol();
-    int gRow = this.location.getGridRow();
+    int gCol = location.getGridCol();
+    int gRow = location.getGridRow();
 
     if (dX < 0) gCol = gCol - 1;
     else if (dX > 0) gCol = gCol + 1;
@@ -214,21 +216,12 @@ public class Movable
     else if (dY > 0) gRow = gRow + 1;
     if (gRow < 40 && gCol < 40 && gRow >= 0 && gCol >= 0)
     {
-      Tile nextTile = tiles[gRow][gCol];
+      Tile nextTile = zModel.getTile(gRow,gCol);;
       boolean canMove = nextTile.isMovable();
       boolean intersectsWall = moveChecker.intersects(nextTile);
       return (canMove || !intersectsWall);
     }
     else return false;
-  }
-
-  /**
-   * Arbitrarily move to a Tile by reference.
-   * @param next  target Tile
-   */
-  public void setCurrentTile(Tile next)
-  {
-    location = next;
   }
 
   /**

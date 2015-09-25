@@ -38,8 +38,8 @@ public class ImageLoader
   public ImageLoader(ZombieHouseModel zModel, int tWidth, int tHeight)
   {
     this.zModel = zModel;
-    this.cols = ZombieHouseModel.COLS;
-    this.rows = ZombieHouseModel.ROWS;
+    this.cols = zModel.getCols();
+    this.rows = zModel.getRows();
     this.tileWidth = tWidth;
     this.tileHeight = tHeight;
     background = new BufferedImage(tileWidth * this.rows, tileHeight * this.cols, BufferedImage.TYPE_INT_RGB);

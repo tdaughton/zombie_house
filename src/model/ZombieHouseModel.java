@@ -15,16 +15,16 @@ import java.util.ArrayList;
 public class ZombieHouseModel
 {
   private static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  protected final static int MAX_SCREEN_WIDTH = (int)userScreenSize.getWidth();
-  protected final static int MAX_SCREEN_HEIGHT = (int)userScreenSize.getHeight();
-  protected final static int VISIBLE_X_TILES = 12;
-  protected final static int VISIBLE_Y_TILES = 10;
-  protected final static SoundLoader SOUNDLOADER = new SoundLoader();
-  private ImageLoader imageLoader;
-  public final static int ROWS = 40;
-  public final static int COLS = 40;
+  private final static int MAX_SCREEN_WIDTH = (int)userScreenSize.getWidth();
+  private final static int MAX_SCREEN_HEIGHT = (int)userScreenSize.getHeight();
+  private final static int VISIBLE_X_TILES = 23;
+  private final static int VISIBLE_Y_TILES = 12;
+  private final static int ROWS = 40;
+  private final static int COLS = 40;
   private static final double ZOMBIE_SPAWN_RATE = 0.1f;
   private static final double TRAP_SPAWN_RATE = 0.01f;
+  private SoundLoader soundLoader;
+  private ImageLoader imageLoader;
   private Random rand = new Random();
   private Player playerCharacter;
   private ArrayList<Zombie> zombies;
@@ -49,6 +49,7 @@ public class ZombieHouseModel
     this.grid = this.translateTileImages(mapGen.getMap());
     //this.map = new Map(tiles, ROWS, COLS);
     this.imageLoader = new ImageLoader(this, tileWidth, tileHeight);
+    this.soundLoader = new SoundLoader();
     this.setRandomTraps();
     this.initializeRandomZombies();
     playerCharacter=this.getRandomStart();
@@ -90,12 +91,10 @@ public class ZombieHouseModel
       x = rand.nextInt(COLS);
       y = rand.nextInt(ROWS);
       this.playerCharacter = new Player(this.grid[x][y].getCenterTileX(), this.grid[x][y].getCenterTileY(), this.tileHeight / 2,this.grid[x][y],
-              this.grid, GridOrientation.pickRandomOrientation(), this.imageLoader);
+              this, GridOrientation.pickRandomOrientation(), this.imageLoader);
     }
     return playerCharacter;
   }
-
-
 
   /**
    * Called inside actionPerformed in ZombieHouseFrame to periodically update frame width
@@ -105,6 +104,8 @@ public class ZombieHouseModel
   public void setCurrentScreenWidth(int x)
   {
     this.currentScreenWidth = x;
+    this.tileWidth = Math.max(currentScreenWidth/VISIBLE_X_TILES, currentScreenHeight/VISIBLE_Y_TILES);
+    this.tileHeight = tileWidth;
   }
 
   /**
@@ -115,6 +116,8 @@ public class ZombieHouseModel
   public void setCurrentScreenHeight(int y)
   {
     this.currentScreenHeight = y;
+    this.tileWidth = Math.max(currentScreenWidth/VISIBLE_X_TILES, currentScreenHeight/VISIBLE_Y_TILES);
+    this.tileHeight = tileWidth;
   }
 
   /**
@@ -122,9 +125,9 @@ public class ZombieHouseModel
    */
   private void setRandomTraps()
   {
-    for (int i = 0; i < ROWS; i++)
+    for (int i = 1; i < ROWS-1; i++)
     {
-      for (int j = 0; j < COLS; j++)
+      for (int j = 1; j < COLS-1; j++)
       {
         if (grid[i][j] instanceof Floor && rand.nextDouble() < TRAP_SPAWN_RATE)
         {
@@ -159,7 +162,7 @@ public class ZombieHouseModel
           }
           if (valid < 4 && rand.nextDouble() < ZOMBIE_SPAWN_RATE)
           {
-            Zombie zombone = new Zombie((int)grid[i][j].getCenterX(), (int)grid[i][j].getCenterY(), this.tileHeight / 2, grid[i][j], grid, GridOrientation.pickRandomOrientation(), imageLoader);
+            Zombie zombone = new Zombie((int)grid[i][j].getCenterX(), (int)grid[i][j].getCenterY(), this.tileHeight / 2, grid[i][j], this, GridOrientation.pickRandomOrientation(), imageLoader);
             zombies.add(zombone);
             System.out.println(zombone.getZType()+" Zombie at [" + i + "][" + j + "]");
           }
@@ -172,7 +175,6 @@ public class ZombieHouseModel
   {
     //map.setMapGrid(tiles);
   }*/
-
 
   /**
    * This method takes a displacement as int xy-coordinate pair and an orientation and tells the Player object to move
@@ -211,6 +213,16 @@ public class ZombieHouseModel
     }*/
   }
 
+  public int getRows()
+  {
+    return ROWS;
+  }
+
+  public int getCols()
+  {
+    return COLS;
+  }
+
   /**
    * Getter for the tile tiles
    * @return  reference to the tile array
@@ -218,6 +230,21 @@ public class ZombieHouseModel
   public Tile[][] getGrid()
   {
     return this.grid;
+  }
+
+  public Tile getTile(int gRow, int gCol)
+  {
+    return this.grid[gRow][gCol];
+  }
+
+  public int getTileWidth()
+  {
+    return this.tileWidth;
+  }
+
+  public int getTileHeight()
+  {
+    return this.tileHeight;
   }
 
   /**
@@ -242,6 +269,11 @@ public class ZombieHouseModel
   public ImageLoader getImageLoader()
   {
     return this.imageLoader;
+  }
+
+  public SoundLoader getSoundLoader()
+  {
+    return this.soundLoader;
   }
 
   public void setCharredTile(Tile tile)

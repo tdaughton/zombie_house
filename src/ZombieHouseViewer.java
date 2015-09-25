@@ -221,7 +221,7 @@ public class ZombieHouseViewer extends JPanel
       for (Zombie zombie : zombies)
       {
         SpriteLoader zombieSprite = zombie.getFrames();
-       // System.out.println("(" + zombie.getX() + ", " + zombie.getY() + ")");
+        //System.out.println("(" + zombie.getX() + ", " + zombie.getY() + ")");
         if (zombie.getZType().equals("Random")) g.setColor(Color.GREEN);
         else g.setColor(Color.RED);
         g.drawOval(zombie.getX()-zombie.getRadius(), zombie.getY()-zombie.getRadius(), 2 * zombie.getRadius(), 2 * zombie.getRadius());

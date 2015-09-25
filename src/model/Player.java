@@ -29,11 +29,11 @@ public class Player extends Movable
    * @param y                    Y coordinate of center point (in pixels)
    * @param radius               Radius of bounding circle (in pixels)
    * @param location             Tile location containing center point
-   * @param grid                 Reference to Zombie House map
+   * @param zhModel              Reference to Zombie House Model
    */
-  public Player(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation, ImageLoader imageLoader)
+  public Player(double x, double y, double radius, Tile location, ZombieHouseModel zhModel, Enum playerOrientation, ImageLoader imageLoader)
   {
-    super(x, y, radius,location,grid,playerOrientation);
+    super(x, y, radius,location,zhModel,playerOrientation);
     frames = new SpriteLoader(imageLoader);
     numberOfTraps = 0;
     stamina = STAM_MAX;
