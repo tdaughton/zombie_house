@@ -47,7 +47,7 @@ public class ZombieHouseModel
     this.tileWidth = currentScreenWidth/VISIBLE_X_TILES;
     this.tileHeight = currentScreenHeight/VISIBLE_Y_TILES;
     this.grid = this.translateTileImages(mapGen.getMap());
-    //this.map = new Map(grid, ROWS, COLS);
+    //this.map = new Map(tiles, ROWS, COLS);
     this.imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     this.setRandomTraps();
     this.initializeRandomZombies();
@@ -150,14 +150,14 @@ public class ZombieHouseModel
         valid = 0;
         if (grid[i][j] instanceof Floor)
         {
-          for (int k = i - 1; k < i + 2; k++)
+          for (int k = i-1; k < i+2; k++)
           {
-            for (int l = 1; l < j + 2; l++)
+            for (int l = j-1; l < j+2; l++)
             {
               if (this.grid[k][l] instanceof Wall) valid++;
             }
           }
-          if (valid < 5 && rand.nextDouble() < ZOMBIE_SPAWN_RATE)
+          if (valid < 4 && rand.nextDouble() < ZOMBIE_SPAWN_RATE)
           {
             Zombie zombone = new Zombie((int)grid[i][j].getCenterX(), (int)grid[i][j].getCenterY(), this.tileHeight / 2, grid[i][j], grid, GridOrientation.pickRandomOrientation(), imageLoader);
             zombies.add(zombone);
@@ -168,9 +168,9 @@ public class ZombieHouseModel
     }
   }
 
-  /*public void setMap(Tile[][] grid)
+  /*public void setMap(Tile[][] tiles)
   {
-    //map.setMapGrid(grid);
+    //map.setMapGrid(tiles);
   }*/
 
 
@@ -178,7 +178,7 @@ public class ZombieHouseModel
    * This method takes a displacement as int xy-coordinate pair and an orientation and tells the Player object to move
    * @param dX       X-displacement (in pixels)
    * @param dY       Y-displacement (in pixels)
-   * @param dir      orientation on the grid
+   * @param dir      orientation on the tiles
    */
   public void movePlayer(double dX, double dY, Enum dir, boolean running)
   {
@@ -212,7 +212,7 @@ public class ZombieHouseModel
   }
 
   /**
-   * Getter for the tile grid
+   * Getter for the tile tiles
    * @return  reference to the tile array
    */
   public Tile[][] getGrid()
@@ -246,12 +246,12 @@ public class ZombieHouseModel
 
   public void setCharredTile(Tile tile)
   {
-    System.out.println(tile.getGridRow());
+    //System.out.println(tile.getGridRow());
     int x = tile.getGridRow();
     int y = tile.getGridCol();
     for(int i = x-1; i < x+2; i++)
     {
-      for(int j=y-1; j<y+2; j++)
+      for(int j=y-1; j< y+2; j++)
       {
         if(i>=0 && j>=0 && i<40 && j<40)
         {

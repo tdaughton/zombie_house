@@ -15,14 +15,13 @@ public class Player extends Movable
   private static final double SPEED_MULT = 2.0f;
   private static final double STAM_MAX = 5.0f;
   private static final double STAM_REGEN = 0.2f;
-  //Player keeps track of its own animation frames (sprites)
   private SpriteLoader frames;
   // Inventory is going to take traps only. If there will be any other items
   // then we can use HashTable<String itemName, ArrayList<Item>> or something
   // like that.
   private int numberOfTraps;
   private double stamina;
-  private int x, y;
+  private boolean running;
 
   /**
    * Full constructor
@@ -34,9 +33,7 @@ public class Player extends Movable
    */
   public Player(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation, ImageLoader imageLoader)
   {
-    super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
-    //currently SpriteLoader only handles player sprites
-    this.playerOrientation=playerOrientation;
+    super(x, y, radius,location,grid,playerOrientation);
     frames = new SpriteLoader(imageLoader);
     numberOfTraps = 0;
     stamina = STAM_MAX;
@@ -44,7 +41,7 @@ public class Player extends Movable
 
   /**
    * Getter for Player's animation frames (sprites)
-   * @return
+   * @return sprite loader
    */
   public SpriteLoader getFrames()
   {
@@ -53,16 +50,18 @@ public class Player extends Movable
 
   public void update(double timeElapsed)
   {
-    stamina = Math.min(0,Math.max(STAM_MAX,stamina+STAM_REGEN));
+    if (!running) stamina = Math.min(STAM_MAX,stamina+STAM_REGEN);
+    stamina = Math.max(0, stamina);
   }
 
-  public void walk(double dX, double dY, Enum direction, boolean running, double timeElapsed)
+  public void walk(double dX, double dY, Enum direction, boolean boost, double timeElapsed)
   {
+    running = boost;
     stamina -= (running ? timeElapsed : 0.0f);
-    double xDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * location.getWidth() * timeElapsed * dX;
-    double yDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * location.getHeight() * timeElapsed * dY;
+    double xDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * super.getCurrentTile().getWidth() * timeElapsed * dX;
+    double yDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * super.getCurrentTile().getHeight() * timeElapsed * dY;
     //System.out.println("pxd "+xDistance+" pyd "+yDistance);
-    super.move(xDistance, yDistance, this.location, direction);
+    super.move(xDistance, yDistance, direction);
     frames.getRotatingRun();
   }
 
@@ -84,25 +83,9 @@ public class Player extends Movable
   {
     return numberOfTraps;
   }
+
   public double getPlayerSight()
   {
     return DIST_SIGHT;
-  }
-
-
-//
-//  private void setX(int x1)
-//  {
-//    this.x = x1;
-//  }
-//
-//  private void setY(int y1)
-//  {
-//    this.y = y1;
-//  }
-
-  private void setCurrentTile(int x, int y)
-  {
-    this.location = grid[x][y];
   }
 }

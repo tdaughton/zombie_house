@@ -94,7 +94,7 @@ public class Map
   }
 
   //============================================================================
-  // This will return adjacent tiles of grid[y][x]. One tile will have maximum
+  // This will return adjacent tiles of tiles[y][x]. One tile will have maximum
   // 4 neighboring tiles. (Zombies move only in 4 directions.)
   //============================================================================
   public ArrayList<Tile> getNeighbors(int x, int y)

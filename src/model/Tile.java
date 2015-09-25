@@ -29,7 +29,6 @@ public class Tile extends Rectangle implements Comparable<Tile>
 
   public Tile(int gridRow, int gridCol, Tile[][] grid)
   {
-
     this.gridRow = gridRow;
     this.gridCol = gridCol;
     this.movable = false;
@@ -132,14 +131,25 @@ public class Tile extends Rectangle implements Comparable<Tile>
   {
     return this.trap;
   }
-  public boolean hasTrap() { return this.hasTrap;}
+
+  public boolean hasTrap()
+  {
+    return this.hasTrap;
+  }
 
   //============================================================================
   // Setter and getter of priority. Priority will be set and called by the
   // pathfinder.
   //============================================================================
-  public int getPriority() { return this.priority; }
-  public void setPriority(int priority) { this.priority = priority; }
+  public int getPriority()
+  {
+    return this.priority;
+  }
+
+  public void setPriority(int priority)
+  {
+    this.priority = priority;
+  }
 
   //============================================================================
   // Compare priority with another tile.

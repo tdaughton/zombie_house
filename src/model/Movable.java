@@ -7,14 +7,15 @@ import java.awt.Rectangle;
 
 /**
  * This class represents the basic functionality of moving or movable entities in the Zombie House game.
- * This class provides the model for how entities move within the game grid and enforces collision detection.
+ * This class provides the model for how entities move within the game tiles and enforces collision detection.
  */
 public class Movable
 {
-  protected Circle circle;
-  protected Tile location;
-  protected Tile[][] grid;
-  protected Enum playerOrientation;
+  private Circle circle;
+  private Tile location;
+  private Tile[][] tiles;
+  private Enum playerOrientation;
+
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
 
@@ -31,15 +32,15 @@ public class Movable
    * @param x                    X coordinate of center point (in pixels)
    * @param y                    Y coordinate of center point (in pixels)
    * @param radius               Radius of bounding circle (in pixels)
-   * @param location             Tile location containing center point
+   * @param loc                  Tile location containing center point
    * @param grid                 Reference to Zombie House map
    * @param playerOrientation    8-way orientation
    */
-  public Movable(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation)
+  public Movable(double x, double y, double radius, Tile loc, Tile[][] grid, Enum playerOrientation)
   {
-    this.location = location;
-    this.grid = grid;
-    this.circle = new Circle(x, y, radius);
+    location = loc;
+    tiles = grid;
+    circle = new Circle(x, y, radius);
   }
 
   /**
@@ -48,7 +49,7 @@ public class Movable
    */
   public int getX()
   {
-    return (int)this.circle.getCenterX();
+    return (int)circle.getCenterX();
   }
 
   /**
@@ -57,7 +58,7 @@ public class Movable
    */
   public int getY()
   {
-    return (int)this.circle.getCenterY();
+    return (int)circle.getCenterY();
   }
 
   /**
@@ -66,7 +67,7 @@ public class Movable
    */
   public int getRadius()
   {
-    return (int)this.circle.getRadius();
+    return (int)circle.getRadius();
   }
 
   /**
@@ -75,7 +76,7 @@ public class Movable
    */
   public Enum getPlayerOrientation()
   {
-    return this.playerOrientation;
+    return playerOrientation;
   }
 
   /**
@@ -84,7 +85,7 @@ public class Movable
    */
   public Circle getBoundingCircle()
   {
-    return this.circle;
+    return circle;
   }
 
   /**
@@ -93,7 +94,7 @@ public class Movable
    */
   public Tile getCurrentTile()
   {
-    return this.location;
+    return location;
   }
 
   /**
@@ -105,10 +106,10 @@ public class Movable
   public boolean intersects(Circle otherMovable)
   {
     boolean intersects = false;
-    double r1 = Math.pow(otherMovable.getRadius() - this.circle.getRadius(), 2);
-    double r2 = Math.pow(otherMovable.getRadius() + this.circle.getRadius(), 2);
-    double distance = Math.pow((otherMovable.getCenterX() - this.circle.getCenterX()), 2) +
-                       Math.pow((otherMovable.getCenterY() - this.circle.getCenterY()), 2);
+    double r1 = Math.pow(otherMovable.getRadius() - circle.getRadius(), 2);
+    double r2 = Math.pow(otherMovable.getRadius() + circle.getRadius(), 2);
+    double distance = Math.pow((otherMovable.getCenterX() - circle.getCenterX()), 2) +
+                       Math.pow((otherMovable.getCenterY() - circle.getCenterY()), 2);
 
     if (distance >= r1 && distance <= r2) intersects = true;
 
@@ -126,13 +127,13 @@ public class Movable
   {
     double halfWidth = immovableSpace.getWidth() / 2;
     double halfHeight = immovableSpace.getHeight() / 2;
-    double r1 = Math.abs(this.circle.getCenterX() - immovableSpace.getCenterX());
-    double r2 = Math.abs(this.circle.getCenterY() - immovableSpace.getCenterY());
+    double r1 = Math.abs(circle.getCenterX() - immovableSpace.getCenterX());
+    double r2 = Math.abs(circle.getCenterY() - immovableSpace.getCenterY());
 
-    if (r1 > (halfWidth + this.circle.getRadius()) || r2 > (halfHeight + this.circle.getRadius())) return false;
+    if (r1 > (halfWidth + circle.getRadius()) || r2 > (halfHeight + circle.getRadius())) return false;
     if (r1 <= (halfWidth) || r2 <= (halfHeight)) return true;
     double cd = Math.pow(r1 - halfWidth, 2) + Math.pow(r2 - halfHeight, 2);
-    return (cd <= Math.pow(this.circle.getRadius(), 2));
+    return (cd <= Math.pow(circle.getRadius(), 2));
   }
 
   /**
@@ -140,33 +141,54 @@ public class Movable
    * displacement to check the resultant Tile's type and boundaries.
    * @param dX           X-displacement (in pixels)
    * @param dY           Y-displacement (in pixels)
-   * @param current      reference to current Tile
    * @param orientation  Orientation after moving
    */
-  public boolean move(double dX, double dY, Tile current, Enum orientation)
+  public boolean move(double dX, double dY, Enum orientation)
   {
-    boolean success = canMoveTo(dX, dY);
-    if (success)
+    boolean successX = canMoveTo(dX, 0);
+    if (successX)
     {
-      double xPos = this.circle.getCenterX() + dX;
-      double yPos = this.circle.getCenterY() + dY;
-      int gCol = (int)(xPos / this.location.getWidth());
-      int gRow = (int)(yPos / this.location.getHeight());
+      double xPos = circle.getCenterX() + dX;
+      double yPos = circle.getCenterY();
+      int gCol = (int)(xPos / location.getWidth());
+      int gRow = (int)(yPos / location.getHeight());
       if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
       {
-        this.playerOrientation = orientation;
-        this.circle.setCenterX(xPos);
-        this.circle.setCenterY(yPos);
-        this.location = this.grid[gRow][gCol];
+        playerOrientation = orientation;
+        circle.setCenterX(xPos);
+        circle.setCenterY(yPos);
+        location = this.tiles[gRow][gCol];
 
-        if (this.location.hasTrap)
+        if (location.hasTrap)
         {
           ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
-          this.location.getTrap().setExplosionTrigger();
+          location.getTrap().setExplosionTrigger();
         }
       }
     }
-    return success;
+    
+    boolean successY = canMoveTo(0, dY);
+    if (successY)
+    {
+      double xPos = circle.getCenterX();
+      double yPos = circle.getCenterY() + dY;
+      int gCol = (int)(xPos / location.getWidth());
+      int gRow = (int)(yPos / location.getHeight());
+      if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
+      {
+        playerOrientation = orientation;
+        circle.setCenterX(xPos);
+        circle.setCenterY(yPos);
+        location = this.tiles[gRow][gCol];
+
+        if (location.hasTrap)
+        {
+          ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+          location.getTrap().setExplosionTrigger();
+        }
+      }
+    }
+    return (successX & successY);
   }
 
   /**
@@ -177,26 +199,12 @@ public class Movable
    */
   protected boolean canMoveTo(double dX, double dY)
   {
-    double xNew = this.circle.getCenterX() + dX;
-    double yNew = this.circle.getCenterY() + dY;
+    double xNew = circle.getCenterX() + dX;
+    double yNew = circle.getCenterY() + dY;
     moveChecker.circle.setCenterX(xNew);
     moveChecker.circle.setCenterY(yNew);
     moveChecker.circle.setRadius(circle.getRadius());
-    /*boolean[][] intersectsWalls = new boolean[3][3];
-    int curRow = location.getGridRow();
-    int curCol = location.getGridCol();
-    Tile checkTile;
-    for (int i = 0; i < 3; i++)
-    {
-      for (int j = 0; j < 3; j++)
-      {
-        checkTile = grid[curRow+i-1][curCol+j-1];
-        intersectsWalls[i][j] = checkTile.isMovable();
-        System.out.print(intersectsWalls[i][j] + " ");
-      }
-      System.out.print("\n");
-    }
-    System.out.print("\n");*/
+
     int gCol = this.location.getGridCol();
     int gRow = this.location.getGridRow();
 
@@ -206,7 +214,7 @@ public class Movable
     else if (dY > 0) gRow = gRow + 1;
     if (gRow < 40 && gCol < 40 && gRow >= 0 && gCol >= 0)
     {
-      Tile nextTile = this.grid[gRow][gCol];
+      Tile nextTile = tiles[gRow][gCol];
       boolean canMove = nextTile.isMovable();
       boolean intersectsWall = moveChecker.intersects(nextTile);
       return (canMove || !intersectsWall);
@@ -233,7 +241,7 @@ public class Movable
   {
     double dist;
 
-    dist = Math.sqrt(Math.pow((this.circle.getCenterX() - xNew), 2) + Math.pow((this.circle.getCenterY() - yNew), 2));
+    dist = Math.sqrt(Math.pow((circle.getCenterX() - xNew), 2) + Math.pow((circle.getCenterY() - yNew), 2));
 
     return dist;
   }

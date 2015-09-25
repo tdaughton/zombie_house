@@ -136,7 +136,7 @@ public class ZombieHouseViewer extends JPanel
   private void drawSprite(Graphics g)
   {
     SpriteLoader sprites = playerSprite.getFrames();
-    g.setColor(Color.RED);
+    g.setColor(Color.CYAN);
     g.drawOval(this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), 2 * playerSprite.getRadius(), 2 * playerSprite.getRadius());
     g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), null);
   }
@@ -169,7 +169,7 @@ public class ZombieHouseViewer extends JPanel
   /**
    * Renders the traps with the graphics object of the background BufferedImage
    * If a trap has a true value for boolean explosion triggered, an explosion animation is played
-   * and the trap is removed from the abstract Tile grid.
+   * and the trap is removed from the abstract Tile tiles.
    * The background BufferedImage is re-created so that the detonated trap will no longer be rendered.
    *
    * @param g Graphics system reference
@@ -200,8 +200,8 @@ public class ZombieHouseViewer extends JPanel
           }
           else
           {
-            g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getCenterX(), (int) tile
-                .getCenterY(), null);
+            g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getCenterX(),
+                        (int) tile.getCenterY(), null);
           }
         }
       }
@@ -222,7 +222,10 @@ public class ZombieHouseViewer extends JPanel
       {
         SpriteLoader zombieSprite = zombie.getFrames();
        // System.out.println("(" + zombie.getX() + ", " + zombie.getY() + ")");
-        g.drawImage(zombieSprite.getCurrentZombieImage(zombie), zombie.getX(), zombie.getY(), null);
+        if (zombie.getZType().equals("Random")) g.setColor(Color.GREEN);
+        else g.setColor(Color.RED);
+        g.drawOval(zombie.getX()-zombie.getRadius(), zombie.getY()-zombie.getRadius(), 2 * zombie.getRadius(), 2 * zombie.getRadius());
+        g.drawImage(zombieSprite.getCurrentZombieImage(zombie), zombie.getX()-zombie.getRadius(), zombie.getY()-zombie.getRadius(), null);
       }
     }
   }
