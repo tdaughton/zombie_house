@@ -12,10 +12,10 @@ import java.io.*;
 
 public class SoundLoader
 {
-  private Clip pcRightFoot;
-  private Clip pcLeftFoot;
-  private Clip backgroundMusic;
-  private Clip explosion;
+  private static Clip pcRightFoot;
+  private static Clip pcLeftFoot;
+  private static Clip backgroundMusic;
+  private static Clip explosion;
 
   /**
    * Default constructor. Loads all (three) known sound files and keep references to them.

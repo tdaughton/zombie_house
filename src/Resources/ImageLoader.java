@@ -14,17 +14,16 @@ import java.io.IOException;
 
 public class ImageLoader
 {
-  private BufferedImage floorImage;
-  private BufferedImage charredFloorImage;
-  private BufferedImage wallImage;
-  private BufferedImage outsideImage;
-  private BufferedImage background;
+  private static BufferedImage floorImage;
+  private static BufferedImage charredFloorImage;
+  private static BufferedImage wallImage;
+  private static BufferedImage outsideImage;
+  private static BufferedImage background;
+  private static BufferedImage zombieSheet;
+  private static BufferedImage playerSheetRun;
   private ZombieHouseModel zModel;
-  private BufferedImage zombieSheet;
-  private BufferedImage playerSheetRun;
   private int tileWidth;
   private int tileHeight;
-
   private int cols;
   private int rows;
 
@@ -43,7 +42,7 @@ public class ImageLoader
     this.rows = ZombieHouseModel.ROWS;
     this.tileWidth = tWidth;
     this.tileHeight = tHeight;
-    this.background = new BufferedImage(tileWidth * this.rows, tileHeight * this.cols, BufferedImage.TYPE_INT_RGB);
+    background = new BufferedImage(tileWidth * this.rows, tileHeight * this.cols, BufferedImage.TYPE_INT_RGB);
     this.readImages();
     this.createBackground();
   }
@@ -78,7 +77,7 @@ public class ImageLoader
     Tile[][] grid = this.zModel.getGrid();
     int xCoord = 0;
     int yCoord = 0;
-    Graphics g = this.background.getGraphics();
+    Graphics g = background.getGraphics();
 
     for (int i = 0; i < this.rows; i++)
     {
@@ -86,28 +85,28 @@ public class ImageLoader
       {
         if (grid[i][j] instanceof Floor)
         {
-          g.drawImage(this.floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g.drawImage(floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
         else if (grid[i][j] instanceof Wall)
         {
-          g.drawImage(this.wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
           g.setColor(Color.BLUE);
           g.drawRect((int)grid[i][j].getX(), (int)grid[i][j].getY(), (int)grid[i][j].getWidth(), (int)grid[i][j].getHeight());
         }
         else if (grid[i][j] instanceof Outside)
         {
-          g.drawImage(this.outsideImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g.drawImage(outsideImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
         else if (grid[i][j] instanceof CharredFloorTile )
         {
-          g.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g.drawImage(charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
           /*Graphics2D g2 = (Graphics2D) g;
           g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
           g2.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);*/
         }
         else
         {
-          g.drawImage(this.outsideImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g.drawImage(outsideImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
         xCoord += tileWidth;
       }
@@ -122,17 +121,16 @@ public class ImageLoader
    */
   public BufferedImage getBackground()
   {
-    return this.background;
+    return background;
   }
 
   public BufferedImage getZombieSheet()
   {
-    return this.zombieSheet;
+    return zombieSheet;
   }
 
   public BufferedImage getPlayerSheetRun()
   {
-    return this.playerSheetRun;
+    return playerSheetRun;
   }
-
 }
