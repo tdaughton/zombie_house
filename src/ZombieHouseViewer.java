@@ -50,7 +50,7 @@ public class ZombieHouseViewer extends JPanel
     this.foreground1 = new BufferedImage(backgroundWidth, backgroundHeight, BufferedImage.TYPE_INT_ARGB);
     this.foreground2 = new BufferedImage(backgroundWidth, backgroundHeight, BufferedImage.TYPE_INT_ARGB);
     this.playerSprite = this.zModel.getPlayer();
-    this.lightSource = new LightSource(playerSprite, zModel.getMap().getGrid(), backgroundWidth / 2, backgroundHeight / 2);
+    this.lightSource = new LightSource(playerSprite, zModel.getGrid(), backgroundWidth / 2, backgroundHeight / 2);
 
   }
 
@@ -136,6 +136,8 @@ public class ZombieHouseViewer extends JPanel
   private void drawSprite(Graphics g)
   {
     SpriteLoader sprites = playerSprite.getFrames();
+    g.setColor(Color.RED);
+    g.drawOval(this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), 2 * playerSprite.getRadius(), 2 * playerSprite.getRadius());
     g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), null);
   }
 
@@ -174,7 +176,7 @@ public class ZombieHouseViewer extends JPanel
    */
   private void drawTraps(Graphics g)
   {
-    Tile[][] tiles = zModel.getMap().getGrid();
+    Tile[][] tiles = zModel.getGrid();
     for (Tile[] tileRow : tiles)
     {
       for (Tile tile : tileRow)

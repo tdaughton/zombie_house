@@ -55,6 +55,7 @@ public class Trap
   {
     this.explosionTriggered=true;
   }
+
   public void setExplosionFinished()
   {
     this.explosionFinished=true;
@@ -69,9 +70,14 @@ public class Trap
   {
     return this.explosionFinished;
   }
+
   public boolean explosionTriggered()
   {
     return this.explosionTriggered;
   }
-  public TrapLoader getTrapLoader() { return this.trapLoader; }
+
+  public TrapLoader getTrapLoader()
+  {
+    return this.trapLoader;
+  }
 }

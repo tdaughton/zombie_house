@@ -25,7 +25,7 @@ public class SoundLoader
     pcRightFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav");
     pcLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav");
     backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
-    explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/explosion.wav");
+    explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/boom1.wav");
   }
 
   /**

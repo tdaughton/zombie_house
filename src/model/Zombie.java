@@ -31,6 +31,8 @@ public class Zombie extends Movable implements Alive
   private ArrayList<Tile> path;
   private WalkType wType;
   private double theta;
+  private double timeSinceUpdate;
+  private boolean bumped;
 
   // I thought maybe depending on the types of zombie, how much damage they take
   // and how much health they recover each second may differ. If makes the game
@@ -55,13 +57,13 @@ public class Zombie extends Movable implements Alive
   public Zombie(int x, int y, int radius, Tile location, Tile[][] grid, Enum zombieOrientation, ImageLoader imageLoader)
   {
     super(x, y, radius, location, grid, zombieOrientation);
-    wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
-    path = new ArrayList<>();
-    frames = new SpriteLoader(imageLoader);
+    this.wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
+    this.path = new ArrayList<>();
+    this.frames = new SpriteLoader(imageLoader);
     this.zombieOrientation=zombieOrientation;
+    this.theta = rng.nextDouble() * 2.0f * Math.PI;
+    this.timeSinceUpdate = 0.0f;
   }
-
-
 
   /**
    * Getter for Player's animation frames (sprites)
@@ -72,15 +74,42 @@ public class Zombie extends Movable implements Alive
     return frames;
   }
 
+  public String getZType()
+  {
+    if (this.wType == WalkType.RANDOM) return "Random";
+    return "Line";
+  }
+
   /**
    * Walk in predetermined direction or path
    */
   protected void walk(Enum direction, double timeElapsed)
   {
-    double xDistance = (int)(SPEED_WALK * Math.sin(theta));
-    double yDistance = (int)(SPEED_WALK * Math.cos(theta));
-    super.move(xDistance,yDistance,this.location,direction);
+    double xDistance = (SPEED_WALK * this.location.getWidth() * Math.sin(this.theta));
+    double yDistance = (SPEED_WALK * this.location.getHeight() * Math.cos(this.theta));
+    //System.out.println("zxd "+xDistance+" zyd "+yDistance);
+    if (this.theta < 0.40f || this.theta > 5.90f) direction = GridOrientation.EAST;
+    else if (1.19f < this.theta && this.theta < 0.40f) direction = GridOrientation.NORTHEAST;
+    else if (1.97f < this.theta && this.theta < 1.19f) direction = GridOrientation.NORTH;
+    else if (2.76f < this.theta && this.theta < 1.97f) direction = GridOrientation.NORTHWEST;
+    else if (3.54f < this.theta && this.theta < 2.76f) direction = GridOrientation.WEST;
+    else if (4.33f < this.theta && this.theta < 3.54f) direction = GridOrientation.SOUTHWEST;
+    else if (5.11f < this.theta && this.theta < 4.33f) direction = GridOrientation.SOUTH;
+    else if (5.90f < this.theta && this.theta < 5.11f) direction = GridOrientation.SOUTHEAST;
+    if (!this.bumped) this.bumped = super.move(xDistance, yDistance, this.location, direction);
+    else super.move(xDistance, yDistance, this.location, direction);
     getFrames().getRotatingZombieWalk();
+  }
+
+  public void update(double timeElapsed)
+  {
+    this.timeSinceUpdate += timeElapsed;
+    if (this.timeSinceUpdate > RATE_ACT)
+    {
+      this.timeSinceUpdate = 0.0f;
+      decisionEngine();
+    }
+    this.walk(this.zombieOrientation, timeElapsed);
   }
 
   /**
@@ -103,28 +132,29 @@ public class Zombie extends Movable implements Alive
     int pcY = player.getY();
     if (getDistanceTo(pcX, pcY) < DIST_SMELL)
     {
-      int pCol = (int)(pcX / location.getBounds().getWidth());
-      int pRow = (int)(pcY / location.getBounds().getHeight());
+      int pCol = (int)(pcX / location.getWidth());
+      int pRow = (int)(pcY / location.getHeight());
       path = aStar(location, grid[pRow][pCol]);
     }
     else
     {*/
-    if (this.wType==WalkType.RANDOM)
+    if (this.wType == WalkType.RANDOM || this.bumped)
     {
-      theta = rng.nextDouble() * Math.PI * 2.0;
+      this.theta = rng.nextDouble() * Math.PI * 2.0f;
+      this.bumped = false;
     }
-    double nextX = SPEED_WALK * Math.sin(Math.toRadians(theta));// + x);
-    double nextY = SPEED_WALK * Math.cos(Math.toRadians(theta));// + y);
+    /*double nextX = this.SPEED_WALK * this.location.getWidth() * Math.sin(this.theta);// + x);
+    double nextY = this.SPEED_WALK * this.location.getHeight() * Math.cos(this.theta);// + y);
     if (canMoveTo(nextX, nextY))
     {
-      int nextCol = (int)(nextX / location.getBounds().getWidth());
-      int nextRow = (int)(nextY / location.getBounds().getHeight());
-      path.add(grid[nextRow][nextCol]);
+      int nextCol = Math.min(0, Math.max(40,(int)(nextX / this.location.getWidth())));
+      int nextRow = Math.min(0,Math.max(40,(int)(nextY / this.location.getHeight())));
+      this.path.add(this.grid[nextRow][nextCol]);
     }
     else if (this.wType == WalkType.LINE)
     {
-      theta = rng.nextDouble() * Math.PI * 2.0;
-    }
+      this.theta = rng.nextDouble() * Math.PI * 2.0;
+    }*/
     //}
   }
 

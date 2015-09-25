@@ -14,8 +14,6 @@ import java.io.IOException;
 
 public class ImageLoader
 {
-  private final int MAX_SCREEN_HEIGHT;
-  private final int MAX_SCREEN_WIDTH;
   private BufferedImage floorImage;
   private BufferedImage charredFloorImage;
   private BufferedImage wallImage;
@@ -24,7 +22,6 @@ public class ImageLoader
   private ZombieHouseModel zModel;
   private BufferedImage zombieSheet;
   private BufferedImage playerSheetRun;
-  private Tile[][] grid;
   private int tileWidth;
   private int tileHeight;
 
@@ -36,18 +33,16 @@ public class ImageLoader
    * ImageLoader reads in the three image files for tiles necessary to create a map
    * Then creates the background BufferedImage
    * @param zModel
-   * @param MAX_SCREEN_WIDTH
-   * @param MAX_SCREEN_HEIGHT
+   * @param tWidth
+   * @param tHeight
    */
-  public ImageLoader(ZombieHouseModel zModel, int MAX_SCREEN_WIDTH, int MAX_SCREEN_HEIGHT)
+  public ImageLoader(ZombieHouseModel zModel, int tWidth, int tHeight)
   {
-    this.MAX_SCREEN_HEIGHT = MAX_SCREEN_HEIGHT;
-    this.MAX_SCREEN_WIDTH = MAX_SCREEN_WIDTH;
     this.zModel = zModel;
     this.cols = ZombieHouseModel.COLS;
     this.rows = ZombieHouseModel.ROWS;
-    this.tileWidth = this.MAX_SCREEN_WIDTH / 12;
-    this.tileHeight = this.MAX_SCREEN_HEIGHT / 10;
+    this.tileWidth = tWidth;
+    this.tileHeight = tHeight;
     this.background = new BufferedImage(tileWidth * this.rows, tileHeight * this.cols, BufferedImage.TYPE_INT_RGB);
     this.readImages();
     this.createBackground();
@@ -64,7 +59,7 @@ public class ImageLoader
       floorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor2.jpg"));
       wallImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall.png"));
       outsideImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/deadgrass.png"));
-      charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.jpg"));
+      charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.png"));
       playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
       zombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
     }
@@ -80,7 +75,7 @@ public class ImageLoader
    */
   public void createBackground()
   {
-    grid = zModel.getMap().getGrid();
+    Tile[][] grid = this.zModel.getGrid();
     int xCoord = 0;
     int yCoord = 0;
     Graphics g = this.background.getGraphics();
@@ -96,6 +91,8 @@ public class ImageLoader
         else if (grid[i][j] instanceof Wall)
         {
           g.drawImage(this.wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g.setColor(Color.BLUE);
+          g.drawRect((int)grid[i][j].getX(), (int)grid[i][j].getY(), (int)grid[i][j].getWidth(), (int)grid[i][j].getHeight());
         }
         else if (grid[i][j] instanceof Outside)
         {
@@ -103,10 +100,10 @@ public class ImageLoader
         }
         else if (grid[i][j] instanceof CharredFloorTile )
         {
-          g.drawImage(this.floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
-          Graphics2D g2 = (Graphics2D) g;
+          g.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          /*Graphics2D g2 = (Graphics2D) g;
           g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
-          g2.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g2.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);*/
         }
         else
         {
@@ -127,6 +124,7 @@ public class ImageLoader
   {
     return this.background;
   }
+
   public BufferedImage getZombieSheet()
   {
     return this.zombieSheet;

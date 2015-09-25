@@ -18,7 +18,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private final static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   private ZombieHouseModel zModel;
   private ZombieHouseViewer zView;
-  private ImageLoader imageLoader;
+
   private SoundLoader gameSounds;
   private Timer timer;
   private boolean[] keysPressed;
@@ -26,6 +26,8 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private long currSeconds;
   private double deltaSeconds;
   private int stepCount;
+  private int curScreenWidth;
+  private int curScreenHeight;
 
   /**
    * Constructor
@@ -72,7 +74,6 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    **/
   public void actionPerformed(ActionEvent e)
   {
-    this.notifyScreenSizes(); 
     prevSeconds = currSeconds;
     currSeconds = System.nanoTime();
     deltaSeconds = (currSeconds - prevSeconds) / 1000000000.0f;
@@ -84,7 +85,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   @Override
   public void componentResized(ComponentEvent e)
   {
-    //System.out.println(zView.getWidth() + " " + zView.getHeight());
+    this.notifyScreenSizes();
   }
 
   @Override
@@ -142,10 +143,12 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    */
   private void notifyScreenSizes()
   {
-    this.zView.setCurrentScreenHeight(this.getHeight());
-    this.zView.setCurrentScreenWidth(this.getWidth());
-    this.zModel.setCurrentScreenHeight(this.getHeight());
-    this.zModel.setCurrentScreenWidth(this.getWidth());
+    curScreenWidth = zView.getWidth();
+    curScreenHeight = zView.getHeight();
+    this.zView.setCurrentScreenHeight(curScreenHeight);
+    this.zView.setCurrentScreenWidth(curScreenWidth);
+    this.zModel.setCurrentScreenHeight(curScreenHeight);
+    this.zModel.setCurrentScreenWidth(curScreenWidth);
   }
 
   /**

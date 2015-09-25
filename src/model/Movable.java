@@ -2,10 +2,8 @@
  * Created by Tess Daughton, September 13th, 2015
  */
 package model;
-import Resources.SoundLoader;
 import javafx.scene.shape.Circle;
 import java.awt.Rectangle;
-import java.util.HashSet;
 
 /**
  * This class represents the basic functionality of moving or movable entities in the Zombie House game.
@@ -13,9 +11,6 @@ import java.util.HashSet;
  */
 public class Movable
 {
-  //protected int x;
-  //protected int y;
-  //protected int radius;
   protected Circle circle;
   protected Tile location;
   protected Tile[][] grid;
@@ -148,28 +143,30 @@ public class Movable
    * @param current      reference to current Tile
    * @param orientation  Orientation after moving
    */
-  public void move(double dX, double dY, Tile current, Enum orientation)
+  public boolean move(double dX, double dY, Tile current, Enum orientation)
   {
-    if (canMoveTo(dX, dY))
+    boolean success = canMoveTo(dX, dY);
+    if (success)
     {
       double xPos = this.circle.getCenterX() + dX;
       double yPos = this.circle.getCenterY() + dY;
-      int gCol = (int)(xPos / location.getBounds().getWidth());
-      int gRow = (int)(yPos / location.getBounds().getHeight());
+      int gCol = (int)(xPos / this.location.getWidth());
+      int gRow = (int)(yPos / this.location.getHeight());
       if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
       {
-        playerOrientation = orientation;
-        circle.setCenterX(xPos);
-        circle.setCenterY(yPos);
-        location = grid[gRow][gCol];
+        this.playerOrientation = orientation;
+        this.circle.setCenterX(xPos);
+        this.circle.setCenterY(yPos);
+        this.location = this.grid[gRow][gCol];
 
-        if (location.hasTrap)
+        if (this.location.hasTrap)
         {
           ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
-          location.getTrap().setExplosionTrigger();
+          this.location.getTrap().setExplosionTrigger();
         }
       }
     }
+    return success;
   }
 
   /**
@@ -200,16 +197,16 @@ public class Movable
       System.out.print("\n");
     }
     System.out.print("\n");*/
-    int gCol = location.getGridCol();
-    int gRow = location.getGridRow();
+    int gCol = this.location.getGridCol();
+    int gRow = this.location.getGridRow();
 
-      if (dX < 0) gCol = gCol - 1;
-      else if (dX > 0) gCol = gCol + 1;
-      if (dY < 0) gRow = gRow - 1;
-      else if (dY > 0) gRow = gRow + 1;
-    if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
+    if (dX < 0) gCol = gCol - 1;
+    else if (dX > 0) gCol = gCol + 1;
+    if (dY < 0) gRow = gRow - 1;
+    else if (dY > 0) gRow = gRow + 1;
+    if (gRow < 40 && gCol < 40 && gRow >= 0 && gCol >= 0)
     {
-      Tile nextTile = grid[gRow][gCol];
+      Tile nextTile = this.grid[gRow][gCol];
       boolean canMove = nextTile.isMovable();
       boolean intersectsWall = moveChecker.intersects(nextTile);
       return (canMove || !intersectsWall);
@@ -225,8 +222,6 @@ public class Movable
   {
     location = next;
   }
-
-
 
   /**
    * Calculate straight-line distance to arbitary xy-coordinate.

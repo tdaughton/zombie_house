@@ -14,30 +14,26 @@ public class Map
   private final int COLS;
   private final int ROWS;
   private Tile[][] grid;
-  private int tileHeight;
-  private int tileWidth;
 
   /**
    * Represents the house
    * @param grid
    * @param rows
    * @param cols
-   * @param width
-   * @param height
    */
-  public Map(Tile[][] grid, int rows, int cols, int width, int height)
+  public Map(Tile[][] grid, int rows, int cols)
   {
     this.COLS = cols;
     this.ROWS = rows;
     this.grid = grid;
-    this.tileHeight = height;
-    this.tileWidth = width;
 
     random = new Random();
   }
 
   protected void setMapGrid (Tile[][] grid)
-  {this.grid = grid;}
+  {
+    this.grid = grid;
+  }
 
 
   //============================================================================

@@ -21,6 +21,7 @@ public class Player extends Movable
   // then we can use HashTable<String itemName, ArrayList<Item>> or something
   // like that.
   private int numberOfTraps;
+  private double stamina;
   private int x, y;
 
   /**
@@ -38,6 +39,7 @@ public class Player extends Movable
     this.playerOrientation=playerOrientation;
     frames = new SpriteLoader(imageLoader);
     numberOfTraps = 0;
+    stamina = STAM_MAX;
   }
 
   /**
@@ -49,10 +51,17 @@ public class Player extends Movable
     return frames;
   }
 
+  public void update(double timeElapsed)
+  {
+    stamina = Math.min(0,Math.max(STAM_MAX,stamina+STAM_REGEN));
+  }
+
   public void walk(double dX, double dY, Enum direction, boolean running, double timeElapsed)
   {
-    double xDistance = (running ? SPEED_MULT : 1.0f) * SPEED_WALK * location.getWidth() * timeElapsed * dX;
-    double yDistance = (running ? SPEED_MULT : 1.0f) * SPEED_WALK * location.getHeight() * timeElapsed * dY;
+    stamina -= (running ? timeElapsed : 0.0f);
+    double xDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * location.getWidth() * timeElapsed * dX;
+    double yDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * location.getHeight() * timeElapsed * dY;
+    //System.out.println("pxd "+xDistance+" pyd "+yDistance);
     super.move(xDistance, yDistance, this.location, direction);
     frames.getRotatingRun();
   }
