@@ -145,9 +145,9 @@ public class ZombieHouseModel
 
     if(map[x][y] instanceof Floor)
     {
-      for (int i = x; i < x + 2; i++)
+      for (int i = x-1; i < (x + 2); i++)
       {
-        for (int j = y; j < x + 2; j++)
+        for (int j = y-1; j < (y + 2); j++)
         {
           if ((map[i][j]) instanceof Wall) valid = false;
         }
@@ -191,6 +191,20 @@ public class ZombieHouseModel
   }
 
   /**
+   * This method takes a displacement as int xy-coordinate pair and an orientation and tells the ArrayList of Zombie objects to move
+   */
+  public void checkTraps()
+  {
+    for(Trap trap: traps)
+    {
+      if(trap.explosionTriggered())
+      {
+        //
+      }
+    }
+  }
+
+  /**
    * Getter for the map object
    * @return  reference to the Map
    */
@@ -220,6 +234,22 @@ public class ZombieHouseModel
     return this.imageLoader;
   }
 
+  public void setCharredTile(Tile tile)
+  {
+    System.out.println(tile.getGridRow());
+    int x = tile.getGridRow();
+    int y = tile.getGridCol();
+    for(int i = x-1; i < x+2; i++)
+    {
+      for(int j=y-1; j<y+2; j++)
+      {
+        if(i>=0 && j>=0 && i<40 && j<40) grid[i][j] = new CharredFloorTile(i,j,grid);
+      }
+    }
+    this.setMap(grid);
+    System.out.println(tile.getGridRow());
+
+  }
 
 
   /**
@@ -230,6 +260,7 @@ public class ZombieHouseModel
   {
     this.deltaSeconds = timeElapsed;
     this.moveZombies();
+    this.checkTraps();
     //TODO: update zombies
     //TODO: update player
     //TODO: check zombie-zombie intersections

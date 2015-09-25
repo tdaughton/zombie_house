@@ -13,6 +13,7 @@ public class Trap
 {
   private int x, y;
   private boolean grabbable;
+  private boolean explosionFinished;
   private boolean explosionTriggered;
   private Movable movableTrigger;
   private TrapLoader trapLoader;
@@ -27,6 +28,7 @@ public class Trap
     this.y = y;
     this.grabbable = grabbable;
     this.explosionTriggered = false;
+    this.explosionFinished = false;
     this.trapLoader = new TrapLoader();
   }
 
@@ -53,13 +55,19 @@ public class Trap
   {
     this.explosionTriggered=true;
   }
+  public void setExplosionFinished()
+  {
+    this.explosionFinished=true;
+  }
+
   public void setMovableTrigger(Movable mover)
   {
     this.movableTrigger=mover;
   }
-  public Movable getMovableTrigger()
+
+  public Boolean getExplosionFinished()
   {
-    return this.movableTrigger;
+    return this.explosionFinished;
   }
   public boolean explosionTriggered()
   {

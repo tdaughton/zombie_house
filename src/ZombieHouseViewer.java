@@ -8,6 +8,7 @@
  */
 
 import Resources.*;
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import model.*;
 import javax.swing.JPanel;
 import java.awt.*;
@@ -107,6 +108,7 @@ public class ZombieHouseViewer extends JPanel
     if ((yMin + yMax) >= background.getHeight()) yMax = background.getHeight() - yMin;
 
     this.currentForegroundSubImage = this.getVisibleTransparentBuffer(xMin, yMin, xMax, yMax);
+    this.background = zModel.getImageLoader().getBackground();
     return background.getSubimage(xMin, yMin, xMax, yMax);
   }
 
@@ -137,7 +139,12 @@ public class ZombieHouseViewer extends JPanel
     g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), null);
   }
 
-  private Graphics getForegroundGraphics(Graphics g)
+  /**
+   * switches between foreground bufferedimages
+   * clears out the past frame inside the foreground bufferedimage previously used
+   * @return  g2 Graphics reference for relevant foreground buffer
+   */
+  private Graphics getForegroundGraphics()
   {
     Graphics2D g2;
     if (switchForeground == 1)
@@ -145,16 +152,16 @@ public class ZombieHouseViewer extends JPanel
       g2 = (Graphics2D) foreground1.getGraphics();
       g2.setBackground(new Color(255, 255, 255, 0));
       g2.clearRect(0, 0, backgroundWidth, backgroundHeight);
-      g = foreground2.getGraphics();
+      g2 = (Graphics2D) foreground2.getGraphics();
     }
     else
     {
       g2 = (Graphics2D) foreground2.getGraphics();
       g2.setBackground(new Color(255, 255, 255, 0));
       g2.clearRect(0, 0, backgroundWidth, backgroundHeight);
-      g = foreground1.getGraphics();
+      g2 = (Graphics2D) foreground1.getGraphics();
     }
-    return g;
+    return g2;
   }
 
   /**
@@ -176,24 +183,34 @@ public class ZombieHouseViewer extends JPanel
         {
           if (tile.getTrap().explosionTriggered())
           {
-//            explosion = new LightSource(playerSprite,zModel.getMap().getGrid(),(int) tile.getCenterX(),(int) tile.getCenterY());
-//            drawLight(g,explosion);
             tile.getTrap().getTrapLoader().getExplosionEffect(tile);
             if (tile.getTrap() != null)
             {
               g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getX(), (int) tile.getY(), null);
-
+            }
+            if(tile.getTrap().getExplosionFinished())
+            {
+              tile.removeTrap();
+              zModel.setCharredTile(tile);
+              zModel.getImageLoader().createBackground();
+              this.background = zModel.getImageLoader().getBackground();
             }
           }
           else
           {
-            g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getCenterX(), (int) tile.getCenterY(), null);
+            g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getCenterX(), (int) tile
+                .getCenterY(), null);
           }
         }
       }
     }
   }
 
+  /**
+   * Iterates through the ArrayList of zombies located inside of zModel and draws them at their current location inside the bufferedimage
+   * on the relevant transparent buffer
+   * @param g
+   */
   private void drawZombies(Graphics g)
   {
     ArrayList<Zombie> zombies = zModel.getZombieList();
@@ -202,7 +219,7 @@ public class ZombieHouseViewer extends JPanel
       for (Zombie zombie : zombies)
       {
         SpriteLoader zombieSprite = zombie.getFrames();
-        System.out.println("(" + zombie.getX() + ", " + zombie.getY() + ")");
+       // System.out.println("(" + zombie.getX() + ", " + zombie.getY() + ")");
         g.drawImage(zombieSprite.getCurrentZombieImage(zombie), zombie.getX(), zombie.getY(), null);
       }
     }
@@ -234,9 +251,6 @@ public class ZombieHouseViewer extends JPanel
 
   }
 
-
-
-
   /**
    * Overrides JPanel paintComponent to display gameplay elements
    * Draws visiblebuffer, the subimage of the background that the player is centered on
@@ -252,7 +266,7 @@ public class ZombieHouseViewer extends JPanel
     g.drawImage(currentForegroundSubImage, negXOffSet, negYOffSet, null);
     this.drawSprite(g);
     this.drawLight(g, lightSource);
-    g = this.getForegroundGraphics(g);
+    g = this.getForegroundGraphics();
     this.drawZombies(g);
     this.drawTraps(g);
   }

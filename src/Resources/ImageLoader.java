@@ -101,9 +101,16 @@ public class ImageLoader
         {
           g.drawImage(this.outsideImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
+        else if (grid[i][j] instanceof CharredFloorTile )
+        {
+          g.drawImage(this.floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          Graphics2D g2 = (Graphics2D) g;
+          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
+          g2.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+        }
         else
         {
-          g.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g.drawImage(this.outsideImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
         xCoord += tileWidth;
       }

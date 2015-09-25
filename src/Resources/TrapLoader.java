@@ -217,14 +217,18 @@ public class TrapLoader
     else if (iterator == 43) currentTrapImage = explosion43;
     else if (iterator == 44) currentTrapImage = explosion44;
     else if (iterator == 45) currentTrapImage = explosion45;
-    else if (iterator == 46) currentTrapImage = explosion46;
-    else if (iterator == 47) currentTrapImage = explosion47;
+    else if (iterator == 46)
+    {
+      currentTrapImage = explosion46;
+      trap.getTrap().setExplosionFinished();
+
+    }
     if (iterator < 47) iterator++;
     else if (iterator == 47)
     {
       currentTrapImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
       iterator = 0;
-      trap.removeTrap();
+
     }
   }
 }

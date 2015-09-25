@@ -214,7 +214,7 @@ public class Movable
       boolean intersectsWall = moveChecker.intersects(nextTile);
       return (canMove || !intersectsWall);
     }
-    return false;
+    else return false;
   }
 
   /**
