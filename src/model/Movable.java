@@ -20,7 +20,6 @@ public class Movable
   protected Tile location;
   protected Tile[][] grid;
   protected Enum playerOrientation;
-  private SoundLoader soundLoader = new SoundLoader();
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
 
@@ -157,15 +156,18 @@ public class Movable
       double yPos = this.circle.getCenterY() + dY;
       int gCol = (int)(xPos / location.getBounds().getWidth());
       int gRow = (int)(yPos / location.getBounds().getHeight());
-      playerOrientation = orientation;
-      circle.setCenterX(xPos);
-      circle.setCenterY(yPos);
-      location = grid[gRow][gCol];
-
-      if(location.hasTrap)
+      if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
       {
-        soundLoader.playExplosionEffect();
-        location.getTrap().setExplosionTrigger();
+        playerOrientation = orientation;
+        circle.setCenterX(xPos);
+        circle.setCenterY(yPos);
+        location = grid[gRow][gCol];
+
+        if (location.hasTrap)
+        {
+          ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+          location.getTrap().setExplosionTrigger();
+        }
       }
     }
   }
@@ -200,15 +202,19 @@ public class Movable
     System.out.print("\n");*/
     int gCol = location.getGridCol();
     int gRow = location.getGridRow();
-    if (dX < 0) gCol = gCol - 1;
-    else if (dX > 0) gCol = gCol + 1;
-    if (dY < 0) gRow = gRow - 1;
-    else if (dY > 0) gRow = gRow + 1;
-    Tile nextTile = grid[gRow][gCol];
-    boolean canMove = nextTile.isMovable();
 
-    boolean intersectsWall = moveChecker.intersects(nextTile);
-    return (canMove || !intersectsWall);
+      if (dX < 0) gCol = gCol - 1;
+      else if (dX > 0) gCol = gCol + 1;
+      if (dY < 0) gRow = gRow - 1;
+      else if (dY > 0) gRow = gRow + 1;
+    if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
+    {
+      Tile nextTile = grid[gRow][gCol];
+      boolean canMove = nextTile.isMovable();
+      boolean intersectsWall = moveChecker.intersects(nextTile);
+      return (canMove || !intersectsWall);
+    }
+    return false;
   }
 
   /**
@@ -219,6 +225,8 @@ public class Movable
   {
     location = next;
   }
+
+
 
   /**
    * Calculate straight-line distance to arbitary xy-coordinate.

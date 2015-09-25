@@ -5,6 +5,7 @@
 package model;
 
 import Resources.SpriteLoader;
+import Resources.ImageLoader;
 
 public class Player extends Movable
 {
@@ -30,12 +31,12 @@ public class Player extends Movable
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Player(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation)
+  public Player(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation, ImageLoader imageLoader)
   {
     super(x, y, radius,location,grid,GridOrientation.pickRandomOrientation());
     //currently SpriteLoader only handles player sprites
     this.playerOrientation=playerOrientation;
-    frames = new SpriteLoader();
+    frames = new SpriteLoader(imageLoader);
     numberOfTraps = 0;
   }
 
@@ -80,16 +81,16 @@ public class Player extends Movable
   }
 
 
-
-  private void setX(int x1)
-  {
-    this.x = x1;
-  }
-
-  private void setY(int y1)
-  {
-    this.y = y1;
-  }
+//
+//  private void setX(int x1)
+//  {
+//    this.x = x1;
+//  }
+//
+//  private void setY(int y1)
+//  {
+//    this.y = y1;
+//  }
 
   private void setCurrentTile(int x, int y)
   {

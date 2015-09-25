@@ -5,6 +5,7 @@
  */
 
 import Resources.SoundLoader;
+import Resources.ImageLoader;
 import model.GridOrientation;
 import model.ZombieHouseModel;
 
@@ -17,6 +18,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private final static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   private ZombieHouseModel zModel;
   private ZombieHouseViewer zView;
+  private ImageLoader imageLoader;
   private SoundLoader gameSounds;
   private Timer timer;
   private boolean[] keysPressed;

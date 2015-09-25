@@ -22,7 +22,11 @@ public class ImageLoader
   private BufferedImage outsideImage;
   private BufferedImage background;
   private ZombieHouseModel zModel;
+  private BufferedImage zombieSheet;
+  private BufferedImage playerSheetRun;
   private Tile[][] grid;
+  private int tileWidth;
+  private int tileHeight;
 
   private int cols;
   private int rows;
@@ -40,9 +44,11 @@ public class ImageLoader
     this.MAX_SCREEN_HEIGHT = MAX_SCREEN_HEIGHT;
     this.MAX_SCREEN_WIDTH = MAX_SCREEN_WIDTH;
     this.zModel = zModel;
-    this.grid = zModel.getMap().getGrid();
     this.cols = ZombieHouseModel.COLS;
     this.rows = ZombieHouseModel.ROWS;
+    this.tileWidth = this.MAX_SCREEN_WIDTH / 12;
+    this.tileHeight = this.MAX_SCREEN_HEIGHT / 10;
+    this.background = new BufferedImage(tileWidth * this.rows, tileHeight * this.cols, BufferedImage.TYPE_INT_RGB);
     this.readImages();
     this.createBackground();
   }
@@ -59,6 +65,8 @@ public class ImageLoader
       wallImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall.png"));
       outsideImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/deadgrass.png"));
       charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.jpg"));
+      playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
+      zombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
     }
     catch (IOException e)
     {
@@ -66,16 +74,15 @@ public class ImageLoader
     }
   }
 
+
   /**
    * Creates the background BufferedImage based on screen dimensions and tile rows/cols
    */
   public void createBackground()
   {
-    int tileWidth = this.MAX_SCREEN_WIDTH / 12;
-    int tileHeight = this.MAX_SCREEN_HEIGHT / 10;
+    grid = zModel.getMap().getGrid();
     int xCoord = 0;
     int yCoord = 0;
-    this.background = new BufferedImage(tileWidth * this.rows, tileHeight * this.cols, BufferedImage.TYPE_INT_RGB);
     Graphics g = this.background.getGraphics();
 
     for (int i = 0; i < this.rows; i++)
@@ -113,4 +120,14 @@ public class ImageLoader
   {
     return this.background;
   }
+  public BufferedImage getZombieSheet()
+  {
+    return this.zombieSheet;
+  }
+
+  public BufferedImage getPlayerSheetRun()
+  {
+    return this.playerSheetRun;
+  }
+
 }

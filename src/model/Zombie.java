@@ -5,6 +5,7 @@
 package model;
 
 import Resources.SpriteLoader;
+import Resources.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -30,7 +31,6 @@ public class Zombie extends Movable implements Alive
   private ArrayList<Tile> path;
   private WalkType wType;
   private double theta;
-  private int x, y;
 
   // I thought maybe depending on the types of zombie, how much damage they take
   // and how much health they recover each second may differ. If makes the game
@@ -52,12 +52,12 @@ public class Zombie extends Movable implements Alive
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Zombie(int x, int y, int radius, Tile location, Tile[][] grid, Enum zombieOrientation)
+  public Zombie(int x, int y, int radius, Tile location, Tile[][] grid, Enum zombieOrientation, ImageLoader imageLoader)
   {
     super(x, y, radius, location, grid, zombieOrientation);
     wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
     path = new ArrayList<>();
-    frames = new SpriteLoader();
+    frames = new SpriteLoader(imageLoader);
     this.zombieOrientation=zombieOrientation;
   }
 
@@ -75,11 +75,11 @@ public class Zombie extends Movable implements Alive
   /**
    * Walk in predetermined direction or path
    */
-  protected void walk(Enum direction, boolean running, double timeElapsed)
+  protected void walk(Enum direction, double timeElapsed)
   {
-    int xNew = this.getX() + (int)(SPEED_WALK * Math.sin(theta));
-    int yNew = this.getY() + (int)(SPEED_WALK * Math.cos(theta));
-    super.move(xNew,yNew,this.location,direction);
+    double xDistance = (int)(SPEED_WALK * Math.sin(theta));
+    double yDistance = (int)(SPEED_WALK * Math.cos(theta));
+    super.move(xDistance,yDistance,this.location,direction);
     getFrames().getRotatingZombieWalk();
   }
 
@@ -113,8 +113,8 @@ public class Zombie extends Movable implements Alive
     {
       theta = rng.nextDouble() * Math.PI * 2.0;
     }
-    double nextX = SPEED_WALK * Math.sin(Math.toRadians(theta) + x);
-    double nextY = SPEED_WALK * Math.cos(Math.toRadians(theta) + y);
+    double nextX = SPEED_WALK * Math.sin(Math.toRadians(theta));// + x);
+    double nextY = SPEED_WALK * Math.cos(Math.toRadians(theta));// + y);
     if (canMoveTo(nextX, nextY))
     {
       int nextCol = (int)(nextX / location.getBounds().getWidth());
