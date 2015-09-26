@@ -2,6 +2,7 @@
  * Created by Tess Daughton, September 13th 2015
  *
  * http://slick.ninjacave.com/forum/viewtopic.php?f=3&t=5364
+ * http://opengameart.org/sites/default/files/styles/watermarked/public/orc_regular_0.png
  */
 
 package Resources;
@@ -21,11 +22,25 @@ public class SpriteLoader
   private BufferedImage subPlayerImage;
   private BufferedImage currentPlayerImage;
 
-  private static BufferedImage zombieSheet;
-  private int zombieIterator;
-  private static BufferedImage zombie[];
-  private BufferedImage subZombieImage;
-  private BufferedImage currentZombieImage;
+  private static BufferedImage randomZombieSheet;
+  private static BufferedImage lineZombieSheet;
+  private static BufferedImage masterZombieSheet;
+
+  private int randomZombieIterator;
+  private static BufferedImage randomZombie[];
+  private BufferedImage subRandomZombieImage;
+  private BufferedImage currentRandomZombieImage;
+
+  private int lineZombieIterator;
+  private static BufferedImage lineZombie[];
+  private BufferedImage subLineZombieImage;
+  private BufferedImage currentLineZombieImage;
+
+  private int masterZombieIterator;
+  private static BufferedImage masterZombie[];
+  private BufferedImage subMasterZombieImage;
+  private BufferedImage currentMasterZombieImage;
+
 
   /**
    * Constructor
@@ -36,18 +51,28 @@ public class SpriteLoader
    */
   public SpriteLoader(ImageLoader imageLoader)
   {
-    zombieSheet = imageLoader.getZombieSheet();
+    randomZombieSheet = imageLoader.getRandomZombieSheet();
+    lineZombieSheet = imageLoader.getLineZombieSheet();
     playerSheetRun = imageLoader.getPlayerSheetRun();
+    masterZombieSheet=imageLoader.getMasterZombieSheet();
     run = new BufferedImage[15];
-    zombie = new BufferedImage[30];
+    randomZombie = new BufferedImage[30];
+    lineZombie = new BufferedImage[16];
+    masterZombie = new BufferedImage[12];
+
     setIndividualPlayerFrames();
     setIndividualZombieFrames();
-    zombieIterator = 0;
+    randomZombieIterator = 0;
+    lineZombieIterator = 0;
     playerIterator = 0;
     currentPlayerImage = run[5];
     subPlayerImage = currentPlayerImage;
-    currentZombieImage = zombie[0];
-    subZombieImage = currentZombieImage;
+    currentRandomZombieImage = randomZombie[0];
+    subRandomZombieImage = currentRandomZombieImage;
+    currentLineZombieImage = lineZombie[0];
+    subLineZombieImage = currentLineZombieImage;
+    currentMasterZombieImage = masterZombie[0];
+    subMasterZombieImage = currentMasterZombieImage;
   }
 
   /**
@@ -75,36 +100,70 @@ public class SpriteLoader
 
   private void setIndividualZombieFrames()
   {
-    zombie[0] = zombieSheet.getSubimage(28, 17, 105, 120);
-    zombie[1] = zombieSheet.getSubimage(241, 17, 105, 120);
-    zombie[2] = zombieSheet.getSubimage(454, 17, 105, 120);
-    zombie[3] = zombieSheet.getSubimage(664, 17, 105, 120);
-    zombie[4] = zombieSheet.getSubimage(877, 17, 105, 120);
-    zombie[5] = zombieSheet.getSubimage(1087, 17, 105, 120);
-    zombie[6] = zombieSheet.getSubimage(1296, 17, 105, 120);
-    zombie[7] = zombieSheet.getSubimage(1507, 17, 105, 120);
-    zombie[8] = zombieSheet.getSubimage(1718, 17, 105, 120);
-    zombie[9] = zombieSheet.getSubimage(28, 228, 105, 120);
-    zombie[10] = zombieSheet.getSubimage(241, 228, 105, 120);
-    zombie[11] = zombieSheet.getSubimage(454, 228, 105, 120);
-    zombie[12] = zombieSheet.getSubimage(664, 228, 105, 120);
-    zombie[13] = zombieSheet.getSubimage(877, 228, 105, 120);
-    zombie[14] = zombieSheet.getSubimage(1087, 228, 105, 120);
-    zombie[15] = zombieSheet.getSubimage(1296, 228, 105, 120);
-    zombie[16] = zombieSheet.getSubimage(1507, 228, 105, 120);
-    zombie[17] = zombieSheet.getSubimage(1718, 228, 105, 120);
-    zombie[18] = zombieSheet.getSubimage(28, 435, 105, 120);
-    zombie[19] = zombieSheet.getSubimage(241, 435, 105, 120);
-    zombie[20] = zombieSheet.getSubimage(454, 435, 105, 120);
-    zombie[21] = zombieSheet.getSubimage(664, 435, 105, 120);
-    zombie[22] = zombieSheet.getSubimage(877, 435, 105, 120);
-    zombie[23] = zombieSheet.getSubimage(1087, 435, 105, 120);
-    zombie[24] = zombieSheet.getSubimage(1296, 435, 105, 120);
-    zombie[25] = zombieSheet.getSubimage(1507, 435, 105, 120);
-    zombie[26] = zombieSheet.getSubimage(1718, 435, 105, 120);
-    zombie[27] = zombieSheet.getSubimage(28, 648, 105, 120);
-    zombie[28] = zombieSheet.getSubimage(241, 648, 105, 120);
-    zombie[29] = zombieSheet.getSubimage(454, 648, 105, 120);
+    randomZombie[0] = randomZombieSheet.getSubimage(28, 17, 105, 120);
+    randomZombie[1] = randomZombieSheet.getSubimage(241, 17, 105, 120);
+    randomZombie[2] = randomZombieSheet.getSubimage(454, 17, 105, 120);
+    randomZombie[3] = randomZombieSheet.getSubimage(664, 17, 105, 120);
+    randomZombie[4] = randomZombieSheet.getSubimage(877, 17, 105, 120);
+    randomZombie[5] = randomZombieSheet.getSubimage(1087, 17, 105, 120);
+    randomZombie[6] = randomZombieSheet.getSubimage(1296, 17, 105, 120);
+    randomZombie[7] = randomZombieSheet.getSubimage(1507, 17, 105, 120);
+    randomZombie[8] = randomZombieSheet.getSubimage(1718, 17, 105, 120);
+    randomZombie[9] = randomZombieSheet.getSubimage(28, 228, 105, 120);
+    randomZombie[10] = randomZombieSheet.getSubimage(241, 228, 105, 120);
+    randomZombie[11] = randomZombieSheet.getSubimage(454, 228, 105, 120);
+    randomZombie[12] = randomZombieSheet.getSubimage(664, 228, 105, 120);
+    randomZombie[13] = randomZombieSheet.getSubimage(877, 228, 105, 120);
+    randomZombie[14] = randomZombieSheet.getSubimage(1087, 228, 105, 120);
+    randomZombie[15] = randomZombieSheet.getSubimage(1296, 228, 105, 120);
+    randomZombie[16] = randomZombieSheet.getSubimage(1507, 228, 105, 120);
+    randomZombie[17] = randomZombieSheet.getSubimage(1718, 228, 105, 120);
+    randomZombie[18] = randomZombieSheet.getSubimage(28, 435, 105, 120);
+    randomZombie[19] = randomZombieSheet.getSubimage(241, 435, 105, 120);
+    randomZombie[20] = randomZombieSheet.getSubimage(454, 435, 105, 120);
+    randomZombie[21] = randomZombieSheet.getSubimage(664, 435, 105, 120);
+    randomZombie[22] = randomZombieSheet.getSubimage(877, 435, 105, 120);
+    randomZombie[23] = randomZombieSheet.getSubimage(1087, 435, 105, 120);
+    randomZombie[24] = randomZombieSheet.getSubimage(1296, 435, 105, 120);
+    randomZombie[25] = randomZombieSheet.getSubimage(1507, 435, 105, 120);
+    randomZombie[26] = randomZombieSheet.getSubimage(1718, 435, 105, 120);
+    randomZombie[27] = randomZombieSheet.getSubimage(28, 648, 105, 120);
+    randomZombie[28] = randomZombieSheet.getSubimage(241, 648, 105, 120);
+    randomZombie[29] = randomZombieSheet.getSubimage(454, 648, 105, 120);
+
+    lineZombie[0] = lineZombieSheet.getSubimage(11, 8, 95, 130);
+    lineZombie[1] = lineZombieSheet.getSubimage(188, 8, 95, 130);
+    lineZombie[2] = lineZombieSheet.getSubimage(376, 8, 95, 130);
+    lineZombie[3] = lineZombieSheet.getSubimage(732, 8, 95, 130);
+    lineZombie[4] = lineZombieSheet.getSubimage(917, 8, 95, 130);
+    lineZombie[5] = lineZombieSheet.getSubimage(1098, 8, 95, 130);
+    lineZombie[6] = lineZombieSheet.getSubimage(1277, 8, 95, 130);
+    lineZombie[7] = lineZombieSheet.getSubimage(1447, 8, 95, 130);
+    lineZombie[8] = lineZombieSheet.getSubimage(1622, 8, 95, 130);
+    lineZombie[9] = lineZombieSheet.getSubimage(1818, 8, 95, 130);
+    lineZombie[10] = lineZombieSheet.getSubimage(2003, 8, 95, 130);
+    lineZombie[11] = lineZombieSheet.getSubimage(2180, 8, 95, 130);
+    lineZombie[12] = lineZombieSheet.getSubimage(2360, 8, 95, 130);
+    lineZombie[13] = lineZombieSheet.getSubimage(2544, 8, 95, 130);
+    lineZombie[14] = lineZombieSheet.getSubimage(2721, 8, 95, 130);
+    lineZombie[15] = lineZombieSheet.getSubimage(2899, 8, 95, 130);
+
+
+
+
+    masterZombie[0] = masterZombieSheet.getSubimage(922, 19, 75, 118);
+    masterZombie[1] = masterZombieSheet.getSubimage(1142, 19, 75, 118);
+    masterZombie[2] = masterZombieSheet.getSubimage(1377, 19, 75, 118);
+    masterZombie[3] = masterZombieSheet.getSubimage(1600, 19, 75, 118);
+    masterZombie[4] = masterZombieSheet.getSubimage(1830, 19, 75, 118);
+    masterZombie[5] = masterZombieSheet.getSubimage(2053, 19, 75, 118);
+    masterZombie[6] = masterZombieSheet.getSubimage(2283, 19, 75, 118);
+    masterZombie[7] = masterZombieSheet.getSubimage(2508, 19, 75, 118);
+    masterZombie[8] = masterZombieSheet.getSubimage(2730, 19, 75, 118);
+    masterZombie[9] = masterZombieSheet.getSubimage(2955, 19, 75, 118);
+    masterZombie[10] = masterZombieSheet.getSubimage(3200, 19, 75, 118);
+    masterZombie[11] = masterZombieSheet.getSubimage(3439, 19, 75, 118);
+
   }
 
   /**
@@ -123,14 +182,29 @@ public class SpriteLoader
    * Cycles through the BufferedImages of the movement animation using a class variable iterator
    * changes the value of currentPlayerImage based on the current point in the animation
    */
-  public void getRotatingZombieWalk()
+  public void getRotatingRandomZombieWalk()
   {
-    currentZombieImage = zombie[zombieIterator];
-    zombieIterator++;
-    if (zombieIterator > 29) zombieIterator = 0;
-    subZombieImage = currentZombieImage;
+    currentRandomZombieImage = randomZombie[randomZombieIterator];
+    randomZombieIterator++;
+    if (randomZombieIterator > 29) randomZombieIterator = 0;
+    subRandomZombieImage = currentRandomZombieImage;
   }
 
+  public void getRotatingLineZombieWalk()
+  {
+    currentLineZombieImage = lineZombie[lineZombieIterator];
+    lineZombieIterator++;
+    if (lineZombieIterator > 15) lineZombieIterator = 0;
+    subLineZombieImage = currentLineZombieImage;
+  }
+
+  public void getRotatingMasterZombieWalk()
+  {
+    currentMasterZombieImage = masterZombie[masterZombieIterator];
+    masterZombieIterator++;
+    if (masterZombieIterator > 11) masterZombieIterator = 0;
+    subMasterZombieImage = currentMasterZombieImage;
+  }
   /**
    * currentPlayerImage is rotated depending on the map direction the player is facing
    *
@@ -166,7 +240,7 @@ public class SpriteLoader
    * @param sprite
    * @return Returns the currentPlayerImage based on the sprite's physical orientation in the map
    */
-  public BufferedImage getCurrentZombieImage(Zombie sprite)
+  public BufferedImage getCurrentRandomZombieImage(Zombie sprite)
   {
     Enum currentOrientation = sprite.getPlayerOrientation();
     AffineTransform transform = new AffineTransform();
@@ -184,8 +258,54 @@ public class SpriteLoader
 
     transform.rotate(Math.toRadians(rotateDegrees), 60, 60);
     AffineTransformOp rotate = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-    currentZombieImage=rotate.filter(subZombieImage,null);
+    currentRandomZombieImage =rotate.filter(subRandomZombieImage,null);
 
-    return currentZombieImage;
+    return currentRandomZombieImage;
+  }
+
+  public BufferedImage getCurrentLineZombieImage(Zombie sprite)
+  {
+    Enum currentOrientation = sprite.getPlayerOrientation();
+    AffineTransform transform = new AffineTransform();
+    int rotateDegrees = 0;
+
+    if(currentOrientation == GridOrientation.NORTH) rotateDegrees=0;
+    else if(currentOrientation == GridOrientation.SOUTH) rotateDegrees=180;
+    else if(currentOrientation == GridOrientation.EAST) rotateDegrees=90;
+    else if(currentOrientation == GridOrientation.WEST) rotateDegrees=270;
+    else if(currentOrientation == GridOrientation.NORTHEAST) rotateDegrees=45;
+    else if(currentOrientation == GridOrientation.SOUTHEAST) rotateDegrees=135;
+    else if(currentOrientation == GridOrientation.NORTHWEST) rotateDegrees=315;
+    else if(currentOrientation == GridOrientation.SOUTHWEST) rotateDegrees=225;
+
+
+    transform.rotate(Math.toRadians(rotateDegrees), 60, 60);
+    AffineTransformOp rotate = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+    currentLineZombieImage =rotate.filter(subLineZombieImage,null);
+
+    return currentLineZombieImage;
+  }
+
+  public BufferedImage getCurrentMasterZombieImage(Zombie sprite)
+  {
+    Enum currentOrientation = sprite.getPlayerOrientation();
+    AffineTransform transform = new AffineTransform();
+    int rotateDegrees = 0;
+
+    if(currentOrientation == GridOrientation.NORTH) rotateDegrees=0;
+    else if(currentOrientation == GridOrientation.SOUTH) rotateDegrees=180;
+    else if(currentOrientation == GridOrientation.EAST) rotateDegrees=90;
+    else if(currentOrientation == GridOrientation.WEST) rotateDegrees=270;
+    else if(currentOrientation == GridOrientation.NORTHEAST) rotateDegrees=45;
+    else if(currentOrientation == GridOrientation.SOUTHEAST) rotateDegrees=135;
+    else if(currentOrientation == GridOrientation.NORTHWEST) rotateDegrees=315;
+    else if(currentOrientation == GridOrientation.SOUTHWEST) rotateDegrees=225;
+
+
+    transform.rotate(Math.toRadians(rotateDegrees), 60, 60);
+    AffineTransformOp rotate = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+    currentMasterZombieImage =rotate.filter(subMasterZombieImage,null);
+
+    return currentMasterZombieImage;
   }
 }

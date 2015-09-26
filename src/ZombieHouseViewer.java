@@ -8,7 +8,6 @@
  */
 
 import Resources.*;
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import model.*;
 import javax.swing.JPanel;
 import java.awt.*;
@@ -188,7 +187,7 @@ public class ZombieHouseViewer extends JPanel
             tile.getTrap().getTrapLoader().getExplosionEffect(tile);
             if (tile.getTrap() != null)
             {
-              g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getX(), (int) tile.getY(), null);
+              g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getX()-100, (int) tile.getY()-100, null);
             }
             if(tile.getTrap().getExplosionFinished())
             {
@@ -200,8 +199,8 @@ public class ZombieHouseViewer extends JPanel
           }
           else
           {
-            g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getCenterX(),
-                        (int) tile.getCenterY(), null);
+            g.drawImage(tile.getTrap().getTrapLoader().getCurrentTrapImage(), (int) tile.getCenterX()-30,
+                        (int) tile.getCenterY()-30, null);
           }
         }
       }
@@ -222,10 +221,20 @@ public class ZombieHouseViewer extends JPanel
       {
         SpriteLoader zombieSprite = zombie.getFrames();
        // System.out.println("(" + zombie.getX() + ", " + zombie.getY() + ")");
-        if (zombie.getZType().equals("Random")) g.setColor(Color.GREEN);
-        else g.setColor(Color.RED);
-        g.drawOval(zombie.getX()-zombie.getRadius(), zombie.getY()-zombie.getRadius(), 2 * zombie.getRadius(), 2 * zombie.getRadius());
-        g.drawImage(zombieSprite.getCurrentZombieImage(zombie), zombie.getX()-zombie.getRadius(), zombie.getY()-zombie.getRadius(), null);
+        if (zombie.getZType().equals("Random"))
+        {
+          g.setColor(Color.GREEN);
+          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(), 2 * zombie.getRadius());
+          g.drawImage(zombieSprite.getCurrentMasterZombieImage(zombie), zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), null);
+
+        }
+        else
+        {
+          g.setColor(Color.RED);
+          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(), 2 * zombie.getRadius());
+
+          g.drawImage(zombieSprite.getCurrentLineZombieImage(zombie), zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), null);
+        }
       }
     }
   }
@@ -240,7 +249,7 @@ public class ZombieHouseViewer extends JPanel
   public void drawLight(Graphics g, LightSource lightSource)
   {
     Graphics2D g2 = (Graphics2D) g;
-    lightSource.setPolygon(this.currentScreenWidth, this.currentScreenHeight);
+    lightSource.setPolygon(this.currentScreenWidth,this.currentScreenHeight);
     Polygon light = lightSource.getPolygon();
     Area darkness = new Area(new Rectangle(0,0,this.currentScreenWidth,this.currentScreenHeight));
     darkness.subtract(new Area(light));
@@ -253,7 +262,6 @@ public class ZombieHouseViewer extends JPanel
     g2.setPaint(radialGradientPaint);
     g2.draw(light);
     g2.fill(light);
-
   }
 
   /**
@@ -271,8 +279,17 @@ public class ZombieHouseViewer extends JPanel
     g.drawImage(currentForegroundSubImage, negXOffSet, negYOffSet, null);
     this.drawSprite(g);
     this.drawLight(g, lightSource);
-    g = this.getForegroundGraphics();
+    this.drawBufferedComponents();
+
+
+
+
+  }
+  public void drawBufferedComponents()
+  {
+    Graphics g = this.getForegroundGraphics();
     this.drawZombies(g);
     this.drawTraps(g);
+
   }
 }

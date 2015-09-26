@@ -15,7 +15,8 @@ public class Trap extends Movable
   private boolean grabbable;
   private boolean explosionFinished;
   private boolean explosionTriggered;
-  private Movable movableTrigger;
+  private boolean soundPlayed;
+  private static Movable movableTrigger;
   private TrapLoader trapLoader;
 
   //============================================================================
@@ -29,6 +30,7 @@ public class Trap extends Movable
     this.grabbable = grabbable;
     this.explosionTriggered = false;
     this.explosionFinished = false;
+    this.soundPlayed = false;
     this.trapLoader = new TrapLoader();
   }
 
@@ -63,7 +65,12 @@ public class Trap extends Movable
 
   public void setMovableTrigger(Movable mover)
   {
-    this.movableTrigger=mover;
+    movableTrigger=mover;
+  }
+
+  public void setSoundPlayed()
+  {
+    this.soundPlayed=true;
   }
 
   public Boolean getExplosionFinished()
@@ -77,7 +84,12 @@ public class Trap extends Movable
   }
 
   public TrapLoader getTrapLoader()
+{
+  return this.trapLoader;
+}
+
+  public Boolean getSoundPlayed()
   {
-    return this.trapLoader;
+    return this.soundPlayed;
   }
 }

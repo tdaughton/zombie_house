@@ -19,7 +19,11 @@ public class ImageLoader
   private static BufferedImage wallImage;
   private static BufferedImage outsideImage;
   private static BufferedImage background;
-  private static BufferedImage zombieSheet;
+  private static BufferedImage randomZombieSheet;
+  private static BufferedImage lineZombieSheet;
+  private static BufferedImage masterZombieSheet;
+
+
   private static BufferedImage playerSheetRun;
   private ZombieHouseModel zModel;
   private int tileWidth;
@@ -60,7 +64,11 @@ public class ImageLoader
       outsideImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/deadgrass.png"));
       charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.png"));
       playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
-      zombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
+      randomZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
+      lineZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/random.png"));
+      masterZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/master.png"));
+
+
     }
     catch (IOException e)
     {
@@ -100,9 +108,6 @@ public class ImageLoader
         else if (grid[i][j] instanceof CharredFloorTile )
         {
           g.drawImage(charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
-          /*Graphics2D g2 = (Graphics2D) g;
-          g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
-          g2.drawImage(this.charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);*/
         }
         else
         {
@@ -124,10 +129,20 @@ public class ImageLoader
     return background;
   }
 
-  public BufferedImage getZombieSheet()
+  public BufferedImage getRandomZombieSheet()
   {
-    return zombieSheet;
+    return randomZombieSheet;
   }
+  public BufferedImage getLineZombieSheet()
+  {
+    return lineZombieSheet;
+  }
+  public BufferedImage getMasterZombieSheet()
+  {
+    return masterZombieSheet;
+  }
+
+
 
   public BufferedImage getPlayerSheetRun()
   {

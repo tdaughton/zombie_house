@@ -31,12 +31,12 @@ public class Player extends Movable
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Player(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation, ImageLoader imageLoader)
+  public Player(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation, ImageLoader imageLoader, boolean running)
   {
-    super(x, y, radius,location,grid,playerOrientation);
-    frames = new SpriteLoader(imageLoader);
-    numberOfTraps = 0;
-    stamina = STAM_MAX;
+    super(x, y, radius,location,grid,playerOrientation, running);
+    this.frames = new SpriteLoader(imageLoader);
+    this.numberOfTraps = 3;
+    this.stamina = STAM_MAX;
   }
 
   /**
@@ -56,7 +56,7 @@ public class Player extends Movable
 
   public void walk(double dX, double dY, Enum direction, boolean boost, double timeElapsed)
   {
-    running = boost;
+    this.running = boost;
     stamina -= (running ? timeElapsed : 0.0f);
     double xDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * super.getCurrentTile().getWidth() * timeElapsed * dX;
     double yDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * super.getCurrentTile().getHeight() * timeElapsed * dY;
@@ -65,6 +65,7 @@ public class Player extends Movable
     frames.getRotatingRun();
   }
 
+
   //============================================================================
   // This method will allow the player to grab a trap from the tile if there
   // exists a trap spawned in that tile.
@@ -72,11 +73,13 @@ public class Player extends Movable
   public void grabTrap()
   {
     numberOfTraps++;
+    this.getCurrentTile().removeTrap();
   }
 
   public void installTrap()
   {
     numberOfTraps--;
+    this.getCurrentTile().installTrap();
   }
 
   public int getNumberOfTraps()

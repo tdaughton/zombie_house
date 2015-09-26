@@ -15,6 +15,7 @@ public class Movable
   private Tile location;
   private Tile[][] tiles;
   private Enum playerOrientation;
+  private boolean running;
 
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
@@ -36,11 +37,13 @@ public class Movable
    * @param grid                 Reference to Zombie House map
    * @param playerOrientation    8-way orientation
    */
-  public Movable(double x, double y, double radius, Tile loc, Tile[][] grid, Enum playerOrientation)
+  public Movable(double x, double y, double radius, Tile loc, Tile[][] grid, Enum playerOrientation, Boolean running)
   {
-    location = loc;
-    tiles = grid;
+    this.location = loc;
+    this.tiles = grid;
+    this.running=running;
     circle = new Circle(x, y, radius);
+
   }
 
   /**
@@ -97,6 +100,17 @@ public class Movable
     return location;
   }
 
+
+  public boolean isRunning()
+  {
+    return running;
+  }
+
+
+  public void setRunning(Boolean running)
+  {
+    this.running = running;
+  }
   /**
    * Method to calculate collision detection with other Movables.
    * If the distance between center pixels are less than either Movable's radius, then there is a collision.
@@ -161,8 +175,15 @@ public class Movable
 
         if (location.hasTrap)
         {
-          ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
-          location.getTrap().setExplosionTrigger();
+          if(this.isRunning())
+          {
+            location.getTrap().setExplosionTrigger();
+            if (!location.getTrap().getSoundPlayed())
+            {
+              ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+              location.getTrap().setSoundPlayed();
+            }
+          }
         }
       }
     }
@@ -181,10 +202,17 @@ public class Movable
         circle.setCenterY(yPos);
         location = this.tiles[gRow][gCol];
 
-        if (location.hasTrap)
+        if(this.isRunning())
         {
-          ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
-          location.getTrap().setExplosionTrigger();
+          if (location.hasTrap)
+          {
+            location.getTrap().setExplosionTrigger();
+            if (!location.getTrap().getSoundPlayed())
+            {
+              ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+              location.getTrap().setSoundPlayed();
+            }
+          }
         }
       }
     }

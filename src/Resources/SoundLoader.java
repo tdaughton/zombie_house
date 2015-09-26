@@ -16,6 +16,10 @@ public class SoundLoader
   private static Clip pcLeftFoot;
   private static Clip backgroundMusic;
   private static Clip explosion;
+  private static Clip dropTrap;
+  private static Clip pickUpTrap;
+
+  private static FloatControl gainControl;
 
   /**
    * Default constructor. Loads all (three) known sound files and keep references to them.
@@ -25,7 +29,11 @@ public class SoundLoader
     pcRightFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav");
     pcLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav");
     backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
-    explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/boom1.wav");
+    explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/explosion.wav");
+    dropTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Trap_00.wav");
+    pickUpTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Inventory_Open_01.wav");
+
+
   }
 
   /**
@@ -64,6 +72,8 @@ public class SoundLoader
   public void rightFootStep()
   {
     if(pcRightFoot.isRunning()) pcRightFoot.stop();
+    gainControl = (FloatControl) pcRightFoot.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(-6.0f);
     pcRightFoot.setFramePosition(0);
     pcRightFoot.start();
   }
@@ -74,6 +84,8 @@ public class SoundLoader
   public void leftFootStep()
   {
     if(pcLeftFoot.isRunning()) pcLeftFoot.stop();
+    gainControl = (FloatControl) pcLeftFoot.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(-6.0f);
     pcLeftFoot.setFramePosition(0);
     pcLeftFoot.start();
   }
@@ -100,7 +112,23 @@ public class SoundLoader
   public void playExplosionEffect()
   {
     if(explosion.isRunning()) explosion.stop();
+    gainControl = (FloatControl) explosion.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(6.0f);
     explosion.setFramePosition(0);
     explosion.start();
+  }
+
+  public void playPickUpTrap()
+  {
+    if(pickUpTrap.isRunning()) pickUpTrap.stop();
+    pickUpTrap.setFramePosition(0);
+    pickUpTrap.start();
+  }
+
+  public void playDropTrap()
+  {
+    if(dropTrap.isRunning()) dropTrap.stop();
+    dropTrap.setFramePosition(0);
+    dropTrap.start();
   }
 }

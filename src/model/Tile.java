@@ -117,13 +117,12 @@ public class Tile extends Rectangle implements Comparable<Tile>
 
   public void removeTrap()
   {
-    this.trap = null;
     this.hasTrap=false;
   }
 
   public void installTrap()
   {
-    trap = new Trap(x, y, false);
+    this.trap = new Trap((int) this.getCenterX(),(int)this.getCenterY(),true);
     this.hasTrap = true;
   }
 

@@ -33,6 +33,7 @@ public class Zombie extends Movable implements Alive
   private double theta;
   private double timeSinceUpdate;
   private boolean bumped;
+  private boolean running = true;
 
   // I thought maybe depending on the types of zombie, how much damage they take
   // and how much health they recover each second may differ. If makes the game
@@ -54,9 +55,9 @@ public class Zombie extends Movable implements Alive
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Zombie(int x, int y, int radius, Tile location, Tile[][] grid, Enum direction, ImageLoader imageLoader)
+  public Zombie(int x, int y, int radius, Tile location, Tile[][] grid, Enum direction, ImageLoader imageLoader, boolean running)
   {
-    super(x, y, radius, location, grid, direction);
+    super(x, y, radius, location, grid, direction, running);
     wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
     path = new ArrayList<>();
     frames = new SpriteLoader(imageLoader);
@@ -97,7 +98,8 @@ public class Zombie extends Movable implements Alive
     else if (5.11f < theta && theta < 4.33f) direction = GridOrientation.SOUTH;
     else if (5.90f < theta && theta < 5.11f) direction = GridOrientation.SOUTHEAST;
     bumped = super.move(xDistance, yDistance, direction);
-    getFrames().getRotatingZombieWalk();
+    if(wType == WalkType.LINE) getFrames().getRotatingMasterZombieWalk();
+    else getFrames().getRotatingRandomZombieWalk();
   }
 
   public void update(double timeElapsed)
@@ -186,4 +188,6 @@ public class Zombie extends Movable implements Alive
   {
     return dead;
   }
+
+
 }

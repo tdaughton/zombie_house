@@ -74,6 +74,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    **/
   public void actionPerformed(ActionEvent e)
   {
+    this.playerPickUpTrap();
     prevSeconds = currSeconds;
     currSeconds = System.nanoTime();
     deltaSeconds = (currSeconds - prevSeconds) / 1000000000.0f;
@@ -129,6 +130,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
       case KeyEvent.VK_R:
       case KeyEvent.VK_SHIFT:
       case KeyEvent.VK_T:
+      case KeyEvent.VK_P:
         keysPressed[keyCode] = true;
         moveKeys();
         break;
@@ -174,6 +176,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
       case KeyEvent.VK_R:
       case KeyEvent.VK_SHIFT:
       case KeyEvent.VK_T:
+      case KeyEvent.VK_P:
         keysPressed[keyCode] = false;
         moveKeys();
         break;
@@ -198,11 +201,16 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     boolean boost = false;
     int dir = 5;
 
-    if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) boost = true;//movement = 2 * movement;
+    if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT])
+    {
+      boost = true;      //movement = 2 * movement;
+      zModel.setPlayerRunning(true);
+    }
     if (keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) dir += 3;
     if (keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) dir -= 3;
     if (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]) dir -= 1;
     if (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]) dir += 1;
+    if (!boost) zModel.setPlayerRunning(false);
 
     if (dir % 2 != 0) movement = movement / Math.sqrt(2);
     switch (dir)
@@ -248,5 +256,14 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     {
       this.gameSounds.rightFootStep();
     }
+  }
+
+  private void playerPickUpTrap()
+  {
+    if(keysPressed[KeyEvent.VK_P])
+    {
+      zModel.attemptTrapAction();
+    }
+
   }
 }

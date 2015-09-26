@@ -15,15 +15,15 @@ import java.util.ArrayList;
 public class ZombieHouseModel
 {
   private static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-  protected final static int MAX_SCREEN_WIDTH = (int)userScreenSize.getWidth();
-  protected final static int MAX_SCREEN_HEIGHT = (int)userScreenSize.getHeight();
+  protected final static int MAX_SCREEN_WIDTH = (int) userScreenSize.getWidth();
+  protected final static int MAX_SCREEN_HEIGHT = (int) userScreenSize.getHeight();
   protected final static int VISIBLE_X_TILES = 12;
   protected final static int VISIBLE_Y_TILES = 10;
   protected final static SoundLoader SOUNDLOADER = new SoundLoader();
   private ImageLoader imageLoader;
   public final static int ROWS = 40;
   public final static int COLS = 40;
-  private static final double ZOMBIE_SPAWN_RATE = 0.1f;
+  private static final double ZOMBIE_SPAWN_RATE = 0.01f;
   private static final double TRAP_SPAWN_RATE = 0.01f;
   private Random rand = new Random();
   private Player playerCharacter;
@@ -44,21 +44,22 @@ public class ZombieHouseModel
     MapGenerator mapGen = new MapGenerator(ROWS, COLS);
     this.currentScreenWidth = MAX_SCREEN_WIDTH;
     this.currentScreenHeight = MAX_SCREEN_HEIGHT;
-    this.tileWidth = currentScreenWidth/VISIBLE_X_TILES;
-    this.tileHeight = currentScreenHeight/VISIBLE_Y_TILES;
+    this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
+    this.tileHeight = currentScreenHeight / VISIBLE_Y_TILES;
     this.grid = this.translateTileImages(mapGen.getMap());
     //this.map = new Map(tiles, ROWS, COLS);
     this.imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     this.setRandomTraps();
     this.initializeRandomZombies();
-    playerCharacter=this.getRandomStart();
+    playerCharacter = this.getRandomStart();
 
   }
 
   /**
    * This method translates a 2D int array into a 2D Tile array
-   * @param grid  input 2D int array representing some tile types
-   * @return  a 2D Tile array representing the Zombie House
+   *
+   * @param grid input 2D int array representing some tile types
+   * @return a 2D Tile array representing the Zombie House
    */
   private Tile[][] translateTileImages(int[][] grid)
   {
@@ -67,7 +68,8 @@ public class ZombieHouseModel
     for (int i = 0; i < ROWS; i++)
     {
       for (int j = 0; j < COLS; j++)
-      { if (grid[i][j] != 1) tiles[i][j] = new Wall(i, j, tiles);
+      {
+        if (grid[i][j] != 1) tiles[i][j] = new Wall(i, j, tiles);
         else tiles[i][j] = new Floor(i, j, tiles);
         tiles[i][j].setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth, this.tileHeight);
       }
@@ -78,7 +80,8 @@ public class ZombieHouseModel
 
   /**
    * Parses the Zombie House map and places the Player at a random location
-   * @return  new Player located at random tile
+   *
+   * @return new Player located at random tile
    */
   private Player getRandomStart()
   {
@@ -89,18 +92,19 @@ public class ZombieHouseModel
     {
       x = rand.nextInt(COLS);
       y = rand.nextInt(ROWS);
-      this.playerCharacter = new Player(this.grid[x][y].getCenterTileX(), this.grid[x][y].getCenterTileY(), this.tileHeight / 2,this.grid[x][y],
-              this.grid, GridOrientation.pickRandomOrientation(), this.imageLoader);
+      this.playerCharacter = new Player(this.grid[x][y].getCenterTileX(), this.grid[x][y].getCenterTileY(), this.tileHeight / 2, this.grid[x][y],
+
+          this.grid, GridOrientation.pickRandomOrientation(), this.imageLoader, false);
     }
     return playerCharacter;
   }
 
 
-
   /**
    * Called inside actionPerformed in ZombieHouseFrame to periodically update frame width
    * Setter for window width
-   * @param x  new width (in pixels)
+   *
+   * @param x new width (in pixels)
    */
   public void setCurrentScreenWidth(int x)
   {
@@ -110,7 +114,8 @@ public class ZombieHouseModel
   /**
    * Called inside actionPerformed in ZombieHouseFrame to periodically update frame height
    * Setter for window height
-   * @param y  new height (in pixels)
+   *
+   * @param y new height (in pixels)
    */
   public void setCurrentScreenHeight(int y)
   {
@@ -128,7 +133,7 @@ public class ZombieHouseModel
       {
         if (grid[i][j] instanceof Floor && rand.nextDouble() < TRAP_SPAWN_RATE)
         {
-          this.traps.add(new Trap((int)this.grid[i][j].getCenterX(), (int)this.grid[i][j].getCenterY(), true));
+          this.traps.add(new Trap((int) this.grid[i][j].getCenterX(), (int) this.grid[i][j].getCenterY(), true));
           this.grid[i][j].installTrap();
           System.out.println("Trap at [" + i + "][" + j + "]");
         }
@@ -143,25 +148,26 @@ public class ZombieHouseModel
   {
     int valid;
 
-    for (int i = 1; i < ROWS-1; i++)
+    for (int i = 1; i < ROWS - 1; i++)
     {
-      for (int j = 1; j < COLS-1; j++)
+      for (int j = 1; j < COLS - 1; j++)
       {
         valid = 0;
         if (grid[i][j] instanceof Floor)
         {
-          for (int k = i-1; k < i+2; k++)
+          for (int k = i - 1; k < i + 2; k++)
           {
-            for (int l = j-1; l < j+2; l++)
+            for (int l = j - 1; l < j + 2; l++)
             {
               if (this.grid[k][l] instanceof Wall) valid++;
             }
           }
           if (valid < 4 && rand.nextDouble() < ZOMBIE_SPAWN_RATE)
           {
-            Zombie zombone = new Zombie((int)grid[i][j].getCenterX(), (int)grid[i][j].getCenterY(), this.tileHeight / 2, grid[i][j], grid, GridOrientation.pickRandomOrientation(), imageLoader);
+            Zombie zombone = new Zombie((int) grid[i][j].getCenterX(), (int) grid[i][j].getCenterY(),
+                                        this.tileHeight / 2, grid[i][j], grid, GridOrientation.pickRandomOrientation(), imageLoader,true);
             zombies.add(zombone);
-            System.out.println(zombone.getZType()+" Zombie at [" + i + "][" + j + "]");
+            System.out.println(zombone.getZType() + " Zombie at [" + i + "][" + j + "]");
           }
         }
       }
@@ -176,9 +182,10 @@ public class ZombieHouseModel
 
   /**
    * This method takes a displacement as int xy-coordinate pair and an orientation and tells the Player object to move
-   * @param dX       X-displacement (in pixels)
-   * @param dY       Y-displacement (in pixels)
-   * @param dir      orientation on the tiles
+   *
+   * @param dX  X-displacement (in pixels)
+   * @param dY  Y-displacement (in pixels)
+   * @param dir orientation on the tiles
    */
   public void movePlayer(double dX, double dY, Enum dir, boolean running)
   {
@@ -190,10 +197,35 @@ public class ZombieHouseModel
    */
   public void updateZombies()
   {
-    for(Zombie zombie: zombies)
+    for (Zombie zombie : zombies)
     {
       //zombie.walk(zombie.getPlayerOrientation(), deltaSeconds);
       zombie.update(deltaSeconds);
+    }
+  }
+
+
+  public void attemptTrapAction()
+  {
+    if (playerCharacter.getCurrentTile().hasTrap())
+    {
+      for (Trap trap : traps)
+        if ((trap.getX() == playerCharacter.getCurrentTile().getTrap().getX()) && (trap.getY() == playerCharacter.getCurrentTile().getTrap().getY()))
+        {
+          playerCharacter.grabTrap();
+          traps.remove(trap);
+          SOUNDLOADER.playPickUpTrap();
+          break;
+
+        }
+    }
+    else if (playerCharacter.getNumberOfTraps() > 0)
+    {
+      playerCharacter.installTrap();
+      traps.add(new Trap((int) playerCharacter.getCurrentTile().getCenterX(), (int) playerCharacter.getCurrentTile()
+          .getCenterY(), true));
+      SOUNDLOADER.playDropTrap();
+
     }
   }
 
@@ -228,6 +260,12 @@ public class ZombieHouseModel
   {
     return this.playerCharacter;
   }
+
+  public void setPlayerRunning(boolean running)
+  {
+    playerCharacter.setRunning(running);
+  }
+
 
   public ArrayList<Zombie> getZombieList()
   {
