@@ -21,7 +21,7 @@ public class Movable implements Alive
   private int defenseRate;
   private double healingRate;
   private double damage;
-  private boolean dead;
+  private boolean dead = false;
 
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
@@ -102,7 +102,7 @@ public class Movable implements Alive
    */
   public Tile getCurrentTile()
   {
-    return location;
+    return this.location;
   }
 
 
@@ -187,7 +187,7 @@ public class Movable implements Alive
 
             if (!location.getTrap().getSoundPlayed())
             {
-              ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+              ZombieHouseModel.soundLoader.playExplosionEffect();
               location.getTrap().setSoundPlayed();
             }
           }
@@ -217,7 +217,7 @@ public class Movable implements Alive
             this.decrementHealth(10);
             if (!location.getTrap().getSoundPlayed())
             {
-              ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+              ZombieHouseModel.soundLoader.playExplosionEffect();
               location.getTrap().setSoundPlayed();
             }
           }
@@ -284,8 +284,23 @@ public class Movable implements Alive
     return this.originalHealth-this.damage;
   }
 
+  public boolean getRunning()
+  {
+    return this.running;
+  }
+
+  public void setRunning(boolean running)
+  {
+    this.running = running;
+  }
+
   public boolean isDead()
   {
     return this.dead;
   }
+  public void isAlive()
+  {
+    this.dead=false;
+  }
+
 }

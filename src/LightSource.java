@@ -57,69 +57,74 @@ public class LightSource extends Polygon
     {
       xMult = Math.cos(Math.toRadians(deg));
       yMult = Math.sin(Math.toRadians(deg));
-      tile=playerTile;
-      lineOfSight = .01;
-
-      while (lineOfSight < playerSight && tile instanceof Floor)
-      {
-        radius = (float) (lineOfSight * tileRadius);
-        x = player.getX() + (xMult * radius);
-        y = player.getY() + (yMult * radius);
-
-        for (int i = 0; i < playerSight; i++)
-        {
-          if ((gridRow - i >= 0 && gridCol - i >= 0) && grid[gridRow - i][gridCol - i].contains(x, y))
-          {
-            tile = grid[gridRow - i][gridCol - i];
-          }
-          else if ((gridRow - i >= 0 && gridCol >= 0) && grid[gridRow - i][gridCol].contains(x, y))
-          {
-            tile = grid[gridRow - i][gridCol];
-          }
-          else if ((gridRow - i >= 0 && gridCol + i < 40) && grid[gridRow - i][gridCol + i].contains(x, y))
-          {
-            tile = grid[gridRow - i][gridCol + i];
-          }
-          else if ((gridCol - i >= 0) && grid[gridRow][gridCol - i].contains(x, y))
-          {
-            tile = grid[gridRow][gridCol - i];
-          }
-          else if ((gridCol + i < 40) && grid[gridRow][gridCol + i].contains(x, y))
-          {
-            tile = grid[gridRow][gridCol + i];
-          }
-          else if ((gridRow + i < 40 && gridCol - i >= 0) && grid[gridRow + i][gridCol - i].contains(x, y))
-          {
-            tile = grid[gridRow + i][gridCol - i];
-          }
-          else if ((gridRow + i < 40) && grid[gridRow + i][gridCol].contains(x, y))
-          {
-            tile = grid[gridRow + i][gridCol];
-          }
-          else if ((gridRow + i < 40 && gridCol + i < 40) && grid[gridRow + i][gridCol + i].contains(x, y))
-          {
-            tile = grid[gridRow + i][gridCol + i];
-          }
-          if (tile instanceof Wall) break;
-        }
-        if(tile instanceof Wall) break;
-        lineOfSight += .1;
-      }
-      if(tile instanceof Wall)
-      {
-        System.out.println("(" + (int) tile.getCenterX() + ", " + (int) tile.getCenterY() + ")");
-        light.addPoint((int) tile.getCenterX(), (int) tile.getCenterY());
-      }
-      else
-      {
-        x = centerX + (xMult * radius);
-        y = centerY + (yMult * radius);
-        System.out.println("(" + x + ", " + y + ")");
-
-        light.addPoint((int) x, (int) y);
-      }
+      x = centerX + (xMult * radius);
+      y = centerY + (yMult * radius);
+      light.addPoint((int) x, (int) y);
     }
   }
+      //     tile=playerTile;
+//      lineOfSight = .01;
+//
+//      while (lineOfSight < playerSight && tile instanceof Floor)
+//      {
+//        radius = (float) (lineOfSight * tileRadius);
+//        x = player.getX() + (xMult * radius);
+//        y = player.getY() + (yMult * radius);
+//
+//        for (int i = 0; i < playerSight; i++)
+//        {
+//          if ((gridRow - i >= 0 && gridCol - i >= 0) && grid[gridRow - i][gridCol - i].contains(x, y))
+//          {
+//            tile = grid[gridRow - i][gridCol - i];
+//          }
+//          else if ((gridRow - i >= 0 && gridCol >= 0) && grid[gridRow - i][gridCol].contains(x, y))
+//          {
+//            tile = grid[gridRow - i][gridCol];
+//          }
+//          else if ((gridRow - i >= 0 && gridCol + i < 40) && grid[gridRow - i][gridCol + i].contains(x, y))
+//          {
+//            tile = grid[gridRow - i][gridCol + i];
+//          }
+//          else if ((gridCol - i >= 0) && grid[gridRow][gridCol - i].contains(x, y))
+//          {
+//            tile = grid[gridRow][gridCol - i];
+//          }
+//          else if ((gridCol + i < 40) && grid[gridRow][gridCol + i].contains(x, y))
+//          {
+//            tile = grid[gridRow][gridCol + i];
+//          }
+//          else if ((gridRow + i < 40 && gridCol - i >= 0) && grid[gridRow + i][gridCol - i].contains(x, y))
+//          {
+//            tile = grid[gridRow + i][gridCol - i];
+//          }
+//          else if ((gridRow + i < 40) && grid[gridRow + i][gridCol].contains(x, y))
+//          {
+//            tile = grid[gridRow + i][gridCol];
+//          }
+//          else if ((gridRow + i < 40 && gridCol + i < 40) && grid[gridRow + i][gridCol + i].contains(x, y))
+//          {
+//            tile = grid[gridRow + i][gridCol + i];
+//          }
+//          if (tile instanceof Wall) break;
+//        }
+//        if(tile instanceof Wall) break;
+//        lineOfSight += .1;
+//      }
+//      if(tile instanceof Wall)
+//      {
+//        System.out.println("(" + (int) tile.getCenterX() + ", " + (int) tile.getCenterY() + ")");
+//        light.addPoint((int) tile.getCenterX(), (int) tile.getCenterY());
+//      }
+//      else
+//      {
+//        x = centerX + (xMult * radius);
+//        y = centerY + (yMult * radius);
+//        System.out.println("(" + x + ", " + y + ")");
+//
+//        light.addPoint((int) x, (int) y);
+//      }
+//    }
+//  }
 
 
 

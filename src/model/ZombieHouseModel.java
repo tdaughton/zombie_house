@@ -21,17 +21,17 @@ public class ZombieHouseModel
   protected final static int MAX_SCREEN_HEIGHT = (int) userScreenSize.getHeight();
   protected final static int VISIBLE_X_TILES = 12;
   protected final static int VISIBLE_Y_TILES = 10;
-  public final static SoundLoader SOUNDLOADER = new SoundLoader();
-  private ImageLoader imageLoader;
-  public final static int ROWS = 40;
-  public final static int COLS = 40;
-  private static final double ZOMBIE_SPAWN_RATE = 0.00f;
-  private static final double TRAP_SPAWN_RATE = 0.00f;
+  public static SoundLoader soundLoader;
+  public static ImageLoader imageLoader;
+  public final static int ROWS = 41;
+  public final static int COLS = 48;
+  private static final double ZOMBIE_SPAWN_RATE = 0.01f;
+  private static final double TRAP_SPAWN_RATE = 0.01f;
   private Random rand = new Random();
+  MapGenerator mapGen = new MapGenerator();
   private Player playerCharacter;
   private ArrayList<Zombie> zombies;
   private ArrayList<Trap> traps;
-  //private Map map;
   private Tile grid[][];
   private double deltaSeconds;
   private int currentScreenWidth;
@@ -39,21 +39,20 @@ public class ZombieHouseModel
   private int tileWidth;
   private int tileHeight;
 
-  public ZombieHouseModel()
+  public ZombieHouseModel(SoundLoader soundLoader)
   {
     traps = new ArrayList<>();
     zombies = new ArrayList<>();
-    MapGenerator mapGen = new MapGenerator();
+    ZombieHouseModel.soundLoader =soundLoader;
     this.currentScreenWidth = MAX_SCREEN_WIDTH;
     this.currentScreenHeight = MAX_SCREEN_HEIGHT;
     this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
     this.tileHeight = currentScreenHeight / VISIBLE_Y_TILES;
     this.grid = this.translateTileImages(mapGen.getMap());
-    //this.map = new Map(tiles, ROWS, COLS);
-    this.imageLoader = new ImageLoader(this, tileWidth, tileHeight);
+    imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     this.setRandomTraps();
     this.initializeRandomZombies();
-    playerCharacter = this.getRandomStart();
+    this.playerCharacter = this.getRandomStart();
 
   }
 
@@ -71,8 +70,15 @@ public class ZombieHouseModel
     {
       for (int j = 0; j < COLS; j++)
       {
-        if (grid[i][j] != 1) tiles[i][j] = new Wall(i, j, tiles);
-        else tiles[i][j] = new Floor(i, j, tiles);
+        // 0(Nowhere) ---------------> 0(Nowhere)
+// 1(Room) ------------------> 2(Floor)
+// 2(Hallways) --------------> 2(Floor)
+// 8(Exit) ------------------> 4(Exit)
+// 16(Wall) -----------------> 1(Wall)
+        if (grid[i][j] == 0) tiles[i][j] = new Outside(i,j,tiles);
+        else if (grid[i][j] == 2) tiles[i][j] = new Floor(i,j,tiles);
+        else if (grid[i][j] == 4) tiles[i][j] = new Floor(i,j,tiles); // implement exit tile
+        else tiles[i][j] = new Wall(i, j, tiles);
         tiles[i][j].setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth, this.tileHeight);
       }
     }
@@ -92,11 +98,10 @@ public class ZombieHouseModel
 
     while (!(grid[x][y] instanceof Floor))
     {
-      x = rand.nextInt(COLS);
-      y = rand.nextInt(ROWS);
+      x = rand.nextInt(ROWS);
+      y = rand.nextInt(COLS);
       this.playerCharacter = new Player(this.grid[x][y].getCenterTileX(), this.grid[x][y].getCenterTileY(), this.tileHeight / 2, this.grid[x][y],
-
-          this.grid, this.imageLoader, false, 20);
+                                        this.grid, imageLoader, false, 20);
     }
     return playerCharacter;
   }
@@ -227,7 +232,7 @@ public class ZombieHouseModel
         {
           playerCharacter.grabTrap();
           traps.remove(trap);
-          SOUNDLOADER.playPickUpTrap();
+          soundLoader.playPickUpTrap();
           break;
         }
     }
@@ -236,7 +241,7 @@ public class ZombieHouseModel
       playerCharacter.installTrap();
       traps.add(new Trap((int) playerCharacter.getCurrentTile().getCenterX(), (int) playerCharacter.getCurrentTile()
           .getCenterY(), true));
-      SOUNDLOADER.playDropTrap();
+      soundLoader.playDropTrap();
 
     }
   }
@@ -273,12 +278,6 @@ public class ZombieHouseModel
     return this.playerCharacter;
   }
 
-  public void setPlayerRunning(boolean running)
-  {
-    playerCharacter.setRunning(running);
-  }
-
-
   public ArrayList<Zombie> getZombieList()
   {
     return this.zombies;
@@ -291,7 +290,7 @@ public class ZombieHouseModel
 
   public ImageLoader getImageLoader()
   {
-    return this.imageLoader;
+    return imageLoader;
   }
 
   public void setCharredTile(Tile tile)
@@ -311,6 +310,17 @@ public class ZombieHouseModel
     }
   }
 
+  public void restart()
+  {
+    this.playerCharacter = this.getRandomStart();
+    this.grid = this.translateTileImages(mapGen.getMap());
+    imageLoader = new ImageLoader(this, tileWidth, tileHeight);
+    this.traps = new ArrayList<>();
+    this.zombies = new ArrayList<>();
+    this.setRandomTraps();
+    this.initializeRandomZombies();
+
+  }
 
   /**
    * This method dispatches time-based events among game agents
