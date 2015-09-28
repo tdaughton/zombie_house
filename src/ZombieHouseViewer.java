@@ -47,6 +47,7 @@ public class ZombieHouseViewer extends JPanel
     this.zModel = zModel;
     this.currentScreenWidth = (int) userScreenSize.getWidth();
     this.currentScreenHeight = (int) userScreenSize.getHeight();
+    this.zModel.getImageLoader().createBackground();
     this.background = zModel.getImageLoader().getBackground();
     this.backgroundWidth = background.getWidth();
     this.backgroundHeight = background.getHeight();
@@ -254,12 +255,12 @@ public class ZombieHouseViewer extends JPanel
    * Utilizes Area class to paint the area outside of the Polygon black (to render darkness)
    * @param g  Graphics system reference
    */
-  public void drawLight(Graphics g, Graphics b, LightSource lightSource)
+  public void drawLight(Graphics g, LightSource lightSource)
   {
     Graphics2D g2 = (Graphics2D) g;
 
     lightSource.setPolygon(playerSprite.getCurrentTile().getGridRow(),playerSprite.getCurrentTile().getGridCol(),
-                            playerSprite.getX(),playerSprite.getY());
+                            this.currentScreenWidth/2, this.currentScreenHeight/2);
     Polygon light = lightSource.getPolygon();
     Area darkness = new Area(new Rectangle(0,0,currentScreenWidth,currentScreenHeight));
     darkness.subtract(new Area(light));
@@ -288,6 +289,7 @@ public class ZombieHouseViewer extends JPanel
     g.drawImage(this.getVisibleBuffer(), negXOffSet, negYOffSet, null);
     g.drawImage(currentForegroundSubImage, negXOffSet, negYOffSet, null);
     this.drawSprite(g);
+    this.drawLight(g, lightSource);
     this.drawBufferedComponents(g);
 
   }
@@ -296,6 +298,15 @@ public class ZombieHouseViewer extends JPanel
     Graphics g2 = this.getForegroundGraphics();
     this.drawZombies(g2);
     this.drawTraps(g2);
-    this.drawLight(g2, g, lightSource);
+  }
+
+
+  public void restart()
+  {
+    this.zModel.getImageLoader().createBackground();
+    this.background = zModel.getImageLoader().getBackground();
+    this.playerSprite = zModel.getPlayer();
+    this.lightSource = new LightSource(playerSprite,zModel.getGrid());
+    repaint();
   }
 }

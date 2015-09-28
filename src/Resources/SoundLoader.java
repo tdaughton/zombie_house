@@ -34,20 +34,24 @@ public class SoundLoader
   private static Clip zombieGrunt5;
   private static Clip zombieGrunt6;
   private static Clip zombieGrunt7;
+  private static Clip losingSound;
+  private static Clip levelUpSound;
+
 
   private static boolean pause;
 
-  private int pan = 0;
+  private float pan = 0f;
 
-  private Random rand = new Random(100);
+  private Random rand;
 
   private static FloatControl gainControl;
 
   /**
    * Default constructor. Loads all (three) known sound files and keep references to them.
    */
-  public SoundLoader()
+  public SoundLoader(Random rand)
   {
+    this.rand = rand;
     pcRightFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav");
     pcLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav");
     backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
@@ -67,9 +71,8 @@ public class SoundLoader
     zombieGrunt5 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-15.wav");
     zombieGrunt6 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-16.wav");
     zombieGrunt7 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-17.wav");
-
-
-
+    losingSound = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Spell_02.wav");
+    levelUpSound = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Spell_00.wav");
 
 
   }
@@ -186,20 +189,20 @@ public class SoundLoader
 
     Clip zombieTalk = zombieTalk1;
     int r = rand.nextInt(3);
-    if (zombie.getX() - 20 < player.getX()) pan = -1;
-    else pan = 1;
+    if (zombie.getX() - 20 < player.getX()) pan = -1f;
+    else pan = 1f;
 
     if (r % 3 == 0) zombieTalk = zombieTalk1;
     else if (r % 3 == 1) zombieTalk = zombieTalk2;
     else zombieTalk = zombieTalk3;
-
-//    gainControl = (FloatControl) zombieTalk.getControl(FloatControl.Type.BALANCE);
+//
+//    gainControl = (FloatControl) zombieTalk.getControl(FloatControl.Type.MASTER_GAIN);
 //    gainControl.setValue(pan);
     if (zombieTalk.isRunning()) return;
 
     else
     {
-      zombieTalk.setFramePosition(pan);
+      zombieTalk.setFramePosition(0);
       zombieTalk.start();
     }
   }
@@ -209,8 +212,8 @@ public class SoundLoader
 
     Clip zombieGrunt = zombieGrunt1;
     int r = rand.nextInt(7);
-    if(zombie.getX()-20 < player.getX()) pan = -1;
-    else pan = 1;
+    if(zombie.getX()-20 < player.getX()) pan = -1f;
+    else pan = 1f;
 
     if(r%7==0);
     else if(r%7==1) zombieGrunt = zombieGrunt2;
@@ -220,13 +223,13 @@ public class SoundLoader
     else if(r%7==5) zombieGrunt = zombieGrunt6;
     else zombieGrunt = zombieGrunt7;
 
-
-//    gainControl = (FloatControl) zombieGrunt.getControl(FloatControl.Type.BALANCE);
+//
+//    gainControl = (FloatControl) zombieGrunt.getControl(FloatControl.Type.MASTER_GAIN);
 //    gainControl.setValue(pan);
     if(zombieGrunt.isRunning()) return;
     else
     {
-      zombieGrunt.setFramePosition(pan);
+      zombieGrunt.setFramePosition(0);
       zombieGrunt.start();
     }
   }
@@ -236,19 +239,33 @@ public class SoundLoader
 
     Clip zombiePain = zombiePain1;
     int r = rand.nextInt(3);
-    if(zombie.getX()-20 < player.getX()) pan = -1;
-    else pan = 1;
+    if(zombie.getX()-20 < player.getX()) pan = -1f;
+    else pan = 1f;
 
     if(r%3==1) zombiePain = zombiePain1;
     else if(r%3==2) zombiePain = zombiePain2;
     else if(r%3==0) zombiePain = zombiePain3;
-
-//    gainControl = (FloatControl) zombiePain.getControl(FloatControl.Type.BALANCE);
+//
+//    gainControl = (FloatControl) zombiePain.getControl(FloatControl.Type.MASTER_GAIN);
 //    gainControl.setValue(pan);
     if(zombiePain.isRunning()) return;
     else
-    { zombiePain.setFramePosition(pan);
+    { zombiePain.setFramePosition(0);
       zombiePain.start();
     }
+  }
+
+  public void playLosingSound()
+  {
+    if(losingSound.isRunning()) losingSound.stop();
+    losingSound.setFramePosition(0);
+    losingSound.start();
+  }
+
+  public void playLevelUpSound()
+  {
+    if(levelUpSound.isRunning()) levelUpSound.stop();
+    levelUpSound.setFramePosition(0);
+    levelUpSound.start();
   }
 }

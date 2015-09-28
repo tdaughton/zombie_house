@@ -4,6 +4,7 @@
 package model;
 import javafx.scene.shape.Circle;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 /**
  * This class represents the basic functionality of moving or movable entities in the Zombie House game.
@@ -13,6 +14,7 @@ public class Movable implements Alive
 {
   private Circle circle;
   private Tile location;
+  private ZombieHouseModel zModel;
   private Tile[][] tiles;
   private Enum playerOrientation;
   private boolean running;
@@ -21,7 +23,7 @@ public class Movable implements Alive
   private int defenseRate;
   private double healingRate;
   private double damage;
-  private boolean dead;
+  private boolean dead = false;
 
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
@@ -40,12 +42,13 @@ public class Movable implements Alive
    * @param y                    Y coordinate of center point (in pixels)
    * @param radius               Radius of bounding circle (in pixels)
    * @param loc                  Tile location containing center point
-   * @param grid                 Reference to Zombie House map
+   * @param zhModel              Reference to Zombie House map
    */
-  public Movable(double x, double y, double radius, Tile loc, Tile[][] grid, Boolean running, int health)
+  public Movable(double x, double y, double radius, Tile loc, ZombieHouseModel zhModel, Boolean running, int health)
   {
     this.location = loc;
-    this.tiles = grid;
+    this.zModel = zhModel;
+    this.tiles = zModel.getGrid();
     this.running=running;
     this.originalHealth = health;
     circle = new Circle(x, y, radius);
@@ -102,7 +105,7 @@ public class Movable implements Alive
    */
   public Tile getCurrentTile()
   {
-    return location;
+    return this.location;
   }
 
 
@@ -122,13 +125,13 @@ public class Movable implements Alive
    * @param otherMovable  any other Movable
    * @return  true/false if collision
    */
-  public boolean intersects(Circle otherMovable)
+  public boolean intersects(Movable otherMovable)
   {
     boolean intersects = false;
     double r1 = Math.pow(otherMovable.getRadius() - circle.getRadius(), 2);
     double r2 = Math.pow(otherMovable.getRadius() + circle.getRadius(), 2);
-    double distance = Math.pow((otherMovable.getCenterX() - circle.getCenterX()), 2) +
-                       Math.pow((otherMovable.getCenterY() - circle.getCenterY()), 2);
+    double distance = Math.pow((otherMovable.getX() - circle.getCenterX()), 2) +
+                      Math.pow((otherMovable.getY() - circle.getCenterY()), 2);
 
     if (distance >= r1 && distance <= r2) intersects = true;
 
@@ -187,7 +190,7 @@ public class Movable implements Alive
 
             if (!location.getTrap().getSoundPlayed())
             {
-              ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+              ZombieHouseModel.soundLoader.playExplosionEffect();
               location.getTrap().setSoundPlayed();
             }
           }
@@ -217,7 +220,7 @@ public class Movable implements Alive
             this.decrementHealth(10);
             if (!location.getTrap().getSoundPlayed())
             {
-              ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+              ZombieHouseModel.soundLoader.playExplosionEffect();
               location.getTrap().setSoundPlayed();
             }
           }
@@ -253,7 +256,13 @@ public class Movable implements Alive
       Tile nextTile = tiles[gRow][gCol];
       boolean canMove = nextTile.isMovable();
       boolean intersectsWall = moveChecker.intersects(nextTile);
-      return (canMove || !intersectsWall);
+      boolean intersectsMovable = false;
+      ArrayList<Zombie> zList = zModel.getZombieList();
+      for (Zombie zombone : zList)
+      {
+        if (!zombone.equals(this)) intersectsMovable |= moveChecker.intersects(zombone);
+      }
+      return ((canMove || !intersectsWall) && !intersectsMovable);
     }
     else return false;
   }
@@ -284,8 +293,23 @@ public class Movable implements Alive
     return this.originalHealth-this.damage;
   }
 
+  public boolean getRunning()
+  {
+    return this.running;
+  }
+
+  public void setRunning(boolean running)
+  {
+    this.running = running;
+  }
+
   public boolean isDead()
   {
     return this.dead;
   }
+  public void isAlive()
+  {
+    this.dead=false;
+  }
+
 }

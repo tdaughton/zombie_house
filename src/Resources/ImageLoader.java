@@ -23,6 +23,8 @@ public class ImageLoader
   private static BufferedImage lineZombieSheet;
   private static BufferedImage masterZombieSheet;
   private static BufferedImage lineZombieDeathSheet;
+  private static BufferedImage trap;
+  private static BufferedImage explosionSheet;
 
 
   private static BufferedImage playerSheetRun;
@@ -49,7 +51,6 @@ public class ImageLoader
     this.tileHeight = tHeight;
     background = new BufferedImage(tileWidth * this.rows, tileHeight * this.cols, BufferedImage.TYPE_INT_RGB);
     this.readImages();
-    this.createBackground();
   }
 
 
@@ -69,6 +70,8 @@ public class ImageLoader
       lineZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/random.png"));
       masterZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/master.png"));
       lineZombieDeathSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/random_death.png"));
+      trap = ImageIO.read(this.getClass().getResourceAsStream("/Resources/trap_resources/bomb.png"));
+      explosionSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/trap_resources/explosion.png"));
 
 
     }
@@ -147,9 +150,14 @@ public class ImageLoader
   {
     return lineZombieDeathSheet;
   }
-
-
-
+  public BufferedImage getExplosionSheet()
+  {
+    return explosionSheet;
+  }
+  public BufferedImage getTrap()
+  {
+    return trap;
+  }
 
   public BufferedImage getPlayerSheetRun()
   {

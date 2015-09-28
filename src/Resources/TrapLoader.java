@@ -18,7 +18,7 @@ import java.io.IOException;
 public class TrapLoader
 {
 
-  private BufferedImage trap;
+  private static BufferedImage trap;
   private static BufferedImage explosionSheet;
 
   private static BufferedImage explosions[];
@@ -34,28 +34,14 @@ public class TrapLoader
    * Sets a variable called currentTrapImage to keep track of which image is currently being used to represent
    * the trap (useful for when the animation is underway)
    */
-  public TrapLoader()
-  { explosions = new BufferedImage[47];
-    this.readImages();
+  public TrapLoader(ImageLoader loader)
+  {
+    explosionSheet = loader.getExplosionSheet();
+    trap = loader.getTrap();
+    explosions = new BufferedImage[47];
     this.setExplosionSheet();
     this.currentTrapImage=trap;
 
-  }
-
-  /**
-   * Uses a resource stream to load the animation sheet and trap image
-   */
-  private void readImages()
-  {
-    try
-    {
-      trap = ImageIO.read(this.getClass().getResourceAsStream("/Resources/trap_resources/bomb.png"));
-      explosionSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/trap_resources/explosion.png"));
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
   }
 
   /**

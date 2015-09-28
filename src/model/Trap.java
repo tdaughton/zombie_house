@@ -31,7 +31,7 @@ public class Trap extends Movable
     this.explosionTriggered = false;
     this.explosionFinished = false;
     this.soundPlayed = false;
-    this.trapLoader = new TrapLoader();
+    this.trapLoader = new TrapLoader(ZombieHouseModel.imageLoader);
   }
 
   //============================================================================

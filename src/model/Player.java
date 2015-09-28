@@ -33,12 +33,13 @@ public class Player extends Movable
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Player(double x, double y, double radius, Tile location, Tile[][] grid, ImageLoader imageLoader, boolean running, int health)
+  public Player(double x, double y, double radius, Tile location, ZombieHouseModel zhModel, ImageLoader imageLoader, boolean running, int health)
   {
-    super(x, y, radius,location,grid,running, health);
+    super(x, y, radius, location, zhModel, running, health);
     this.frames = new SpriteLoader(imageLoader);
     this.numberOfTraps = 3;
     this.stamina = STAM_MAX;
+    this.setRunning(running);
   }
 
   /**
@@ -52,17 +53,15 @@ public class Player extends Movable
 
   public void update(double timeElapsed)
   {
-    if (!running) stamina = Math.min(STAM_MAX,stamina+STAM_REGEN);
+    if (!running) stamina = Math.min(STAM_MAX,stamina+STAM_REGEN*timeElapsed);
     stamina = Math.max(0, stamina);
   }
 
   public void walk(double dX, double dY, Enum direction, boolean boost, double timeElapsed)
   {
-    this.running = boost;
-    stamina -= (running ? timeElapsed : 0.0f);
-    double xDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * super.getCurrentTile().getWidth() * timeElapsed * dX;
-    double yDistance = (running && stamina > 0.0f ? SPEED_MULT : 1.0f) * SPEED_WALK * super.getCurrentTile().getHeight() * timeElapsed * dY;
-    //System.out.println("pxd "+xDistance+" pyd "+yDistance);
+    stamina -= (boost ? timeElapsed : 0.0f);
+    double xDistance = ((boost && stamina > 0.0f) ? SPEED_MULT : 1.0f) * SPEED_WALK * super.getCurrentTile().getWidth() * timeElapsed * dX;
+    double yDistance = ((boost && stamina > 0.0f) ? SPEED_MULT : 1.0f) * SPEED_WALK * super.getCurrentTile().getHeight() * timeElapsed * dY;
     super.move(xDistance, yDistance, direction);
     frames.getRotatingRun();
   }
