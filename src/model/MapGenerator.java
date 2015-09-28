@@ -45,12 +45,8 @@ public class MapGenerator implements GameMap
   // 2. Generate RANDOM room with different sizes. Each room must start and end
   //    at odd coordinates of of tile because that way hallways are going to
   //    look prettier.
-  // 3. Generate RANDOM hallways. Hallways are going to change directions or end
-  //    at odd number of coordinates only, too.
-  // 4. Connect tempRooms and hallways. Each room can have multiple doors but
-  //    must have at least one.
-  // 5. locate exit on hallway.
-  // 6. Erase unused hallways.
+  // 3. Build doors for each room. Each room should have one or more doors.
+  // 4. Build hallways and make sure all the doors are connected.
   //============================================================================
   public MapGenerator()
   {
@@ -60,7 +56,6 @@ public class MapGenerator implements GameMap
     initiateHouse();
     RoomGenerator rg = new RoomGenerator(map);
     DoorGenerator dg = new DoorGenerator(rg.getMap(), rg.getRooms());
-    //printMap();
     HallwayGenerator hg = new HallwayGenerator(dg.getMap(), dg.getDoors());
     //printMap();
     convertIntoDisplayableMap(hg.getMap());

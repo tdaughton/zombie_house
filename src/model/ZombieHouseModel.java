@@ -71,6 +71,7 @@ public class ZombieHouseModel
     {
       for (int j = 0; j < COLS; j++)
       {
+        // 0 = empty space, 1 = wall, 2 = floor, 4 = exit
         if (grid[i][j] != 1) tiles[i][j] = new Wall(i, j, tiles);
         else tiles[i][j] = new Floor(i, j, tiles);
         tiles[i][j].setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth, this.tileHeight);
