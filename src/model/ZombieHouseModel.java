@@ -7,9 +7,11 @@ package model;
 
 import Resources.ImageLoader;
 import Resources.SoundLoader;
-import java.awt.*;
-import java.util.Random;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class ZombieHouseModel
@@ -41,7 +43,7 @@ public class ZombieHouseModel
   {
     traps = new ArrayList<>();
     zombies = new ArrayList<>();
-    MapGenerator mapGen = new MapGenerator(ROWS, COLS);
+    MapGenerator mapGen = new MapGenerator();
     this.currentScreenWidth = MAX_SCREEN_WIDTH;
     this.currentScreenHeight = MAX_SCREEN_HEIGHT;
     this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
