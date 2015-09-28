@@ -14,7 +14,7 @@ import java.util.Random;
  * This class serves as the model for Zombies in Zombie House. It specifies behavior unique to
  * Zombies among Movables including automatic walking, olfactory sense, and chasing down the Player.
  */
-public class Zombie extends Movable implements Alive
+public class Zombie extends Movable
 {
   /**
    * Enumerator to give zombie types fancy names.
@@ -33,17 +33,11 @@ public class Zombie extends Movable implements Alive
   private double theta;
   private double timeSinceUpdate;
   private boolean bumped;
-  private boolean running = true;
 
   // I thought maybe depending on the types of zombie, how much damage they take
   // and how much health they recover each second may differ. If makes the game
   // too difficult, then let's not do this. :D -Miri
-  private int originalHealth;
-  private int currentHealth;
-  private double healingRate;
-  private double defenceRate;
-  private double damage;
-  private boolean dead;
+
   private Enum zombieOrientation;
   private SpriteLoader frames;
 
@@ -55,9 +49,9 @@ public class Zombie extends Movable implements Alive
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Zombie(int x, int y, int radius, Tile location, Tile[][] grid, Enum direction, ImageLoader imageLoader, boolean running)
+  public Zombie(int x, int y, int radius, Tile location, Tile[][] grid, Enum direction, ImageLoader imageLoader, boolean running, int health)
   {
-    super(x, y, radius, location, grid, direction, running);
+    super(x, y, radius, location, grid, running, health);
     wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
     path = new ArrayList<>();
     frames = new SpriteLoader(imageLoader);
@@ -84,25 +78,25 @@ public class Zombie extends Movable implements Alive
   /**
    * Walk in predetermined direction or path
    */
-  protected void walk(Enum direction, double timeElapsed)
+  protected void walk(double timeElapsed)
   {
     double xDistance = (SPEED_WALK * super.getCurrentTile().getWidth() * Math.sin(theta) * timeElapsed);
     double yDistance = (SPEED_WALK * super.getCurrentTile().getHeight() * Math.cos(theta) * timeElapsed);
     //System.out.println("zxd "+xDistance+" zyd "+yDistance);
-    if (theta < 0.40f || theta > 5.90f) direction = GridOrientation.EAST;
-    else if (1.19f < theta && theta < 0.40f) direction = GridOrientation.NORTHEAST;
-    else if (1.97f < theta && theta < 1.19f) direction = GridOrientation.NORTH;
-    else if (2.76f < theta && theta < 1.97f) direction = GridOrientation.NORTHWEST;
-    else if (3.54f < theta && theta < 2.76f) direction = GridOrientation.WEST;
-    else if (4.33f < theta && theta < 3.54f) direction = GridOrientation.SOUTHWEST;
-    else if (5.11f < theta && theta < 4.33f) direction = GridOrientation.SOUTH;
-    else if (5.90f < theta && theta < 5.11f) direction = GridOrientation.SOUTHEAST;
-    bumped = super.move(xDistance, yDistance, direction);
-    if(wType == WalkType.LINE) getFrames().getRotatingMasterZombieWalk();
+    if (theta < 0.40f || theta > 5.90f) zombieOrientation = GridOrientation.EAST;
+    else if (1.19f < theta && theta < 0.40f) zombieOrientation = GridOrientation.NORTHEAST;
+    else if (1.97f < theta && theta < 1.19f) zombieOrientation = GridOrientation.NORTH;
+    else if (2.76f < theta && theta < 1.97f) zombieOrientation = GridOrientation.NORTHWEST;
+    else if (3.54f < theta && theta < 2.76f) zombieOrientation = GridOrientation.WEST;
+    else if (4.33f < theta && theta < 3.54f) zombieOrientation = GridOrientation.SOUTHWEST;
+    else if (5.11f < theta && theta < 4.33f) zombieOrientation = GridOrientation.SOUTH;
+    else if (5.90f < theta && theta < 5.11f) zombieOrientation = GridOrientation.SOUTHEAST;
+    bumped = super.move(xDistance, yDistance, zombieOrientation);
+    if(wType == WalkType.LINE) getFrames().getRotatingLineZombieWalk();
     else getFrames().getRotatingRandomZombieWalk();
   }
 
-  public void update(double timeElapsed)
+  public void updateZombie(double timeElapsed)
   {
     timeSinceUpdate += timeElapsed;
     if (timeSinceUpdate > RATE_ACT)
@@ -110,7 +104,7 @@ public class Zombie extends Movable implements Alive
       timeSinceUpdate = 0.0f;
       decisionEngine();
     }
-    walk(zombieOrientation, timeElapsed);
+    walk(timeElapsed);
   }
 
   /**
@@ -158,36 +152,4 @@ public class Zombie extends Movable implements Alive
     }*/
     //}
   }
-
-  //============================================================================
-  // Zombies should take damage from trap.
-  //============================================================================
-  @Override
-  public void getBurn(int damage)
-  {
-    damage = damage;
-  }
-
-  @Override
-  public int getHealth()
-  {
-    return currentHealth;
-  }
-
-  @Override
-  public void updateCurrentStatus()
-  {
-    currentHealth -= damage;
-    damage -= damage*defenceRate;
-
-    if(currentHealth <= 0) dead = true;
-  }
-
-  @Override
-  public boolean isDead()
-  {
-    return dead;
-  }
-
-
 }

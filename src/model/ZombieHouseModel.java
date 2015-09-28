@@ -19,12 +19,12 @@ public class ZombieHouseModel
   protected final static int MAX_SCREEN_HEIGHT = (int) userScreenSize.getHeight();
   protected final static int VISIBLE_X_TILES = 12;
   protected final static int VISIBLE_Y_TILES = 10;
-  protected final static SoundLoader SOUNDLOADER = new SoundLoader();
+  public final static SoundLoader SOUNDLOADER = new SoundLoader();
   private ImageLoader imageLoader;
   public final static int ROWS = 40;
   public final static int COLS = 40;
-  private static final double ZOMBIE_SPAWN_RATE = 0.01f;
-  private static final double TRAP_SPAWN_RATE = 0.01f;
+  private static final double ZOMBIE_SPAWN_RATE = 0.00f;
+  private static final double TRAP_SPAWN_RATE = 0.00f;
   private Random rand = new Random();
   private Player playerCharacter;
   private ArrayList<Zombie> zombies;
@@ -94,7 +94,7 @@ public class ZombieHouseModel
       y = rand.nextInt(ROWS);
       this.playerCharacter = new Player(this.grid[x][y].getCenterTileX(), this.grid[x][y].getCenterTileY(), this.tileHeight / 2, this.grid[x][y],
 
-          this.grid, GridOrientation.pickRandomOrientation(), this.imageLoader, false);
+          this.grid, this.imageLoader, false, 20);
     }
     return playerCharacter;
   }
@@ -165,7 +165,7 @@ public class ZombieHouseModel
           if (valid < 4 && rand.nextDouble() < ZOMBIE_SPAWN_RATE)
           {
             Zombie zombone = new Zombie((int) grid[i][j].getCenterX(), (int) grid[i][j].getCenterY(),
-                                        this.tileHeight / 2, grid[i][j], grid, GridOrientation.pickRandomOrientation(), imageLoader,true);
+                                        this.tileHeight / 2, grid[i][j], grid, GridOrientation.pickRandomOrientation(), imageLoader,true, 10);
             zombies.add(zombone);
             System.out.println(zombone.getZType() + " Zombie at [" + i + "][" + j + "]");
           }
@@ -199,9 +199,20 @@ public class ZombieHouseModel
   {
     for (Zombie zombie : zombies)
     {
-      //zombie.walk(zombie.getPlayerOrientation(), deltaSeconds);
-      zombie.update(deltaSeconds);
+      if (zombie.isDead())
+      {
+        zombies.remove(zombie);
+        break;
+      }
+      else
+      {
+//        int r = rand.nextInt(100);
+//        if (r % 99 == 0) SOUNDLOADER.playRandomDialogue(zombie, playerCharacter);
+//        else if (r % 88 == 0) SOUNDLOADER.playRandomGrunt(zombie, playerCharacter);
+        zombie.updateZombie(deltaSeconds);
+      }
     }
+
   }
 
 
@@ -216,7 +227,6 @@ public class ZombieHouseModel
           traps.remove(trap);
           SOUNDLOADER.playPickUpTrap();
           break;
-
         }
     }
     else if (playerCharacter.getNumberOfTraps() > 0)
@@ -284,7 +294,6 @@ public class ZombieHouseModel
 
   public void setCharredTile(Tile tile)
   {
-    //System.out.println(tile.getGridRow());
     int x = tile.getGridRow();
     int y = tile.getGridCol();
     for(int i = x-1; i < x+2; i++)
@@ -298,7 +307,6 @@ public class ZombieHouseModel
         }
       }
     }
-    System.out.println(tile.getGridRow());
   }
 
 

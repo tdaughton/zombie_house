@@ -13,6 +13,7 @@ import model.Player;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.Graphics;
 
 public class SpriteLoader
 {
@@ -41,6 +42,9 @@ public class SpriteLoader
   private BufferedImage subMasterZombieImage;
   private BufferedImage currentMasterZombieImage;
 
+  private static BufferedImage lineDeadZombie[];
+  private static BufferedImage lineDeadSheet;
+
 
   /**
    * Constructor
@@ -55,10 +59,13 @@ public class SpriteLoader
     lineZombieSheet = imageLoader.getLineZombieSheet();
     playerSheetRun = imageLoader.getPlayerSheetRun();
     masterZombieSheet=imageLoader.getMasterZombieSheet();
+    lineDeadSheet = imageLoader.getLineZombieDeathSheet();
+
     run = new BufferedImage[15];
     randomZombie = new BufferedImage[30];
     lineZombie = new BufferedImage[16];
     masterZombie = new BufferedImage[12];
+    lineDeadZombie = new BufferedImage[8];
 
     setIndividualPlayerFrames();
     setIndividualZombieFrames();
@@ -149,8 +156,6 @@ public class SpriteLoader
     lineZombie[15] = lineZombieSheet.getSubimage(2899, 8, 95, 130);
 
 
-
-
     masterZombie[0] = masterZombieSheet.getSubimage(922, 19, 75, 118);
     masterZombie[1] = masterZombieSheet.getSubimage(1142, 19, 75, 118);
     masterZombie[2] = masterZombieSheet.getSubimage(1377, 19, 75, 118);
@@ -163,6 +168,16 @@ public class SpriteLoader
     masterZombie[9] = masterZombieSheet.getSubimage(2955, 19, 75, 118);
     masterZombie[10] = masterZombieSheet.getSubimage(3200, 19, 75, 118);
     masterZombie[11] = masterZombieSheet.getSubimage(3439, 19, 75, 118);
+
+
+    lineDeadZombie[0] = lineDeadSheet.getSubimage(0, 0, 232, 249);
+    lineDeadZombie[1] = lineDeadSheet.getSubimage(256, 0, 232, 249);
+    lineDeadZombie[2] = lineDeadSheet.getSubimage(511, 0, 232, 249);
+    lineDeadZombie[3] = lineDeadSheet.getSubimage(758, 0, 232, 249);
+    lineDeadZombie[4] = lineDeadSheet.getSubimage(1011, 0, 232, 249);
+    lineDeadZombie[5] = lineDeadSheet.getSubimage(1286, 0, 232, 249);
+    lineDeadZombie[6] = lineDeadSheet.getSubimage(1540, 0, 232, 249);
+    lineDeadZombie[7] = lineDeadSheet.getSubimage(1793, 0, 200, 249);
 
   }
 
@@ -204,6 +219,14 @@ public class SpriteLoader
     masterZombieIterator++;
     if (masterZombieIterator > 11) masterZombieIterator = 0;
     subMasterZombieImage = currentMasterZombieImage;
+  }
+
+
+  public void playLineDeathSequence(Graphics g, Zombie zombie)
+  {
+    g.drawImage(masterZombie[masterZombieIterator], zombie.getX(), zombie.getY(), null);
+    masterZombieIterator++;
+    if (masterZombieIterator > 7) g.drawImage(masterZombie[7], zombie.getX(), zombie.getY(), null);
   }
   /**
    * currentPlayerImage is rotated depending on the map direction the player is facing

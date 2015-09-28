@@ -18,9 +18,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private final static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   private ZombieHouseModel zModel;
   private ZombieHouseViewer zView;
-
+  private ZombieHouseMenu zMenu;
   private SoundLoader gameSounds;
-  private Timer timer;
+  public static Timer timer;
   private boolean[] keysPressed;
   private long prevSeconds;
   private long currSeconds;
@@ -28,6 +28,8 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private int stepCount;
   private int curScreenWidth;
   private int curScreenHeight;
+  private boolean pause;
+  private int pauseTracker = 2;
 
   /**
    * Constructor
@@ -39,9 +41,10 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    */
   public ZombieHouseFrame()
   {
-    super();
+    super("ZombieHouse");
     this.zModel = new ZombieHouseModel();
     this.zView  = new ZombieHouseViewer(zModel, userScreenSize);
+    this.zMenu = new ZombieHouseMenu(zModel, (int) userScreenSize.getWidth());
     this.gameSounds = new SoundLoader();
     this.gameSounds.playBackgroundMusic();
 
@@ -49,12 +52,15 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     this.setPreferredSize(userScreenSize);
     this.setSize(userScreenSize);
     this.setBackground(Color.black);
+    this.getContentPane().add(zMenu, BorderLayout.PAGE_END);
     this.getContentPane().add(zView, BorderLayout.CENTER);
+    zView.requestFocusInWindow();
     this.setVisible(true);
 
-    this.timer = new Timer(16, this);
-    this.timer.setInitialDelay(1000);
-    this.timer.start();
+
+    timer = new Timer(16, this);
+    timer.setInitialDelay(1000);
+    timer.start();
     this.currSeconds = System.nanoTime();
 
     this.keysPressed = new boolean[128];
@@ -74,11 +80,22 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    **/
   public void actionPerformed(ActionEvent e)
   {
+    this.requestFocus();
     this.playerPickUpTrap();
+    this.zMenu.updateLabels();
     prevSeconds = currSeconds;
     currSeconds = System.nanoTime();
     deltaSeconds = (currSeconds - prevSeconds) / 1000000000.0f;
     zModel.update(deltaSeconds);
+    if(pause && pauseTracker>0)
+    {
+      pauseTracker--;
+    }
+    if(pauseTracker==0)
+    {
+      pauseTracker = 2;
+      pause = false;
+    }
     repaint();
   }
 
@@ -200,7 +217,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     double movement = 1.0f;
     boolean boost = false;
     int dir = 5;
-
+    if(pause) return;
     if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT])
     {
       boost = true;      //movement = 2 * movement;
@@ -263,7 +280,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     if(keysPressed[KeyEvent.VK_P])
     {
       zModel.attemptTrapAction();
+      pause = true;
     }
-
   }
 }

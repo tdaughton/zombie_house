@@ -9,6 +9,9 @@ package Resources;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.util.Random;
+import model.Zombie;
+import model.Player;
 
 public class SoundLoader
 {
@@ -18,6 +21,25 @@ public class SoundLoader
   private static Clip explosion;
   private static Clip dropTrap;
   private static Clip pickUpTrap;
+  private static Clip zombieTalk1;
+  private static Clip zombieTalk2;
+  private static Clip zombieTalk3;
+  private static Clip zombiePain1;
+  private static Clip zombiePain2;
+  private static Clip zombiePain3;
+  private static Clip zombieGrunt1;
+  private static Clip zombieGrunt2;
+  private static Clip zombieGrunt3;
+  private static Clip zombieGrunt4;
+  private static Clip zombieGrunt5;
+  private static Clip zombieGrunt6;
+  private static Clip zombieGrunt7;
+
+  private static boolean pause;
+
+  private int pan = 0;
+
+  private Random rand = new Random(100);
 
   private static FloatControl gainControl;
 
@@ -32,6 +54,22 @@ public class SoundLoader
     explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/explosion.wav");
     dropTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Trap_00.wav");
     pickUpTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Inventory_Open_01.wav");
+    zombieTalk1 = openWavByResourcePath("/Resources/sound_resources/zombies/dialogue.wav");
+    zombieTalk2 = openWavByResourcePath("/Resources/sound_resources/zombies/dialogue2.wav");
+    zombieTalk3 = openWavByResourcePath("/Resources/sound_resources/zombies/dialogue3.wav");
+    zombiePain1 = openWavByResourcePath("/Resources/sound_resources/zombies/pain1.wav");
+    zombiePain2 = openWavByResourcePath("/Resources/sound_resources/zombies/pain2.wav");
+    zombiePain3 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-4.wav");
+    zombieGrunt1 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-1.wav");
+    zombieGrunt2 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-9.wav");
+    zombieGrunt3 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-10.wav");
+    zombieGrunt4 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-13.wav");
+    zombieGrunt5 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-15.wav");
+    zombieGrunt6 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-16.wav");
+    zombieGrunt7 = openWavByResourcePath("/Resources/sound_resources/zombies/zombie-17.wav");
+
+
+
 
 
   }
@@ -64,6 +102,15 @@ public class SoundLoader
     }
 
     return null;
+  }
+
+  public void setPause(boolean paused)
+  {
+    pause = paused;
+  }
+  public boolean getPause()
+  {
+    return pause;
   }
 
   /**
@@ -111,7 +158,7 @@ public class SoundLoader
    */
   public void playExplosionEffect()
   {
-    if(explosion.isRunning()) explosion.stop();
+    if(this.getPause()) return;
     gainControl = (FloatControl) explosion.getControl(FloatControl.Type.MASTER_GAIN);
     gainControl.setValue(6.0f);
     explosion.setFramePosition(0);
@@ -130,5 +177,78 @@ public class SoundLoader
     if(dropTrap.isRunning()) dropTrap.stop();
     dropTrap.setFramePosition(0);
     dropTrap.start();
+  }
+
+
+  public void playRandomDialogue(Zombie zombie, Player player)
+  {
+    if(this.getPause()) return;
+
+    Clip zombieTalk = zombieTalk1;
+    int r = rand.nextInt(3);
+    if (zombie.getX() - 20 < player.getX()) pan = -1;
+    else pan = 1;
+
+    if (r % 3 == 0) zombieTalk = zombieTalk1;
+    else if (r % 3 == 1) zombieTalk = zombieTalk2;
+    else zombieTalk = zombieTalk3;
+
+//    gainControl = (FloatControl) zombieTalk.getControl(FloatControl.Type.BALANCE);
+//    gainControl.setValue(pan);
+    if (zombieTalk.isRunning()) return;
+
+    else
+    {
+      zombieTalk.setFramePosition(pan);
+      zombieTalk.start();
+    }
+  }
+  public void playRandomGrunt(Zombie zombie, Player player)
+  {
+    if(this.getPause()) return;
+
+    Clip zombieGrunt = zombieGrunt1;
+    int r = rand.nextInt(7);
+    if(zombie.getX()-20 < player.getX()) pan = -1;
+    else pan = 1;
+
+    if(r%7==0);
+    else if(r%7==1) zombieGrunt = zombieGrunt2;
+    else if(r%7==2) zombieGrunt = zombieGrunt3;
+    else if(r%7==3) zombieGrunt = zombieGrunt4;
+    else if(r%7==4) zombieGrunt = zombieGrunt5;
+    else if(r%7==5) zombieGrunt = zombieGrunt6;
+    else zombieGrunt = zombieGrunt7;
+
+
+//    gainControl = (FloatControl) zombieGrunt.getControl(FloatControl.Type.BALANCE);
+//    gainControl.setValue(pan);
+    if(zombieGrunt.isRunning()) return;
+    else
+    {
+      zombieGrunt.setFramePosition(pan);
+      zombieGrunt.start();
+    }
+  }
+  public void playRandomPain(Zombie zombie, Player player)
+  {
+    if(this.getPause()) return;
+
+    Clip zombiePain = zombiePain1;
+    int r = rand.nextInt(3);
+    if(zombie.getX()-20 < player.getX()) pan = -1;
+    else pan = 1;
+
+    if(r%3==1) zombiePain = zombiePain1;
+    else if(r%3==2) zombiePain = zombiePain2;
+    else if(r%3==0) zombiePain = zombiePain3;
+
+//    gainControl = (FloatControl) zombiePain.getControl(FloatControl.Type.BALANCE);
+//    gainControl.setValue(pan);
+    if(zombiePain.isRunning()) return;
+    else
+    { zombiePain.setFramePosition(pan);
+      zombiePain.start();
+    }
   }
 }

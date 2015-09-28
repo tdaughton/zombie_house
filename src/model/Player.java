@@ -15,6 +15,8 @@ public class Player extends Movable
   private static final double SPEED_MULT = 2.0f;
   private static final double STAM_MAX = 5.0f;
   private static final double STAM_REGEN = 0.2f;
+
+
   private SpriteLoader frames;
   // Inventory is going to take traps only. If there will be any other items
   // then we can use HashTable<String itemName, ArrayList<Item>> or something
@@ -31,9 +33,9 @@ public class Player extends Movable
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Player(double x, double y, double radius, Tile location, Tile[][] grid, Enum playerOrientation, ImageLoader imageLoader, boolean running)
+  public Player(double x, double y, double radius, Tile location, Tile[][] grid, ImageLoader imageLoader, boolean running, int health)
   {
-    super(x, y, radius,location,grid,playerOrientation, running);
+    super(x, y, radius,location,grid,running, health);
     this.frames = new SpriteLoader(imageLoader);
     this.numberOfTraps = 3;
     this.stamina = STAM_MAX;
@@ -91,4 +93,16 @@ public class Player extends Movable
   {
     return DIST_SIGHT;
   }
+  public double getPlayerHearing()
+  {
+    return DIST_HEAR;
+  }
+
+  public double getPlayerStamina()
+  {
+    return stamina;
+  }
+
+
+
 }

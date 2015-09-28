@@ -9,13 +9,19 @@ import java.awt.Rectangle;
  * This class represents the basic functionality of moving or movable entities in the Zombie House game.
  * This class provides the model for how entities move within the game tiles and enforces collision detection.
  */
-public class Movable
+public class Movable implements Alive
 {
   private Circle circle;
   private Tile location;
   private Tile[][] tiles;
   private Enum playerOrientation;
   private boolean running;
+
+  private int originalHealth;
+  private int defenseRate;
+  private double healingRate;
+  private double damage;
+  private boolean dead;
 
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
@@ -35,15 +41,14 @@ public class Movable
    * @param radius               Radius of bounding circle (in pixels)
    * @param loc                  Tile location containing center point
    * @param grid                 Reference to Zombie House map
-   * @param playerOrientation    8-way orientation
    */
-  public Movable(double x, double y, double radius, Tile loc, Tile[][] grid, Enum playerOrientation, Boolean running)
+  public Movable(double x, double y, double radius, Tile loc, Tile[][] grid, Boolean running, int health)
   {
     this.location = loc;
     this.tiles = grid;
     this.running=running;
+    this.originalHealth = health;
     circle = new Circle(x, y, radius);
-
   }
 
   /**
@@ -178,6 +183,8 @@ public class Movable
           if(this.isRunning())
           {
             location.getTrap().setExplosionTrigger();
+            this.decrementHealth(10);
+
             if (!location.getTrap().getSoundPlayed())
             {
               ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
@@ -207,6 +214,7 @@ public class Movable
           if (location.hasTrap)
           {
             location.getTrap().setExplosionTrigger();
+            this.decrementHealth(10);
             if (!location.getTrap().getSoundPlayed())
             {
               ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
@@ -251,15 +259,6 @@ public class Movable
   }
 
   /**
-   * Arbitrarily move to a Tile by reference.
-   * @param next  target Tile
-   */
-  public void setCurrentTile(Tile next)
-  {
-    location = next;
-  }
-
-  /**
    * Calculate straight-line distance to arbitary xy-coordinate.
    * @param xNew  X-coordinate of interest (in pixels)
    * @param yNew  Y-coordinate of interest (in pixels)
@@ -272,5 +271,21 @@ public class Movable
     dist = Math.sqrt(Math.pow((circle.getCenterX() - xNew), 2) + Math.pow((circle.getCenterY() - yNew), 2));
 
     return dist;
+  }
+
+  public void decrementHealth(int damage)
+  {
+      this.damage+=damage;
+    if(this.getHealth() <= 0) this.dead = true;
+  }
+
+  public double getHealth()
+  {
+    return this.originalHealth-this.damage;
+  }
+
+  public boolean isDead()
+  {
+    return this.dead;
   }
 }

@@ -22,6 +22,7 @@ public class ImageLoader
   private static BufferedImage randomZombieSheet;
   private static BufferedImage lineZombieSheet;
   private static BufferedImage masterZombieSheet;
+  private static BufferedImage lineZombieDeathSheet;
 
 
   private static BufferedImage playerSheetRun;
@@ -67,6 +68,7 @@ public class ImageLoader
       randomZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
       lineZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/random.png"));
       masterZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/master.png"));
+      lineZombieDeathSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/random_death.png"));
 
 
     }
@@ -141,6 +143,11 @@ public class ImageLoader
   {
     return masterZombieSheet;
   }
+  public BufferedImage getLineZombieDeathSheet()
+  {
+    return lineZombieDeathSheet;
+  }
+
 
 
 

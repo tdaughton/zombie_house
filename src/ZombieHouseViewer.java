@@ -30,6 +30,10 @@ public class ZombieHouseViewer extends JPanel
   private int negYOffSet = 0;
   private int backgroundWidth;
   private int backgroundHeight;
+  private int xMin;
+  private int xMax;
+  private int yMin;
+  private int yMax;
 
   /**
    * Full constructor.
@@ -49,7 +53,7 @@ public class ZombieHouseViewer extends JPanel
     this.foreground1 = new BufferedImage(backgroundWidth, backgroundHeight, BufferedImage.TYPE_INT_ARGB);
     this.foreground2 = new BufferedImage(backgroundWidth, backgroundHeight, BufferedImage.TYPE_INT_ARGB);
     this.playerSprite = this.zModel.getPlayer();
-    this.lightSource = new LightSource(playerSprite, zModel.getGrid(), backgroundWidth / 2, backgroundHeight / 2);
+    this.lightSource = new LightSource(playerSprite, zModel.getGrid());
 
   }
 
@@ -82,7 +86,6 @@ public class ZombieHouseViewer extends JPanel
    */
   private BufferedImage getVisibleBuffer()
   {
-    int xMin, xMax, yMin, yMax;
     this.negXOffSet = 0;
     this.negYOffSet = 0;
 
@@ -220,20 +223,25 @@ public class ZombieHouseViewer extends JPanel
       for (Zombie zombie : zombies)
       {
         SpriteLoader zombieSprite = zombie.getFrames();
-       // System.out.println("(" + zombie.getX() + ", " + zombie.getY() + ")");
+        if(zombie.isDead()) zombieSprite.playLineDeathSequence(g,zombie);
+
         if (zombie.getZType().equals("Random"))
         {
           g.setColor(Color.GREEN);
-          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(), 2 * zombie.getRadius());
-          g.drawImage(zombieSprite.getCurrentMasterZombieImage(zombie), zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), null);
+          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
+              2 * zombie.getRadius());
 
+          g.drawImage(zombieSprite.getCurrentRandomZombieImage(zombie), zombie.getX() - zombie.getRadius(), zombie
+              .getY() - zombie.getRadius(), null);
         }
         else
         {
           g.setColor(Color.RED);
-          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(), 2 * zombie.getRadius());
+          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
+              2 * zombie.getRadius());
 
-          g.drawImage(zombieSprite.getCurrentLineZombieImage(zombie), zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), null);
+          g.drawImage(zombieSprite.getCurrentLineZombieImage(zombie), zombie.getX() - zombie.getRadius(), zombie.getY
+              () - zombie.getRadius(), null);
         }
       }
     }
@@ -246,12 +254,14 @@ public class ZombieHouseViewer extends JPanel
    * Utilizes Area class to paint the area outside of the Polygon black (to render darkness)
    * @param g  Graphics system reference
    */
-  public void drawLight(Graphics g, LightSource lightSource)
+  public void drawLight(Graphics g, Graphics b, LightSource lightSource)
   {
     Graphics2D g2 = (Graphics2D) g;
-    lightSource.setPolygon(this.currentScreenWidth,this.currentScreenHeight);
+
+    lightSource.setPolygon(playerSprite.getCurrentTile().getGridRow(),playerSprite.getCurrentTile().getGridCol(),
+                            playerSprite.getX(),playerSprite.getY());
     Polygon light = lightSource.getPolygon();
-    Area darkness = new Area(new Rectangle(0,0,this.currentScreenWidth,this.currentScreenHeight));
+    Area darkness = new Area(new Rectangle(0,0,currentScreenWidth,currentScreenHeight));
     darkness.subtract(new Area(light));
     g2.setColor(Color.black);
     g2.fill(darkness);
@@ -278,18 +288,14 @@ public class ZombieHouseViewer extends JPanel
     g.drawImage(this.getVisibleBuffer(), negXOffSet, negYOffSet, null);
     g.drawImage(currentForegroundSubImage, negXOffSet, negYOffSet, null);
     this.drawSprite(g);
-    this.drawLight(g, lightSource);
-    this.drawBufferedComponents();
-
-
-
+    this.drawBufferedComponents(g);
 
   }
-  public void drawBufferedComponents()
+  public void drawBufferedComponents(Graphics g)
   {
-    Graphics g = this.getForegroundGraphics();
-    this.drawZombies(g);
-    this.drawTraps(g);
-
+    Graphics g2 = this.getForegroundGraphics();
+    this.drawZombies(g2);
+    this.drawTraps(g2);
+    this.drawLight(g2, g, lightSource);
   }
 }
