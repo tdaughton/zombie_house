@@ -33,9 +33,9 @@ public class Player extends Movable
    * @param location             Tile location containing center point
    * @param grid                 Reference to Zombie House map
    */
-  public Player(double x, double y, double radius, Tile location, Tile[][] grid, ImageLoader imageLoader, boolean running, int health)
+  public Player(double x, double y, double radius, Tile location, ZombieHouseModel zhModel, ImageLoader imageLoader, boolean running, int health)
   {
-    super(x, y, radius,location,grid,running, health);
+    super(x, y, radius, location, zhModel, running, health);
     this.frames = new SpriteLoader(imageLoader);
     this.numberOfTraps = 3;
     this.stamina = STAM_MAX;
