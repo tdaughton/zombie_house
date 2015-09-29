@@ -145,7 +145,7 @@ public class Movable implements Alive
                       Math.pow((otherMovable.getY() - circle.getCenterY()), 2);
 
     if (distance >= r1 && distance <= r2) intersects = true;
-
+    if(intersects && this instanceof Player) this.dead=true;
     return intersects;
   }
 
@@ -197,7 +197,7 @@ public class Movable implements Alive
           if(this.isRunning())
           {
             location.getTrap().setExplosionTrigger();
-            this.decrementHealth(10);
+            this.dead = true;
 
             if (!location.getTrap().getSoundPlayed())
             {
@@ -228,7 +228,7 @@ public class Movable implements Alive
           if (location.hasTrap)
           {
             location.getTrap().setExplosionTrigger();
-            this.decrementHealth(10);
+            this.dead=true;
             if (!location.getTrap().getSoundPlayed())
             {
               ZombieHouseModel.soundLoader.playExplosionEffect();
@@ -294,17 +294,6 @@ public class Movable implements Alive
     return Math.sqrt(Math.pow((circle.getCenterX() - otherMovable.getX()), 2) + Math.pow((circle.getCenterY() - otherMovable.getY()), 2));
   }
 
-  public void decrementHealth(int damage)
-  {
-      this.damage+=damage;
-    if(this.getHealth() <= 0) this.dead = true;
-  }
-
-  public double getHealth()
-  {
-    return this.originalHealth-this.damage;
-  }
-
   public boolean getRunning()
   {
     return this.running;
@@ -318,10 +307,6 @@ public class Movable implements Alive
   public boolean isDead()
   {
     return this.dead;
-  }
-  public void isAlive()
-  {
-    this.dead=false;
   }
 
 }
