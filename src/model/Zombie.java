@@ -71,8 +71,9 @@ public class Zombie extends Movable
 
   public String getZType()
   {
-    if (wType == WalkType.RANDOM) return "Random";
-    return "Line";
+    if (wType == WalkType.LINE) return "Line";
+    else if (wType == WalkType.PATH) return "Master";
+    return "Random";
   }
 
   /**
@@ -83,14 +84,14 @@ public class Zombie extends Movable
     double xDistance = (SPEED_WALK * super.getCurrentTile().getWidth() * Math.sin(theta) * timeElapsed);
     double yDistance = (SPEED_WALK * super.getCurrentTile().getHeight() * Math.cos(theta) * timeElapsed);
     //System.out.println("zxd "+xDistance+" zyd "+yDistance);
-    if (theta < 0.40f || theta > 5.90f) zombieOrientation = GridOrientation.EAST;
-    else if (1.19f < theta && theta < 0.40f) zombieOrientation = GridOrientation.NORTHEAST;
-    else if (1.97f < theta && theta < 1.19f) zombieOrientation = GridOrientation.NORTH;
-    else if (2.76f < theta && theta < 1.97f) zombieOrientation = GridOrientation.NORTHWEST;
-    else if (3.54f < theta && theta < 2.76f) zombieOrientation = GridOrientation.WEST;
-    else if (4.33f < theta && theta < 3.54f) zombieOrientation = GridOrientation.SOUTHWEST;
-    else if (5.11f < theta && theta < 4.33f) zombieOrientation = GridOrientation.SOUTH;
-    else if (5.90f < theta && theta < 5.11f) zombieOrientation = GridOrientation.SOUTHEAST;
+    if (theta < 0.40f || theta > 5.90f) zombieOrientation = GridOrientation.NORTH;
+    else if (1.19f < theta && theta < 0.40f) zombieOrientation = GridOrientation.NORTHWEST;
+    else if (1.97f < theta && theta < 1.19f) zombieOrientation = GridOrientation.WEST;
+    else if (2.76f < theta && theta < 1.97f) zombieOrientation = GridOrientation.SOUTHWEST;
+    else if (3.54f < theta && theta < 2.76f) zombieOrientation = GridOrientation.SOUTH;
+    else if (4.33f < theta && theta < 3.54f) zombieOrientation = GridOrientation.SOUTHEAST;
+    else if (5.11f < theta && theta < 4.33f) zombieOrientation = GridOrientation.EAST;
+    else if (5.90f < theta && theta < 5.11f) zombieOrientation = GridOrientation.NORTHEAST;
     bumped = super.move(xDistance, yDistance, zombieOrientation);
     if(wType == WalkType.LINE) getFrames().getRotatingLineZombieWalk();
     else getFrames().getRotatingRandomZombieWalk();
@@ -137,8 +138,9 @@ public class Zombie extends Movable
     {
       Tile nextTile = path.get(0);
       theta = Math.atan2(nextTile.getCenterX() - this.getX(), nextTile.getCenterY() - this.getY());
-      System.out.println("Z["+this.getTileRow()+"]["+this.getTileCol()+"] tracking ["+this.getZModel().getPlayer().getTileRow()+"]["+this.getZModel().getPlayer().getTileCol()+"] via ["+nextTile.getGridRow()+"]["+nextTile.getGridCol()+"]");
-      System.out.println(Math.toDegrees(theta));
+      //System.out.println("Z["+this.getTileRow()+"]["+this.getTileCol()+"] tracking ["+this.getZModel().getPlayer().getTileRow()+"]["+this.getZModel().getPlayer().getTileCol()+"] via ["+nextTile.getGridRow()+"]["+nextTile.getGridCol()+"]");
+      System.out.println(theta);
+      System.out.println(zombieOrientation);
     }
     else if (wType == WalkType.RANDOM || !bumped)
     {
@@ -168,5 +170,10 @@ public class Zombie extends Movable
   public void deletePath()
   {
     path.clear();
+  }
+
+  public void setMasterZombie()
+  {
+    wType = WalkType.PATH;
   }
 }
