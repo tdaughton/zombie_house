@@ -143,10 +143,7 @@ public class Movable implements Alive
     double distance = Math.pow((otherMovable.getX() - circle.getCenterX()), 2) +
         Math.pow((otherMovable.getY() - circle.getCenterY()), 2);
 
-    if (distance >= r1 && distance <= r2)
-    { ZombieHouseModel.soundLoader.playThud();
-      intersects = true;
-    }
+    if (distance >= r1 && distance <= r2) intersects = true;
 
 //    if (intersects && (this instanceof Player || otherMovable instanceof Player))
 //    {
@@ -164,14 +161,13 @@ public class Movable implements Alive
    */
   public boolean intersects(Rectangle immovableSpace)
   {
-
     double halfWidth = immovableSpace.getWidth() / 2;
     double halfHeight = immovableSpace.getHeight() / 2;
     double r1 = Math.abs(circle.getCenterX() - immovableSpace.getCenterX());
     double r2 = Math.abs(circle.getCenterY() - immovableSpace.getCenterY());
 
     if (r1 > (halfWidth + circle.getRadius()) || r2 > (halfHeight + circle.getRadius())) return false;
-    if (r1 <= (halfWidth) || r2 <= (halfHeight))  return true;
+    if (r1 <= (halfWidth) || r2 <= (halfHeight)) return true;
     double cd = Math.pow(r1 - halfWidth, 2) + Math.pow(r2 - halfHeight, 2);
     return (cd <= Math.pow(circle.getRadius(), 2));
   }
@@ -201,15 +197,9 @@ public class Movable implements Alive
 
         if (location.hasTrap)
         {
-          if(this instanceof Zombie)
-          {
-            ZombieHouseModel.soundLoader.playRandomPain((Zombie) this, zModel.getPlayer());
-            this.dead = true;
-          }
           if(this.isRunning())
           {
             location.getTrap().setExplosionTrigger();
-
             this.dead = true;
 
             if (!location.getTrap().getSoundPlayed())
@@ -241,11 +231,7 @@ public class Movable implements Alive
           if (location.hasTrap)
           {
             location.getTrap().setExplosionTrigger();
-            if(this instanceof Zombie)
-            {
-              ZombieHouseModel.soundLoader.playRandomPain((Zombie) this, zModel.getPlayer());
-              this.dead = true;
-            }
+            this.dead=true;
             if (!location.getTrap().getSoundPlayed())
             {
               ZombieHouseModel.soundLoader.playExplosionEffect();

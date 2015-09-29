@@ -17,9 +17,4 @@ public class Room
     width = Math.abs(x2 - x1);
     height = Math.abs(y2 - y1);
   }
-
-  public boolean contains(Tile tile)
-  {
-    return !(x1 > tile.x || x2 < tile.x || y1 > tile.y || y2 < tile.y);
-  }
 }

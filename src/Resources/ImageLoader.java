@@ -3,10 +3,6 @@
  * ImageLoader loads the Tile images and creates a BufferedImage map
  *  http://forum.halomaps.org/index.cfm?page=topic&topicID=43046
  *  http://nutriphobia.com/images/img-5/white-ceramic-tile-texture-design-inspiration-2.jpg
- *  http://freetexturesfor3d.com/wp-content/uploads/p4n5g/aug2-2014/charred_concrete_Diffuse.jpg
- *  http://math.nist.gov/f90gl/stars.jpg
- *  http://orig07.deviantart.net/a974/f/2009/360/7/d/lava_and_rock_study_1_by_devin_busha.jpg
- *  http://babydreambackdrops.com/images/WoodPink.jpg
  */
 
 package Resources;
@@ -17,7 +13,6 @@ import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.io.IOException;
 
 /**
@@ -29,26 +24,13 @@ public class ImageLoader
   private static BufferedImage floorImage1;
   private static BufferedImage floorImage2;
   private static BufferedImage floorImage3;
-  private static BufferedImage floorImage4;
-  private static BufferedImage floorImage5;
-
-
 
   private static BufferedImage charredFloorImage;
-  private static BufferedImage charredFloorImage2;
-
   private static BufferedImage wallImage1;
   private static BufferedImage wallImage2;
   private static BufferedImage wallImage3;
-  private static BufferedImage wallImage4;
-  private static BufferedImage wallImage5;
-
-
 
   private static BufferedImage outsideImage;
-  private static BufferedImage outsideImage3;
-  private static BufferedImage outsideImage4;
-
 
   private static BufferedImage background;
   private static BufferedImage randomZombieSheet;
@@ -61,7 +43,7 @@ public class ImageLoader
   private static BufferedImage tombObstacleSheet;
   private static BufferedImage tombs[];
   private static BufferedImage treeObstacle;
-  private static int levelCount =0;
+  private static int levelCount = 0;
 
   int obstacleIterator = 0;
 
@@ -99,21 +81,12 @@ public class ImageLoader
         wallImage1 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall.png"));
         outsideImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/deadgrass.png"));
         floorImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor3.png"));
-        charredFloorImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor2.png"));
         wallImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall2.png"));
         treeObstacle = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/obstacle2.png"));
-        floorImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor4.png"));
+        floorImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor4.jpg"));
         wallImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall4.png"));
-        outsideImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/outside3.jpg"));
-      outsideImage4 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/outside4.jpg"));
-      floorImage4 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor5.jpg"));
-        wallImage4 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall5.jpg"));
-        floorImage5 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor6.jpg"));
-        wallImage5 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall6.jpg"));
 
-
-
-      charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.png"));
+        charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.png"));
         exitImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/exit.png"));
         playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
         //randomZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
@@ -144,8 +117,6 @@ public class ImageLoader
     int yCoord = 0;
     BufferedImage floorImage;
     BufferedImage wallImage;
-    BufferedImage outsideImage = ImageLoader.outsideImage;
-
     if(levelCount==1)
     { floorImage = floorImage1;
       wallImage = wallImage1;
@@ -155,22 +126,10 @@ public class ImageLoader
       floorImage = floorImage2;
       wallImage = wallImage2;
     }
-    else if(levelCount==3)
+    else
     {
       floorImage = floorImage3;
       wallImage = wallImage3;
-      outsideImage=outsideImage3;
-    }
-    else if(levelCount==4)
-    {
-      floorImage = floorImage4;
-      wallImage = wallImage4;
-      outsideImage = outsideImage4;
-    }
-    else
-    {
-      floorImage = floorImage5;
-      wallImage = wallImage5;
     }
 
     Graphics g = background.getGraphics();
@@ -199,16 +158,6 @@ public class ImageLoader
         }
         else if (grid[i][j] instanceof Wall)
         {
-          if (grid[i][j].isObstacle())
-          {
-            g
-            .drawImage(tombObstacleSheet, xCoord, yCoord, tileWidth, tileHeight,
-                      null);
-          } else
-          {
-            g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
-          }
-          g.drawImage(floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
           g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
 //          g.setColor(Color.BLUE);
 //          g.drawRect((int) grid[i][j].getX(), (int) grid[i][j].getY(), (int) grid[i][j].getWidth(), (int) grid[i][j]

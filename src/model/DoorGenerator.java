@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,12 +13,12 @@ import java.util.Collections;
 //==============================================================================
 public class DoorGenerator implements GameMap
 {
-  int roomNum;
-  private Tile[][] map;
+  private int[][] map;
   private Room[] rooms;
-  private ArrayList<Tile> doors;
+  private ArrayList<Point> doors;
+  int roomNum;
 
-  public DoorGenerator(Tile[][] map, Room[] rooms, int roomNum)
+  public DoorGenerator(int[][] map, Room[] rooms, int roomNum)
   {
     this.map = map;
     this.roomNum = roomNum;
@@ -27,15 +28,8 @@ public class DoorGenerator implements GameMap
     generateDoorways();
   }
 
-  public Tile[][] getMap()
-  {
-    return map;
-  }
-
-  public ArrayList<Tile> getDoors()
-  {
-    return doors;
-  }
+  public int[][] getMap() { return map; }
+  public ArrayList getDoors() { return doors; }
 
   //============================================================================
   // This method will build doors.
@@ -111,18 +105,15 @@ public class DoorGenerator implements GameMap
         return;
     }
 
-    if (map[y + yInc * 2][x + xInc * 2].type != 1)
+    if(map[y+yInc*2][x+xInc*2] != 1)
     {
-      map[y + yInc][x + xInc] = new Floor(y + yInc, x + xInc, null);
-      map[y + yInc * 2][x + xInc * 2] = new Floor(y + yInc * 2, x + xInc * 2,
-                                                 null);
-      map[y + yInc * 2][x + xInc * 2].setHallway(true);
-
-      doors.add(map[y + yInc * 2][x + xInc * 2]);
+      map[y+yInc][x+xInc] = 2;
+      map[y+yInc*2][x+xInc*2] = 2;
+      doors.add(new Point(x+xInc*2, y+yInc*2));
     }
     else
     {
-      map[y + yInc][x + xInc] = new Wall(y + yInc, x + xInc, null);
+      map[y+yInc][x+xInc] = 1;
     }
   }
 
@@ -141,27 +132,29 @@ public class DoorGenerator implements GameMap
     {
       for(int j=-1; j<2; j++)
       {
-        if (i != 0 || j != 0)
-        {
-          map[y + i][x + j] = new Wall(y + i, x + j, null);
-        }
+        if(i != 0 || j != 0) map[y+i][x+j] = 16;
       }
     }
 
     switch(availableSides.get(0))
     {
-      case 'W': x -= 1;
+      case 'W':
+        map[y][x-1] = 2;
+        doors.add(new Point(x-1, y));
         break;
-      case 'S': y += 1;
+      case 'S':
+        map[y+1][x] = 2;
+        doors.add(new Point(x, y+1));
         break;
-      case 'N': y -= 1;
+      case 'N':
+        map[y-1][x] = 2;
+        doors.add(new Point(x, y-1));
         break;
-      case 'E': x += 1;
+      case 'E':
+        map[y][x+1] = 2;
+        doors.add(new Point(x+1, y));
         break;
       default: return;
     }
-
-    map[y][x] = new Floor(y, x, null);
-    doors.add(map[y][x]);
   }
 }

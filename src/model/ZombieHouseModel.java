@@ -20,17 +20,17 @@ public class ZombieHouseModel
 {
   public final static int ROWS = 41;
   public final static int COLS = 48;
+  public int level = 1;
   private final static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   private final static int MAX_SCREEN_WIDTH = (int) userScreenSize.getWidth();
   private final static int MAX_SCREEN_HEIGHT = (int) userScreenSize.getHeight();
   private final static int VISIBLE_X_TILES = 20;
   private final static int VISIBLE_Y_TILES = 12;
   private final static double ZOMBIE_SPAWN_RATE = 0.01f;
-  private final static double TRAP_SPAWN_RATE = 0.01f;
+  private final static double TRAP_SPAWN_RATE = 0.00f;
 
   public static SoundLoader soundLoader;
   public static ImageLoader imageLoader;
-  public int level = 1;
   private Random rand;
   private MapGenerator mapGen;
   private Player playerCharacter;
@@ -62,36 +62,16 @@ public class ZombieHouseModel
     this.currentScreenHeight = MAX_SCREEN_HEIGHT;
     this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
     this.tileHeight = currentScreenHeight / VISIBLE_Y_TILES;
-    this.mapGen = new MapGenerator(level);
+    this.mapGen = new MapGenerator(2);
     this.rand = new Random();
     this.grid = this.translateTileImages(mapGen.getMap());
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     imageLoader.readImages();
     pf = new Pathfinder(this);
-
-    getObstacles(4);
-
     this.setRandomTraps();
     this.initializeRandomZombies();
     this.playerCharacter = this.getRandomStart();
   }
-
-  private void getObstacles(int n)
-  {
-    int x = 0, y = 0;
-
-    for (int i = 0; i < n; i++)
-    {
-      while (!(grid[y][x] instanceof Floor))
-      {
-        x = rand.nextInt(COLS - 1);
-        y = rand.nextInt(ROWS - 1);
-      }
-
-      grid[y][x] = new Obstacle(y, x, grid);
-    }
-  }
-
 
   /**
    * This method translates a 2D int array into a 2D Tile array
@@ -99,7 +79,7 @@ public class ZombieHouseModel
    * @param grid input 2D int array representing some tile types
    * @return a 2D Tile array representing the Zombie House
    */
-  private Tile[][] translateTileImages(Tile[][] grid)
+  private Tile[][] translateTileImages(int[][] grid)
   {
     Tile[][] tiles = new Tile[ROWS][COLS];
 
@@ -107,23 +87,15 @@ public class ZombieHouseModel
     {
       for (int j = 0; j < COLS; j++)
       {
-        if (grid[i][j].type == 0)
+        if (grid[i][j] == 0) tiles[i][j] = new Outside(i,j,tiles);
+        else if (grid[i][j] == 2) tiles[i][j] = new Floor(i,j,tiles);
+        else if (grid[i][j] == 4)
         {
-          tiles[i][j] = new Outside(i, j, tiles);
-        } else if (grid[i][j].type == 2)
-        {
-          tiles[i][j] = new Floor(i, j, tiles);
-          if (grid[i][j].hasExitFlag())
-          {
-            grid[i][j].setExitFlag();// implement exit tile
-          }
-        } else
-        {
-          tiles[i][j] = new Wall(i, j, tiles);
+          tiles[i][j] = new Floor(i,j,tiles);
+          tiles[i][j].setExitFlag();// implement exit tile
         }
-        tiles[i][j]
-        .setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth,
-                  this.tileHeight);
+        else tiles[i][j] = new Wall(i, j, tiles);
+        tiles[i][j].setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth, this.tileHeight);
       }
     }
 
@@ -469,14 +441,14 @@ public class ZombieHouseModel
       trapSub = new ArrayList<>();
       zombieSub = new ArrayList<>();
       this.mapGen = new MapGenerator(level+2);
-      this.grid = mapGen.getMap();
+      this.grid = this.translateTileImages(mapGen.getMap());
       this.setRandomTraps();
       this.initializeRandomZombies();
       this.playerCharacter = this.getRandomStart();
     }
     else
     {
-      this.grid = mapGen.getMap();
+      this.grid = this.translateTileImages(mapGen.getMap());
       this.playerCharacter = new Player(playerSub.getCenterTileX(), playerSub.getCenterTileY(), this.tileHeight / 2, playerSub,
           this, imageLoader, false, 20);
       this.zombies = resetZombies();

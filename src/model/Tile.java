@@ -16,51 +16,35 @@ public class Tile extends Rectangle implements Comparable<Tile>
   protected int type;
 
   protected double priority; // priority will be calculated by the pathfinder.
+
   protected int gridRow;
   protected int gridCol;
   protected boolean occupied;
   protected boolean movable;
   protected boolean hasTrap;
-  boolean hallway;
-  private boolean obstacle;
   private boolean exitFlag = false;
+
+
+
   private Trap trap;
 
   public Tile(int gridRow, int gridCol, Tile[][] grid)
   {
-    super(gridCol, gridRow, 1, 1);
-
     this.gridRow = gridRow;
     this.gridCol = gridCol;
     this.movable = false;
     this.hasTrap = false;
     this.trap = null;
-
-    x = gridCol;
-    y = gridRow;
-
-    hallway = false;
-    obstacle = false;
-  }
-
-  public boolean isHallway()
-  {
-    return hallway;
-  }
-
-  public void setHallway(boolean hallway)
-  {
-    this.hallway = hallway;
-  }
-
-  public boolean isOccupied()
-  {
-    return this.occupied;
   }
 
   private void setOccupied(boolean occupationStatus)
   {
     this.occupied = occupationStatus;
+  }
+
+  public boolean isOccupied()
+  {
+    return this.occupied;
   }
 
   public boolean isMovable()
@@ -96,16 +80,6 @@ public class Tile extends Rectangle implements Comparable<Tile>
   public int getGridCol()
   {
     return this.gridCol;
-  }
-
-  public boolean isObstacle()
-  {
-    return obstacle;
-  }
-
-  public void setObstacle(boolean obstacle)
-  {
-    this.obstacle = obstacle;
   }
 
   public Rectangle getBounds()
@@ -173,8 +147,8 @@ public class Tile extends Rectangle implements Comparable<Tile>
   @Override
   public int compareTo(Tile anotherTile)
   {
-    if (this.priority < anotherTile.getPriority()) return -1;
-    if (this.priority > anotherTile.getPriority()) return 1;
+    if(this.priority < anotherTile.getPriority()) return -1;
+    if(this.priority > anotherTile.getPriority()) return 1;
     return 0;
   }
 

@@ -10,7 +10,6 @@ public class Floor extends Tile
   {
     super(gridRow, gridCol, grid);
     movable = true;
-    super.setType(2);
   }
 
 

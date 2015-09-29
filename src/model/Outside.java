@@ -10,7 +10,6 @@ public class Outside extends Tile
   {
     super(gridRow, gridCol, grid);
     this.movable = true;
-    super.setType(0);
   }
 
   public String getTileType()

@@ -12,14 +12,14 @@ import java.util.ArrayList;
 //==============================================================================
 public class RoomGenerator implements GameMap
 {
-  private final int roomNum;
   private ArrayList<Room> tempRooms;
   private Room[] rooms;
 
-  private Tile[][] map;
+  private int[][] map;
   private int col, row;
+  private int roomNum;
 
-  public RoomGenerator(Tile[][] map, int roomNum)
+  public RoomGenerator(int[][] map, int roomNum)
   {
     this.map = map;
     this.roomNum=roomNum;
@@ -33,10 +33,7 @@ public class RoomGenerator implements GameMap
     generateRandomRoom();
   }
 
-  public Tile[][] getMap()
-  {
-    return map;
-  }
+  public int[][] getMap() { return map; }
   public Room[] getRooms() { return rooms; }
 
   //============================================================================
@@ -52,7 +49,7 @@ public class RoomGenerator implements GameMap
     int exitRoomNumber, exitX, exitY, exitWid, exitHei;
     while (true)
     { // generate smaller squares for border
-      if (getQuadSect(new Room(0, 0, col - 2, row - 2), 0) > roomNum + 1)
+      if (getQuadSect(new Room(0, 0, col - 2, row - 2), 0) > roomNum +1)
       {
         break;
       }
@@ -65,9 +62,8 @@ public class RoomGenerator implements GameMap
 
     exitWid = tempRooms.get(exitRoomNumber).width / 2;
     exitHei = tempRooms.get(exitRoomNumber).height / 2;
-
-    exitX = tempRooms.get(exitRoomNumber).x1 + exitWid;
-    exitY = tempRooms.get(exitRoomNumber).y1 + exitHei;
+    exitX = tempRooms.get(exitRoomNumber).x1 + (1+RANDOM.nextInt(exitWid)) * 2;
+    exitY = tempRooms.get(exitRoomNumber).y1 + (1+RANDOM.nextInt(exitHei)) * 2;
 
     //System.out.println(exitX + "," + exitY);
 
@@ -120,8 +116,7 @@ public class RoomGenerator implements GameMap
   private void locateExit(Room exit, int roomNumber)
   {
     rooms[roomNumber] = exit;
-    map[exit.y1][exit.x1] = new Floor(exit.x1, exit.y1, null);
-    map[exit.y1][exit.x1].setExitFlag();
+    map[exit.y1][exit.x1] = 8;
   }
 
   //============================================================================
@@ -151,13 +146,8 @@ public class RoomGenerator implements GameMap
     {
       for (int j = x - 1; j <= x + width; j++)
       {
-        if (i >= y && i < y + height && j >= x && j < x + width)
-        {
-          map[i][j] = new Floor(i, j, null);
-        } else
-        {
-          map[i][j] = new Wall(i, j, null);
-        }
+        if(i >= y && i < y + height && j >= x && j < x + width) map[i][j] = 1;
+        else map[i][j] = 16;
       }
     }
   }
