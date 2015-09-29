@@ -54,7 +54,7 @@ public class MapGenerator implements GameMap
     rooms = new Room[roomNum + 1];
 
     initiateHouse();
-    RoomGenerator rg = new RoomGenerator(map,roomNum);
+    RoomGenerator rg = new RoomGenerator(map, roomNum);
     DoorGenerator dg = new DoorGenerator(rg.getMap(), rg.getRooms(), roomNum);
     //printMap();
     HallwayGenerator hg = new HallwayGenerator(dg.getMap(), dg.getDoors());
@@ -68,7 +68,10 @@ public class MapGenerator implements GameMap
   // This will only return the finalized map composed only with
   // 0(Wall), 1(Floor), 2(Exit), 4(Nowhere, not added yet).
   //============================================================================
-  public int[][] getMap() { return map; }
+  public int[][] getMap()
+  {
+    return map;
+  }
 
   //============================================================================
   // Map can be printed from any other class for testing.
@@ -125,9 +128,9 @@ public class MapGenerator implements GameMap
   //============================================================================
   private void convertIntoDisplayableMap(int[][] finalMap)
   {
-    for(int i=0; i<ROW; i++)
+    for (int i = 0; i < ROW; i++)
     {
-      for(int j=0; j<COL; j++)
+      for (int j = 0; j < COL; j++)
       {
         switch (finalMap[i][j])
         {
@@ -144,16 +147,5 @@ public class MapGenerator implements GameMap
         }
       }
     }
-  }
-
-  /**
-   * Test script. This is how to use this class.
-   *
-   * @param args do nothing
-   */
-  public static void main(String[] args)
-  {
-    MapGenerator mg = new MapGenerator();
-    mg.printMap();
   }
 }

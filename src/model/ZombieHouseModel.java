@@ -118,12 +118,12 @@ public class ZombieHouseModel
     }
     for(Zombie zombie: zombies)
     {
-      if (grid[x][y].contains(zombie.getX(), zombie.getY())) getRandomStart();
+      if (grid[y][x].contains(zombie.getX(), zombie.getY())) getRandomStart();
       break;
     }
-    this.playerCharacter = new Player(this.grid[x][y].getCenterTileX(), this.grid[x][y].getCenterTileY(), this.tileHeight / 2, this.grid[x][y],
+    this.playerCharacter = new Player(this.grid[y][x].getCenterTileX(), this.grid[y][x].getCenterTileY(), this.tileHeight / 2, this.grid[y][x],
         this, imageLoader, false, 20);
-    playerSub = grid[x][y];
+    playerSub = grid[y][x];
     return playerCharacter;
   }
 

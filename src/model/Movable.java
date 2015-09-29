@@ -325,9 +325,4 @@ public class Movable implements Alive
     return this.levelUp;
   }
 
-  public void setDead(boolean status)
-  {
-    dead = status;
-  }
-
 }

@@ -96,11 +96,10 @@ public class ImageLoader
         {
           g.drawImage(charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
-        else if (grid[i][j] instanceof Floor)
+        else if (grid[i][j] instanceof Floor && grid[i][j].hasExitFlag())
         {
           g.drawImage(floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
           g.drawImage(exitImage, xCoord, yCoord, tileWidth, tileHeight, null);
-
         }
         else if (grid[i][j] instanceof Floor)
         {
