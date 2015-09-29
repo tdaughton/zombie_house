@@ -48,15 +48,14 @@ public class ZombieHouseModel
 
   /**
    * Constructor
-   * @param soundLoader  SoundLoader
+   * @param frameSounds  SoundLoader
    */
-  public ZombieHouseModel(SoundLoader soundLoader)
+  public ZombieHouseModel(SoundLoader frameSounds)
   {
     this.traps = new ArrayList<>();
     this.zombies = new ArrayList<>();
     this.trapSub = new ArrayList<>();
     this.zombieSub = new ArrayList<>();
-    ZombieHouseModel.soundLoader =soundLoader;
     this.currentScreenWidth = MAX_SCREEN_WIDTH;
     this.currentScreenHeight = MAX_SCREEN_HEIGHT;
     this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
@@ -64,12 +63,11 @@ public class ZombieHouseModel
     this.mapGen = new MapGenerator(2);
     this.rand = new Random();
     this.grid = this.translateTileImages(mapGen.getMap());
+    this.getObstacles(4);
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     imageLoader.readImages();
-    pf = new Pathfinder(this);
-
-    getObstacles(4);
-
+    soundLoader = frameSounds;
+    this.pf = new Pathfinder(this);
     this.setRandomTraps();
     this.initializeRandomZombies();
     this.playerCharacter = this.getRandomStart();
@@ -224,7 +222,6 @@ public class ZombieHouseModel
   private ArrayList<Zombie> resetZombies()
   {
     //System.out.println("Zombie");
-
     this.zombies.clear();
     for (Tile tile : this.zombieSub)
     {

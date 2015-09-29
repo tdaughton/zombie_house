@@ -8,5 +8,6 @@ public class Obstacle extends Wall
   public Obstacle(int gridRow, int gridCol)
   {
     super(gridRow, gridCol);
+    super.setObstacle(true);
   }
 }
