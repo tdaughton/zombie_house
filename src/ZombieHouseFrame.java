@@ -5,28 +5,31 @@
  */
 
 import Resources.SoundLoader;
-import com.sun.codemodel.internal.JOp;
 import model.GridOrientation;
 import model.ZombieHouseModel;
 import model.Zombie;
 
-import javax.net.ssl.KeyStoreBuilderParameters;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * This class is the parent JComponent for the Zombie House game. It holds the major Controller elements
+ * including timer, key listener, and resize listener.
+ */
 public class ZombieHouseFrame extends JFrame implements ActionListener, ComponentListener, KeyListener
 {
   private final static Dimension USER_SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
   public final static Random RAND = new Random();
   public final static SoundLoader GAME_SOUNDS = new SoundLoader(RAND);
+  private final static Dimension USER_SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
+
+  public static Timer timer;
   private ZombieHouseModel zModel;
   private ZombieHouseViewer zView;
   private ZombieHouseMenu zMenu;
-  public static Timer timer;
   private boolean[] keysPressed;
   private long prevSeconds;
   private long currSeconds;
@@ -81,7 +84,8 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    * keeps track of time specifications
    * updates the model every 1/60 of a second
    * repaints the viewer when an update has been made inside of model
-   **/
+   * @param e  ActionEvent required by interface
+   */
   public void actionPerformed(ActionEvent e)
   {
     this.requestFocus();
@@ -107,8 +111,11 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     repaint();
   }
 
-  //TODO: ComponentListener to resize Viewer/Panel
   @Override
+  /**
+   * updates currentScreen dimensions for resizing inside of ZombieHouseViewer
+   * @param e  ComponentEvent required by interface
+   */
   public void componentResized(ComponentEvent e)
   {
     this.notifyScreenSizes();
@@ -131,13 +138,14 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     //do nothing
   }
+  
 
+  @Override
   /**
    * When a valid key is pressed, set the keyCode's index in keysPressed to true
    * then call moveKeys to do appropriate actions.
    * @param e  KeyEvent required by interface
    */
-  @Override
   public void keyPressed(KeyEvent e)
   {
     int keyCode = e.getKeyCode();
@@ -284,6 +292,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     }
   }
 
+  /**
+   * Picks up or sets traps when the trap key is pressed
+   */
   private void playerPickUpTrap()
   {
     if(keysPressed[KeyEvent.VK_P])
@@ -293,6 +304,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     }
   }
 
+  /**
+   * Plays random zombie sounds with stereo panning
+   */
   private void playRandomZombieSounds()
   {
     ArrayList<Zombie> zombies = zModel.getZombieList();
@@ -306,6 +320,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     }
   }
 
+  /**
+   * Resets running state when the game is restarted
+   */
   private void toggleShift()
   {
     for (Boolean key : keysPressed)
@@ -314,6 +331,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     keysPressed[KeyEvent.VK_SHIFT] = ! (keysPressed[KeyEvent.VK_SHIFT]);
   }
 
+  /**
+   * Restart the level when the Player dies
+   */
   private void restartLevel()
   {
     JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading");
