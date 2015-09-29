@@ -93,7 +93,8 @@ public class Zombie extends Movable
     else if (5.1051f < theta && theta < 5.8905f) zombieOrientation = GridOrientation.SOUTHWEST;
     bumped = super.move(xDistance, yDistance, zombieOrientation);
     if(wType == WalkType.LINE) getFrames().getRotatingLineZombieWalk();
-    else getFrames().getRotatingRandomZombieWalk();
+    else if(wType == WalkType.RANDOM) getFrames().getRotatingRandomZombieWalk();
+    else getFrames().getRotatingMasterZombieWalk();
   }
 
   /**

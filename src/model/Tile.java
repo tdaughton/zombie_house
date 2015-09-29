@@ -25,6 +25,7 @@ public class Tile extends Rectangle implements Comparable<Tile>
   private boolean exitFlag = false;
 
 
+
   private Trap trap;
 
   public Tile(int gridRow, int gridCol, Tile[][] grid)
@@ -50,6 +51,11 @@ public class Tile extends Rectangle implements Comparable<Tile>
   {
     return this.movable;
   }
+
+  public void setMovable(boolean movable)
+  { this.movable=movable;
+  }
+
 
   public String getTileType()
   {

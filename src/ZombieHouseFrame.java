@@ -90,9 +90,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     this.requestFocus();
 
     if(zModel.getPlayer().isDead() || zModel.getPlayer().isLevelUp())
-    {
-      System.out.println(zModel.getPlayer().isLevelUp());
-      this.restartLevel(zModel.getPlayer().isLevelUp());
+    { this.restartLevel(zModel.getPlayer().isLevelUp());
       return;
     }
     if(pause && pauseTracker>0) pauseTracker--;
@@ -338,9 +336,8 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private void restartLevel(boolean levelUp)
   {
     if (levelUp)
-    {
+    { GAME_SOUNDS.playLevelUpSound();
       JOptionPane.showMessageDialog(this, "You reached the next level in Zombie House.\nNext level loading.");
-      GAME_SOUNDS.playLevelUpSound();
       zModel.restart(true);
       timer.setInitialDelay(500);
       timer.restart();

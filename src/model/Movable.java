@@ -240,10 +240,7 @@ public class Movable implements Alive
           }
         }
       }
-      if(this instanceof Player && this.location.hasExitFlag())
-      { this.levelUp=true;
-        zModel.restart(true);
-      }
+      if(this instanceof Player && this.location.hasExitFlag()) this.levelUp=true;
     }
     return (successX & successY);
   }

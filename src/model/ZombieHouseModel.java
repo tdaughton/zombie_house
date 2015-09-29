@@ -24,8 +24,8 @@ public class ZombieHouseModel
   private final static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   private final static int MAX_SCREEN_WIDTH = (int) userScreenSize.getWidth();
   private final static int MAX_SCREEN_HEIGHT = (int) userScreenSize.getHeight();
-  private final static int VISIBLE_X_TILES = 12;
-  private final static int VISIBLE_Y_TILES = 10;
+  private final static int VISIBLE_X_TILES = 20;
+  private final static int VISIBLE_Y_TILES = 12;
   private final static double ZOMBIE_SPAWN_RATE = 0.01f;
   private final static double TRAP_SPAWN_RATE = 0.00f;
 
@@ -66,6 +66,7 @@ public class ZombieHouseModel
     this.rand = new Random();
     this.grid = this.translateTileImages(mapGen.getMap());
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
+    imageLoader.readImages();
     pf = new Pathfinder(this);
     this.setRandomTraps();
     this.initializeRandomZombies();
@@ -122,7 +123,7 @@ public class ZombieHouseModel
       break;
     }
     this.playerCharacter = new Player(this.grid[y][x].getCenterTileX(), this.grid[y][x].getCenterTileY(), this.tileHeight / 2, this.grid[y][x],
-        this, imageLoader, false, 20);
+        this, imageLoader, false, 15);
     playerSub = grid[y][x];
     return playerCharacter;
   }
@@ -236,6 +237,7 @@ public class ZombieHouseModel
         }
       }
     }
+    if(zombies.size()==0) initializeRandomZombies();
     zombies.get(rand.nextInt(zombies.size())).setMasterZombie();
   }
 
@@ -364,6 +366,11 @@ public class ZombieHouseModel
   {
     return imageLoader;
   }
+  public int getLevel()
+  {
+    return this.level;
+  }
+
 
   public void trapKill(Tile tile)
   {
@@ -428,7 +435,7 @@ public class ZombieHouseModel
   {
     if(newLevel)
     {
-      level++;
+      this.level++;
       traps = new ArrayList<>();
       zombies = new ArrayList<>();
       trapSub = new ArrayList<>();

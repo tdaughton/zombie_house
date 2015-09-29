@@ -304,7 +304,10 @@ public class ZombieHouseViewer extends JPanel
 
   public void restart()
   {
-    this.zModel.getImageLoader().createBackground();
+    Graphics2D g2 = (Graphics2D) background.getGraphics();
+    g2.setBackground(new Color(255, 255, 255, 0));
+    g2.clearRect(0, 0, backgroundWidth, backgroundHeight);
+    zModel.getImageLoader().createBackground();
     this.background = zModel.getImageLoader().getBackground();
     this.playerSprite = zModel.getPlayer();
     this.lightSource = new LightSource(playerSprite,zModel.getGrid());

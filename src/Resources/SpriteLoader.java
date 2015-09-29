@@ -3,6 +3,7 @@
  *
  * http://slick.ninjacave.com/forum/viewtopic.php?f=3&t=5364
  * http://opengameart.org/sites/default/files/styles/watermarked/public/orc_regular_0.png
+ * http://opengameart.org/sites/default/files/cursed_grave.png
  */
 
 package Resources;
@@ -42,9 +43,6 @@ public class SpriteLoader
   private BufferedImage subMasterZombieImage;
   private BufferedImage currentMasterZombieImage;
 
-  private static BufferedImage lineDeadZombie[];
-  private static BufferedImage lineDeadSheet;
-
 
   /**
    * Constructor
@@ -64,10 +62,10 @@ public class SpriteLoader
     randomZombie = new BufferedImage[30];
     lineZombie = new BufferedImage[30];
     masterZombie = new BufferedImage[30];
-    lineDeadZombie = new BufferedImage[8];
 
     setIndividualPlayerFrames();
     setIndividualZombieFrames();
+    masterZombieIterator=0;
     randomZombieIterator = 0;
     lineZombieIterator = 0;
     playerIterator = 0;
@@ -103,6 +101,7 @@ public class SpriteLoader
     run[13] = playerSheetRun.getSubimage(371, 279, 93, 110);
     run[14] = playerSheetRun.getSubimage(495, 279, 93, 110);
   }
+
 
   private void setIndividualZombieFrames()
   {
