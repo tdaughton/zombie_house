@@ -63,7 +63,8 @@ public class HallwayGenerator implements GameMap
           if (map[y + j][x + i].type == 0)
           {
             map[y + j][x + i] = new Wall(y + j, x + i, null);
-          } else if (map[y + j][x + i].isHallway())
+          }
+          else if (map[y + j][x + i].isHallway())
           {
             map[y + j][x + i].setHallway(false);
             putWalls(map[y + j][x + i]);
