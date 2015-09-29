@@ -138,53 +138,37 @@ public class SpriteLoader
     randomZombie[28] = randomZombieSheet.getSubimage(241, 648, 105, 120);
     randomZombie[29] = randomZombieSheet.getSubimage(454, 648, 105, 120);
 
-    lineZombie[0] = lineZombieSheet.getSubimage(11, 8, 95, 130);
-    lineZombie[1] = lineZombieSheet.getSubimage(11, 8, 95, 130);
+    lineZombie[0] = lineZombieSheet.getSubimage(28, 17, 105, 120);
+    lineZombie[1] = lineZombieSheet.getSubimage(241, 17, 105, 120);
+    lineZombie[2] = lineZombieSheet.getSubimage(454, 17, 105, 120);
+    lineZombie[3] = lineZombieSheet.getSubimage(664, 17, 105, 120);
+    lineZombie[4] = lineZombieSheet.getSubimage(877, 17, 105, 120);
+    lineZombie[5] = lineZombieSheet.getSubimage(1087, 17, 105, 120);
+    lineZombie[6] = lineZombieSheet.getSubimage(1296, 17, 105, 120);
+    lineZombie[7] = lineZombieSheet.getSubimage(1507, 17, 105, 120);
+    lineZombie[8] = lineZombieSheet.getSubimage(1718, 17, 105, 120);
+    lineZombie[9] = lineZombieSheet.getSubimage(28, 228, 105, 120);
+    lineZombie[10] = lineZombieSheet.getSubimage(241, 228, 105, 120);
+    lineZombie[11] = lineZombieSheet.getSubimage(454, 228, 105, 120);
+    lineZombie[12] = lineZombieSheet.getSubimage(664, 228, 105, 120);
+    lineZombie[13] = lineZombieSheet.getSubimage(877, 228, 105, 120);
+    lineZombie[14] = lineZombieSheet.getSubimage(1087, 228, 105, 120);
+    lineZombie[15] = lineZombieSheet.getSubimage(1296, 228, 105, 120);
+    lineZombie[16] = lineZombieSheet.getSubimage(1507, 228, 105, 120);
+    lineZombie[17] = lineZombieSheet.getSubimage(1718, 228, 105, 120);
+    lineZombie[18] = lineZombieSheet.getSubimage(28, 435, 105, 120);
+    lineZombie[19] = lineZombieSheet.getSubimage(241, 435, 105, 120);
+    lineZombie[20] = lineZombieSheet.getSubimage(454, 435, 105, 120);
+    lineZombie[21] = lineZombieSheet.getSubimage(664, 435, 105, 120);
+    lineZombie[22] = lineZombieSheet.getSubimage(877, 435, 105, 120);
+    lineZombie[23] = lineZombieSheet.getSubimage(1087, 435, 105, 120);
+    lineZombie[24] = lineZombieSheet.getSubimage(1296, 435, 105, 120);
+    lineZombie[25] = lineZombieSheet.getSubimage(1507, 435, 105, 120);
+    lineZombie[26] = lineZombieSheet.getSubimage(1718, 435, 105, 120);
+    lineZombie[27] = lineZombieSheet.getSubimage(28, 648, 105, 120);
+    lineZombie[28] = lineZombieSheet.getSubimage(241, 648, 105, 120);
+    lineZombie[29] = lineZombieSheet.getSubimage(454, 648, 105, 120);
 
-    lineZombie[2] = lineZombieSheet.getSubimage(188, 8, 95, 130);
-    lineZombie[3] = lineZombieSheet.getSubimage(188, 8, 95, 130);
-
-    lineZombie[4] = lineZombieSheet.getSubimage(376, 8, 95, 130);
-    lineZombie[5] = lineZombieSheet.getSubimage(376, 8, 95, 130);
-
-    lineZombie[6] = lineZombieSheet.getSubimage(732, 8, 95, 130);
-    lineZombie[7] = lineZombieSheet.getSubimage(732, 8, 95, 130);
-
-    lineZombie[8] = lineZombieSheet.getSubimage(917, 8, 95, 130);
-    lineZombie[9] = lineZombieSheet.getSubimage(917, 8, 95, 130);
-
-    lineZombie[10] = lineZombieSheet.getSubimage(1098, 8, 95, 130);
-    lineZombie[11] = lineZombieSheet.getSubimage(1098, 8, 95, 130);
-
-    lineZombie[12] = lineZombieSheet.getSubimage(1277, 8, 95, 130);
-    lineZombie[13] = lineZombieSheet.getSubimage(1277, 8, 95, 130);
-
-    lineZombie[14] = lineZombieSheet.getSubimage(1447, 8, 95, 130);
-    lineZombie[15] = lineZombieSheet.getSubimage(1447, 8, 95, 130);
-
-    lineZombie[16] = lineZombieSheet.getSubimage(1622, 8, 95, 130);
-    lineZombie[17] = lineZombieSheet.getSubimage(1622, 8, 95, 130);
-
-    lineZombie[18] = lineZombieSheet.getSubimage(1818, 8, 95, 130);
-    lineZombie[19] = lineZombieSheet.getSubimage(1818, 8, 95, 130);
-
-    lineZombie[20] = lineZombieSheet.getSubimage(2003, 8, 95, 130);
-    lineZombie[21] = lineZombieSheet.getSubimage(2003, 8, 95, 130);
-
-    lineZombie[22] = lineZombieSheet.getSubimage(2180, 8, 95, 130);
-    lineZombie[23] = lineZombieSheet.getSubimage(2180, 8, 95, 130);
-
-    lineZombie[24] = lineZombieSheet.getSubimage(2360, 8, 95, 130);
-    lineZombie[25] = lineZombieSheet.getSubimage(2360, 8, 95, 130);
-
-    lineZombie[26] = lineZombieSheet.getSubimage(2544, 8, 95, 130);
-    lineZombie[27] = lineZombieSheet.getSubimage(2544, 8, 95, 130);
-
-    lineZombie[28] = lineZombieSheet.getSubimage(2721, 8, 95, 130);
-    lineZombie[29] = lineZombieSheet.getSubimage(2721, 8, 95, 130);
-
-    lineZombie[15] = lineZombieSheet.getSubimage(2899, 8, 95, 130);
-    lineZombie[15] = lineZombieSheet.getSubimage(2899, 8, 95, 130);
 
 
 
@@ -218,31 +202,6 @@ public class SpriteLoader
     masterZombie[27] = masterZombieSheet.getSubimage(28, 648, 105, 120);
     masterZombie[28] = masterZombieSheet.getSubimage(241, 648, 105, 120);
     masterZombie[29] = masterZombieSheet.getSubimage(454, 648, 105, 120);
-
-
-//    lineDeadZombie[0] = lineDeadSheet.getSubimage(0, 0, 232, 249);
-//    lineDeadZombie[1] = lineDeadSheet.getSubimage(0, 0, 232, 249);
-//    lineDeadZombie[2] = lineDeadSheet.getSubimage(256, 0, 232, 249);
-//    lineDeadZombie[3] = lineDeadSheet.getSubimage(256, 0, 232, 249);
-//
-//    lineDeadZombie[4] = lineDeadSheet.getSubimage(511, 0, 232, 249);
-//    lineDeadZombie[5] = lineDeadSheet.getSubimage(511, 0, 232, 249);
-//    lineDeadZombie[6] = lineDeadSheet.getSubimage(758, 0, 232, 249);
-//    lineDeadZombie[7] = lineDeadSheet.getSubimage(758, 0, 232, 249);
-//
-//    lineDeadZombie[8] = lineDeadSheet.getSubimage(1011, 0, 232, 249);
-//    lineDeadZombie[9] = lineDeadSheet.getSubimage(1011, 0, 232, 249);
-//
-//    lineDeadZombie[10] = lineDeadSheet.getSubimage(1286, 0, 232, 249);
-//    lineDeadZombie[11] = lineDeadSheet.getSubimage(1286, 0, 232, 249);
-//
-//    lineDeadZombie[12] = lineDeadSheet.getSubimage(1540, 0, 232, 249);
-//    lineDeadZombie[13] = lineDeadSheet.getSubimage(1540, 0, 232, 249);
-//
-//    lineDeadZombie[14] = lineDeadSheet.getSubimage(1793, 0, 200, 249);
-//    lineDeadZombie[15] = lineDeadSheet.getSubimage(1793, 0, 200, 249);
-
-
   }
 
   /**

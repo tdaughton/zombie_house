@@ -42,13 +42,14 @@ public class LightSource extends Polygon
    */
   protected void setPolygon(int centerX, int centerY)
   {
+
     double tileRadius = Math.sqrt(((Math.pow(playerTile.getHeight(), 2))
         + (Math.pow(playerTile.getWidth(), 2))));
     this.radius = (float) (playerSight * tileRadius);
     this.light = new Polygon();
     double relativeX = player.getX();
     double relativeY = player.getY();
-    this.center = new Point2D.Float(centerX, centerY);
+    this.center = new Point2D.Double(centerX, centerY);
     double x;
     double y;
     double xMult;
@@ -61,7 +62,7 @@ public class LightSource extends Polygon
       x = relativeX + (xMult * radius);
       y = relativeY + (yMult * radius);
       Point newPoint = this.raytrace((int)relativeX, (int)relativeY, (int) x, (int) y);
-      light.addPoint((int) (newPoint.getX()-relativeX + centerX), (int) (newPoint.getY()-relativeY + centerY));
+      light.addPoint( (int) (centerX + newPoint.getX()), (int)(centerY + newPoint.getY()));
     }
   }
 
@@ -71,6 +72,9 @@ public class LightSource extends Polygon
    */
   private Point raytrace(int x0, int y0, int x1, int y1)
   {
+    this.playerTile = player.getCurrentTile();
+    this.gridRow = playerTile.getGridRow();
+    this.gridCol = playerTile.getGridCol();
     int dx = Math.abs(x1 - x0);
     int dy = Math.abs(y1 - y0);
     int x = x0;
@@ -91,7 +95,7 @@ public class LightSource extends Polygon
           if (i >= 0 && j >= 0 && i < 41 && j < 48)
             if (grid[i][j] instanceof Wall && grid[i][j].contains(x, y))
             {
-              return new Point(grid[i][j].getCenterTileX(), grid[i][j].getCenterTileY());
+              return new Point((int)grid[i][j].getCenterX()-x0, (int)grid[i][j].getCenterY()-y0);
             }
         }
       }
@@ -107,7 +111,7 @@ public class LightSource extends Polygon
         error += dx;
       }
     }
-    return new Point(x1,y1);
+    return new Point(x1-x0,y1-y0);
   }
 
 

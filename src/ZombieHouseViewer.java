@@ -268,8 +268,8 @@ public class ZombieHouseViewer extends JPanel
     darkness.subtract(new Area(light));
     g2.setColor(Color.black);
     g2.fill(darkness);
-    Color [] fade = {new Color(0f,0f,0f,0f), Color.BLACK};
-    float [] fCen = {0.0f, 1.0f};
+    Color [] fade = {new Color(0f,0f,0f,0f),new Color(0f,0f,0f,0f), Color.BLACK};
+    float [] fCen = {0.0f, 0.5f, 1.0f};
     RadialGradientPaint radialGradientPaint =  new RadialGradientPaint(lightSource.getCenter(), lightSource.getRadius(), fCen, fade,
         MultipleGradientPaint.CycleMethod.NO_CYCLE);
     g2.setPaint(radialGradientPaint);
