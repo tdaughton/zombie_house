@@ -33,11 +33,6 @@ public class Zombie extends Movable
   private double theta;
   private double timeSinceUpdate;
   private boolean bumped;
-
-  // I thought maybe depending on the types of zombie, how much damage they take
-  // and how much health they recover each second may differ. If makes the game
-  // too difficult, then let's not do this. :D -Miri
-
   private Enum zombieOrientation;
   private SpriteLoader frames;
 
@@ -69,10 +64,15 @@ public class Zombie extends Movable
     return frames;
   }
 
+  /**
+   * Gets zombie's type as a string
+   * @return  String representation of zombie type
+   */
   public String getZType()
   {
-    if (wType == WalkType.RANDOM) return "Random";
-    return "Line";
+    if (wType == WalkType.LINE) return "Line";
+    else if (wType == WalkType.PATH) return "Master";
+    return "Random";
   }
 
   /**
@@ -82,20 +82,24 @@ public class Zombie extends Movable
   {
     double xDistance = (SPEED_WALK * super.getCurrentTile().getWidth() * Math.sin(theta) * timeElapsed);
     double yDistance = (SPEED_WALK * super.getCurrentTile().getHeight() * Math.cos(theta) * timeElapsed);
-    //System.out.println("zxd "+xDistance+" zyd "+yDistance);
-    if (theta < 0.40f || theta > 5.90f) zombieOrientation = GridOrientation.EAST;
-    else if (1.19f < theta && theta < 0.40f) zombieOrientation = GridOrientation.NORTHEAST;
-    else if (1.97f < theta && theta < 1.19f) zombieOrientation = GridOrientation.NORTH;
-    else if (2.76f < theta && theta < 1.97f) zombieOrientation = GridOrientation.NORTHWEST;
-    else if (3.54f < theta && theta < 2.76f) zombieOrientation = GridOrientation.WEST;
-    else if (4.33f < theta && theta < 3.54f) zombieOrientation = GridOrientation.SOUTHWEST;
-    else if (5.11f < theta && theta < 4.33f) zombieOrientation = GridOrientation.SOUTH;
-    else if (5.90f < theta && theta < 5.11f) zombieOrientation = GridOrientation.SOUTHEAST;
+    //System.out.println("zxd "+xDistance+" zyd "+yDistance+" theta "+theta);
+    if (5.8905f < theta || theta < 0.3927f) zombieOrientation = GridOrientation.SOUTH;
+    else if (0.3927f < theta && theta < 1.1781f) zombieOrientation = GridOrientation.SOUTHEAST;
+    else if (1.1781f < theta && theta < 1.9635f) zombieOrientation = GridOrientation.EAST;
+    else if (1.9635f < theta && theta < 2.7489f) zombieOrientation = GridOrientation.NORTHEAST;
+    else if (2.7489f < theta && theta < 3.5343f) zombieOrientation = GridOrientation.NORTH;
+    else if (3.5343f < theta && theta < 4.3197f) zombieOrientation = GridOrientation.NORTHWEST;
+    else if (4.3197f < theta && theta < 5.1051f) zombieOrientation = GridOrientation.WEST;
+    else if (5.1051f < theta && theta < 5.8905f) zombieOrientation = GridOrientation.SOUTHWEST;
     bumped = super.move(xDistance, yDistance, zombieOrientation);
     if(wType == WalkType.LINE) getFrames().getRotatingLineZombieWalk();
     else getFrames().getRotatingRandomZombieWalk();
   }
 
+  /**
+   * Receives timeElapsed from ZombieHouseModel and when a threshhold has been passed, do interesting things.
+   * @param timeElapsed  time elapsed since last update call
+   */
   public void updateZombie(double timeElapsed)
   {
     timeSinceUpdate += timeElapsed;
@@ -112,61 +116,42 @@ public class Zombie extends Movable
    */
   private void decisionEngine()
   {
-    // Just in case you want to use Pathfinder here:
-    // Pathfinder pf = new Pathfinder(tiles);
-    // ArrayList<Tile> path = pf.aStarSearch(starting tile, target tile);
-    // for(int i=path.size(); i > 0; i++) nextTile = path.get(i) //iterate backward.
-    //
-    // Or we can use stack instead. I think stack may be easier to use.
-    // Stack path = pf.aStarSearch(starting tile, target tile)
-    // path.pop => will return the next tile to go.
-    // If you want to test stack, go to pathfinder and modify return type and
-    // return statement of aStarPathfinder. - Miri
-
-    /*int pcX = player.getX();
-    int pcY = player.getY();
-    if (getDistanceTo(pcX, pcY) < DIST_SMELL)
-    {
-      int pCol = (int)(pcX / location.getWidth());
-      int pRow = (int)(pcY / location.getHeight());
-      path = aStar(location, tiles[pRow][pCol]);
-    }
-    else
-    {*/
     if (!path.isEmpty())
     {
       Tile nextTile = path.get(0);
       theta = Math.atan2(nextTile.getCenterX() - this.getX(), nextTile.getCenterY() - this.getY());
-      System.out.println("Z["+this.getTileRow()+"]["+this.getTileCol()+"] tracking ["+this.getZModel().getPlayer().getTileRow()+"]["+this.getZModel().getPlayer().getTileCol()+"] via ["+nextTile.getGridRow()+"]["+nextTile.getGridCol()+"]");
-      System.out.println(Math.toDegrees(theta));
+      //System.out.println("Z["+this.getTileRow()+"]["+this.getTileCol()+"] tracking ["+this.getZModel().getPlayer().getTileRow()+"]["+this.getZModel().getPlayer().getTileCol()+"] via ["+nextTile.getGridRow()+"]["+nextTile.getGridCol()+"]");
+      if (theta < 0.0f) theta += Math.PI * 2.0f;
     }
     else if (wType == WalkType.RANDOM || !bumped)
     {
       theta = rng.nextDouble() * Math.PI * 2.0f;
       bumped = true;
     }
-    /*double nextX = this.SPEED_WALK * this.location.getWidth() * Math.sin(this.theta);// + x);
-    double nextY = this.SPEED_WALK * this.location.getHeight() * Math.cos(this.theta);// + y);
-    if (canMoveTo(nextX, nextY))
-    {
-      int nextCol = Math.min(0, Math.max(40,(int)(nextX / this.location.getWidth())));
-      int nextRow = Math.min(0,Math.max(40,(int)(nextY / this.location.getHeight())));
-      this.path.add(this.tiles[nextRow][nextCol]);
-    }
-    else if (this.wType == WalkType.LINE)
-    {
-      this.theta = rng.nextDouble() * Math.PI * 2.0;
-    }*/
-    //}
   }
 
+  /**
+   * Sets path of Tiles to follow
+   * @param fastPath  path of tiles as array list
+   */
   public void setPath(ArrayList<Tile> fastPath)
   {
     path = fastPath;
   }
 
+  /**
+   * Clears path
+   */
   public void deletePath()
   {
     path.clear();
+  }
+
+  /**
+   * Turns into a master zombie
+   */
+  public void setMasterZombie()
+  {
+    wType = WalkType.PATH;
   }
 }

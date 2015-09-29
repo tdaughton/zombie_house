@@ -207,7 +207,7 @@ public class ZombieHouseModel
       for (int j = 1; j < COLS - 1; j++)
       {
         valid = 0;
-        if (grid[i][j] instanceof Floor)
+        if (grid[i][j] instanceof Floor && !grid[i][j].hasTrap())
         {
           for (int k = i - 1; k < i + 2; k++)
           {
@@ -227,6 +227,7 @@ public class ZombieHouseModel
         }
       }
     }
+    zombies.get(rand.nextInt(zombies.size())).setMasterZombie();
   }
 
   /**
@@ -246,6 +247,14 @@ public class ZombieHouseModel
    */
   public void updateZombies()
   {
+    Zombie master = null;
+    for (Zombie zombie : zombies)
+    {
+      if (zombie.getZType().equals("Master"))
+      {
+        master = zombie;
+      }
+    }
     for (Zombie zombie : zombies)
     {
       if (zombie.isDead())
@@ -259,6 +268,11 @@ public class ZombieHouseModel
         {
           ArrayList<Tile> path = pf.aStarSearch(zombie.getCurrentTile(), playerCharacter.getCurrentTile());
           zombie.setPath(path);
+          if (master != null)
+          {
+            path = pf.aStarSearch(master.getCurrentTile(), playerCharacter.getCurrentTile());
+            master.setPath(path);
+          }
         }
         else
         {
