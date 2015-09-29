@@ -89,7 +89,11 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     this.requestFocus();
 
-
+    if(zModel.getPlayer().isDead())
+    {
+      this.restartLevel();
+      return;
+    }
     if(pause && pauseTracker>0) pauseTracker--;
     else
     {
@@ -103,10 +107,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     currSeconds = System.nanoTime();
     deltaSeconds = (currSeconds - prevSeconds) / 1000000000.0f;
     zModel.update(deltaSeconds);
-    if(zModel.getPlayer().isDead())
-    { this.restartLevel();
-      return;
-    }
+
     repaint();
   }
 
