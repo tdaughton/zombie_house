@@ -6,6 +6,8 @@ package model;
 
 public class Wall extends Tile
 {
+  private boolean obstacle = false;
+
   public Wall(int gridRow, int gridCol, Tile[][] grid)
   {
     super(gridRow, gridCol, grid);
@@ -15,5 +17,12 @@ public class Wall extends Tile
   public String getTileType()
   {
     return "W";
+  }
+
+  public boolean isObstacle() { return obstacle; }
+
+  public void setObstacle(boolean obstacle)
+  {
+    this.obstacle = obstacle;
   }
 }

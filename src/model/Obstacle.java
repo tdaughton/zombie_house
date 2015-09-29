@@ -10,7 +10,6 @@ public class Obstacle extends Wall
     super(gridRow, gridCol, grid);
     super.setType(1);
     super.setObstacle(true);
-
     this.movable = false;
   }
 }

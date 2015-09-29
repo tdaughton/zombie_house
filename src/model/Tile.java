@@ -24,8 +24,6 @@ public class Tile extends Rectangle implements Comparable<Tile>
   protected boolean hasTrap;
   private boolean exitFlag = false;
 
-
-
   private Trap trap;
 
   public Tile(int gridRow, int gridCol, Tile[][] grid)
@@ -37,14 +35,14 @@ public class Tile extends Rectangle implements Comparable<Tile>
     this.trap = null;
   }
 
-  private void setOccupied(boolean occupationStatus)
-  {
-    this.occupied = occupationStatus;
-  }
-
   public boolean isOccupied()
   {
     return this.occupied;
+  }
+
+  private void setOccupied(boolean occupationStatus)
+  {
+    this.occupied = occupationStatus;
   }
 
   public boolean isMovable()
