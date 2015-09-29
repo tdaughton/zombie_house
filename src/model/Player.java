@@ -9,37 +9,29 @@ import Resources.ImageLoader;
 
 public class Player extends Movable
 {
-  private static final double DIST_SIGHT = 5.0f;
-  private static final double DIST_HEAR = 10.0f;
-  private static final double SPEED_WALK = 1.0f;
-  private static final double SPEED_MULT = 2.0f;
-  private static final double STAM_MAX = 5.0f;
-  private static final double STAM_REGEN = 0.2f;
-
+  public static final double DIST_SIGHT = 5.0f;
+  public static final double DIST_HEAR = 10.0f;
+  public static final double SPEED_WALK = 1.0f;
+  public static final double SPEED_MULT = 2.0f;
+  public static final double STAM_MAX = 5.0f;
+  public static final double STAM_REGEN = 0.2f;
 
   private SpriteLoader frames;
-  // Inventory is going to take traps only. If there will be any other items
-  // then we can use HashTable<String itemName, ArrayList<Item>> or something
-  // like that.
   private int numberOfTraps;
   private double stamina;
-  private boolean running;
 
   /**
    * Full constructor
-   * @param x                    X coordinate of center point (in pixels)
-   * @param y                    Y coordinate of center point (in pixels)
-   * @param radius               Radius of bounding circle (in pixels)
-   * @param location             Tile location containing center point
-   * @param grid                 Reference to Zombie House map
+   * @param zhModel              Reference to Zombie House Model
+   * @param loc                  Tile location containing center point
+   * @param running              Initial running status
    */
-  public Player(double x, double y, double radius, Tile location, ZombieHouseModel zhModel, ImageLoader imageLoader, boolean running, int health)
+  public Player(ZombieHouseModel zhModel, Tile loc, boolean running)
   {
-    super(x, y, radius, location, zhModel, running, health);
-    this.frames = new SpriteLoader(imageLoader);
+    super(zhModel, loc, running);
+    this.frames = new SpriteLoader(ZombieHouseModel.imageLoader);
     this.numberOfTraps = 3;
     this.stamina = STAM_MAX;
-    this.setRunning(running);
   }
 
   /**
@@ -53,7 +45,7 @@ public class Player extends Movable
 
   public void update(double timeElapsed)
   {
-    if (!running) stamina = Math.min(STAM_MAX,stamina+STAM_REGEN*timeElapsed);
+    if (!this.isRunning()) stamina = Math.min(STAM_MAX,stamina+STAM_REGEN*timeElapsed);
     stamina = Math.max(0, stamina);
   }
 
@@ -77,10 +69,10 @@ public class Player extends Movable
     this.getCurrentTile().removeTrap();
   }
 
-  public void installTrap()
+  public void installTrap(Trap trap)
   {
     numberOfTraps--;
-    this.getCurrentTile().installTrap();
+    this.getCurrentTile().installTrap(trap);
   }
 
   public int getNumberOfTraps()

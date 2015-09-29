@@ -6,6 +6,7 @@
 package model;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 //==============================================================================
 // I implemented comparable interface to implement priority queue. - Miri :)
@@ -16,23 +17,42 @@ public class Tile extends Rectangle implements Comparable<Tile>
   protected int type;
 
   protected double priority; // priority will be calculated by the pathfinder.
-
   protected int gridRow;
   protected int gridCol;
   protected boolean occupied;
   protected boolean movable;
   protected boolean hasTrap;
+  boolean hallway;
+  private boolean obstacle;
   private boolean exitFlag = false;
-
   private Trap trap;
 
-  public Tile(int gridRow, int gridCol, Tile[][] grid)
+  public Tile(int gridRow, int gridCol, boolean movable, int type)
   {
+    super(gridCol, gridRow, 1, 1);
+
     this.gridRow = gridRow;
     this.gridCol = gridCol;
-    this.movable = false;
+    this.movable = movable;
+    this.type = type;
     this.hasTrap = false;
     this.trap = null;
+
+    x = gridCol;
+    y = gridRow;
+
+    hallway = false;
+    obstacle = false;
+  }
+
+  public boolean isHallway()
+  {
+    return hallway;
+  }
+
+  public void setHallway(boolean hallway)
+  {
+    this.hallway = hallway;
   }
 
   public boolean isOccupied()
@@ -80,9 +100,14 @@ public class Tile extends Rectangle implements Comparable<Tile>
     return this.gridCol;
   }
 
-  public Rectangle getBounds()
+  public boolean isObstacle()
   {
-    return this;
+    return obstacle;
+  }
+
+  public void setObstacle(boolean obstacle)
+  {
+    this.obstacle = obstacle;
   }
 
   public int getType()
@@ -107,11 +132,12 @@ public class Tile extends Rectangle implements Comparable<Tile>
   public void removeTrap()
   {
     this.hasTrap=false;
+    this.trap = null;
   }
 
-  public void installTrap()
+  public void installTrap(Trap trap)
   {
-    this.trap = new Trap((int) this.getCenterX(),(int)this.getCenterY(),true);
+    this.trap = trap;
     this.hasTrap = true;
   }
 
@@ -123,6 +149,15 @@ public class Tile extends Rectangle implements Comparable<Tile>
   public boolean hasTrap()
   {
     return this.hasTrap;
+  }
+
+  public boolean hasZombie(ArrayList<Zombie> zombies)
+  {
+    for (Zombie zombie : zombies)
+    {
+      if (this.contains(zombie.getX(), zombie.getY())) return true;
+    }
+    return false;
   }
 
   //============================================================================
@@ -145,8 +180,8 @@ public class Tile extends Rectangle implements Comparable<Tile>
   @Override
   public int compareTo(Tile anotherTile)
   {
-    if(this.priority < anotherTile.getPriority()) return -1;
-    if(this.priority > anotherTile.getPriority()) return 1;
+    if (this.priority < anotherTile.getPriority()) return -1;
+    if (this.priority > anotherTile.getPriority()) return 1;
     return 0;
   }
 
@@ -154,6 +189,7 @@ public class Tile extends Rectangle implements Comparable<Tile>
   {
     return this.exitFlag;
   }
+
   public void setExitFlag()
   {
     this.exitFlag = true;

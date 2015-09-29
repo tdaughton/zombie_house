@@ -74,7 +74,8 @@ public class Map
   private void installTrap(int x, int y)
   {
     //if(player.getNumberOfTraps() > 0)
-    grid[y][x].installTrap();
+    Trap trap = new Trap(x, y, true);
+    grid[y][x].installTrap(trap);
     //player.installTrap();
   }
 
@@ -101,10 +102,10 @@ public class Map
   {
     ArrayList<Tile> neighbors = new ArrayList<>();
 
-    if(x-1 >= 0 && grid[y][x-1].movable) neighbors.add(grid[y][x-1]);
-    if(x+1 < COLS && grid[y][x+1].movable) neighbors.add(grid[y][x+1]);
-    if(y-1 >= 0 && grid[y-1][x].movable) neighbors.add(grid[y-1][x]);
-    if(y+1 < ROWS && grid[y+1][x].movable) neighbors.add(grid[y+1][x]);
+    if(x-1 >= 0 && grid[y][x-1].isMovable()) neighbors.add(grid[y][x-1]);
+    if(x+1 < COLS && grid[y][x+1].isMovable()) neighbors.add(grid[y][x+1]);
+    if(y-1 >= 0 && grid[y-1][x].isMovable()) neighbors.add(grid[y-1][x]);
+    if(y+1 < ROWS && grid[y+1][x].isMovable()) neighbors.add(grid[y+1][x]);
 
     return neighbors;
   }

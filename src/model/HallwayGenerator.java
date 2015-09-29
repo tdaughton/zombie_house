@@ -1,8 +1,8 @@
 package model;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 //==============================================================================
 // Miri Ryu
@@ -14,20 +14,21 @@ import java.util.HashMap;
 //==============================================================================
 public class HallwayGenerator implements GameMap
 {
-  private int[][] map;
-  private int[][] priorityMap;
-  private  ArrayList<Point> doors;
+  private Tile[][] map;
+  private ArrayList<Tile> doors;
 
-  public HallwayGenerator(int[][] map, ArrayList<Point> doors)
+  public HallwayGenerator(Tile[][] map, ArrayList<Tile> doors)
   {
     this.map = map;
     this.doors = doors;
 
-    this.priorityMap = new int[map.length][map[0].length];
     generateRandomHallway();
   }
 
-  public int[][] getMap() { return map; }
+  public Tile[][] getMap()
+  {
+    return map;
+  }
 
   //============================================================================
   // At each point found to be alone (a wall tile that has all 8 adjacent tiles
@@ -35,11 +36,12 @@ public class HallwayGenerator implements GameMap
   //============================================================================
   private void generateRandomHallway()
   {
-    Point target = doors.get(0); // select any door.
+    Tile target = doors.get(0); // select any door.
+    doors.remove(0);
 
-    for(Point door: doors)
+    for (Tile door : doors)
     {
-      if(target != door) putHallway(findPath(door, target), target);
+      putHallway(findPath(door, target), target);
     }
 
     putWalls(target);
@@ -49,7 +51,7 @@ public class HallwayGenerator implements GameMap
   // At each point found to be alone (a wall tile that has all 8 adjacent tiles
   // are also walls) start a hallway and extend it as far as it can go.
   //============================================================================
-  private void putWalls(Point target)
+  private void putWalls(Tile target)
   {
     int x = target.x, y = target.y;
     for(int i=-1; i<2; i++)
@@ -58,11 +60,13 @@ public class HallwayGenerator implements GameMap
       {
         if(x+i >= 0 && x+i < COL && y+j >= 0 && y+j < ROW && (i != 0 || j !=0))
         {
-          if(map[y+j][x+i] == 0) map[y+j][x+i] = 16;
-          else if(map[y+j][x+i] == 2)
+          if (map[y + j][x + i].type == 0)
           {
-            map[y+j][x+i] = 1;
-            putWalls(new Point(x+i, y+j));
+            map[y + j][x + i] = new Wall(y + j, x + i);
+          } else if (map[y + j][x + i].isHallway())
+          {
+            map[y + j][x + i].setHallway(false);
+            putWalls(map[y + j][x + i]);
           }
         }
       }
@@ -72,42 +76,38 @@ public class HallwayGenerator implements GameMap
   //============================================================================
   // Depth base search to install hallway.
   //============================================================================
-  private HashMap<Point, Point> findPath(Point start, Point target)
+  private HashMap<Tile, Tile> findPath(Tile start, Tile target)
   {
-    //System.out.println("("+start.x + ", " + start.y+") => (" +target.x + ", " + target.y + ")");
+    HashMap<Tile, Integer> costSoFar = new HashMap<>();
+    HashMap<Tile, Tile> cameFrom = new HashMap<>();
 
-    HashMap<Point, Point> cameFrom = new HashMap<>();
-    ArrayList<Point> frontier = new ArrayList<>();
-    HashMap<Point, Integer> costSoFar = new HashMap<>();
+    PriorityQueue<Tile> frontier = new PriorityQueue<>();
 
-    Point current;
-
-    int newCost, priority;
+    Tile current;
 
     frontier.add(start);
-    priorityMap[start.y][start.x] = 0;
-
+    start.setPriority(0);
     cameFrom.put(start, null);
     costSoFar.put(start, 0);
 
     while(!frontier.isEmpty())
     {
-      current = poll(frontier);
-      frontier.remove(current);
+      current = frontier.poll();
 
       if(current == target) break;
 
-      for(Point next: getNeighbors(current))
-      {
-        newCost = costSoFar.get(current) + cost(next);
+      for (Tile next : getNeighbors(current))
+      {// If there are tiles with different cost, add next.getCost() instead of 1.
+        int newCost = costSoFar.get(current) + cost(next);
+
         if(!costSoFar.containsKey(next) || newCost < costSoFar.get(next))
         {
           costSoFar.put(next, newCost);
-          priority = newCost;
 
+          int priority = newCost;
+
+          next.setPriority(priority);
           frontier.add(next);
-          priorityMap[next.y][next.x] = priority;
-
           cameFrom.put(next, current);
         }
       }
@@ -116,76 +116,57 @@ public class HallwayGenerator implements GameMap
     return cameFrom;
   }
 
-
   //============================================================================
   // Cost for each tile. Hallways are preferable compared to other tiles.
   //============================================================================
-  private int cost(Point next)
+  private int cost(Tile next)
   {
-    if(next != null)
+    if (next.isHallway())
     {
-      switch(map[next.y][next.x])
-      {
-        case 0: return 2;
-        case 1: return 2;
-        case 2: return 1;
-        case 4: return 4;
-        case 8: return 4;
-        case 16: default: return 4;
-      }
+      return 1;
+    } else
+    {
+      return 2;
     }
-
-    return 100;
   }
 
   //============================================================================
   // Putting Hallway using cameFram HashMap.
   //============================================================================
-  private void putHallway(HashMap<Point, Point> cameFrom, Point target)
+  private void putHallway(HashMap<Tile, Tile> cameFrom, Tile target)
   {
-    Point current = target;
+    Tile current = target;
 
     while(cameFrom.get(current) != null)
     {
-      map[current.y][current.x] = 2;
+      map[current.y][current.x] = new Floor(current.y, current.x);
+      map[current.y][current.x].setHallway(true);
+
       current = cameFrom.get(current);
     }
   }
 
   //============================================================================
-  // A very expensive poll. If I have time, I will try to implement better poll.
+  // Returns all the neighbors that is not wall. Hallways can't cross walls.
   //============================================================================
-  private Point poll(ArrayList<Point> frontier)
+  private ArrayList<Tile> getNeighbors(Tile p)
   {
-    Point priorPoint = null;
-    int priority = 0, tempPriority = 0;
+    ArrayList<Tile> neighbors = new ArrayList<>();
 
-    for(Point p: frontier)
-    {
-      tempPriority = priorityMap[p.y][p.x];
+    if (isFriendly(p.x, p.y - 1)) neighbors.add(map[p.y - 1][p.x]);
+    if (isFriendly(p.x, p.y + 1)) neighbors.add(map[p.y + 1][p.x]);
+    if (isFriendly(p.x - 1, p.y)) neighbors.add(map[p.y][p.x - 1]);
+    if (isFriendly(p.x + 1, p.y)) neighbors.add(map[p.y][p.x + 1]);
 
-      if(priorPoint == null || priority < tempPriority)
-      {
-        priorPoint = p;
-        priority = tempPriority;
-      }
-    }
-
-    return priorPoint;
+    return neighbors;
   }
 
   //============================================================================
-  // Returns all the neighbors that is not wall. Hallways can't cross walls.
+  // See if the adjacent Tile can be our neighbor.
   //============================================================================
-  private ArrayList<Point> getNeighbors(Point p)
+  private boolean isFriendly(int x, int y)
   {
-    ArrayList<Point> neighbors = new ArrayList<>();
-
-    if(p.y-1>0 && map[p.y-1][p.x] != 16) neighbors.add(new Point(p.x, p.y-1));
-    if(p.y+1<ROW && map[p.y+1][p.x] != 16) neighbors.add(new Point(p.x, p.y+1));
-    if(p.x-1>0 && map[p.y][p.x-1] != 16) neighbors.add(new Point(p.x-1, p.y));
-    if(p.x+1<COL && map[p.y][p.x+1] != 16) neighbors.add(new Point(p.x+1, p.y));
-
-    return neighbors;
+    if (x < 0 || x >= COL || y < 0 || y >= ROW) return false;
+    return map[y][x].type != 1;
   }
 }
