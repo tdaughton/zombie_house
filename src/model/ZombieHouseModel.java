@@ -122,7 +122,7 @@ public class ZombieHouseModel
           tiles[i][j] = new Floor(i, j);
           if (grid[i][j].hasExitFlag())
           {
-            grid[i][j].setExitFlag();// implement exit tile
+            tiles[i][j].setExitFlag();// implement exit tile
           }
         } else
         {
