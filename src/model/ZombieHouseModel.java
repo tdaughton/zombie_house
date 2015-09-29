@@ -67,10 +67,30 @@ public class ZombieHouseModel
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     imageLoader.readImages();
     pf = new Pathfinder(this);
+
+    getObstacles(4);
+
     this.setRandomTraps();
     this.initializeRandomZombies();
     this.playerCharacter = this.getRandomStart();
   }
+
+  private void getObstacles(int n)
+  {
+    int x = 0, y = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+      while (!(grid[y][x] instanceof Floor))
+      {
+        x = rand.nextInt(COLS - 1);
+        y = rand.nextInt(ROWS - 1);
+      }
+
+      grid[y][x] = new Obstacle(y, x, grid);
+    }
+  }
+
 
   /**
    * This method translates a 2D int array into a 2D Tile array

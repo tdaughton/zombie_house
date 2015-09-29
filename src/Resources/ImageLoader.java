@@ -10,7 +10,6 @@ package Resources;
 import model.*;
 
 import javax.imageio.ImageIO;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -158,7 +157,15 @@ public class ImageLoader
         }
         else if (grid[i][j] instanceof Wall)
         {
-          g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          if (grid[i][j].isObstacle())
+          {
+            g
+            .drawImage(tombObstacleSheet, xCoord, yCoord, tileWidth, tileHeight,
+                      null);
+          } else
+          {
+            g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          }
 //          g.setColor(Color.BLUE);
 //          g.drawRect((int) grid[i][j].getX(), (int) grid[i][j].getY(), (int) grid[i][j].getWidth(), (int) grid[i][j]
 //              .getHeight());

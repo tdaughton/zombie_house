@@ -132,7 +132,6 @@ public class MapGenerator implements GameMap
       for (int j = 0; j < COL; j++)
       {
         map[i][j] = new Outside(i, j, null);
-
       }
     }
   }

@@ -16,13 +16,13 @@ public class Tile extends Rectangle implements Comparable<Tile>
   protected int type;
 
   protected double priority; // priority will be calculated by the pathfinder.
-
   protected int gridRow;
   protected int gridCol;
   protected boolean occupied;
   protected boolean movable;
   protected boolean hasTrap;
   boolean hallway;
+  private boolean obstacle;
   private boolean exitFlag = false;
   private Trap trap;
 
@@ -40,6 +40,7 @@ public class Tile extends Rectangle implements Comparable<Tile>
     y = gridRow;
 
     hallway = false;
+    obstacle = false;
   }
 
   public boolean isHallway()
@@ -95,6 +96,16 @@ public class Tile extends Rectangle implements Comparable<Tile>
   public int getGridCol()
   {
     return this.gridCol;
+  }
+
+  public boolean isObstacle()
+  {
+    return obstacle;
+  }
+
+  public void setObstacle(boolean obstacle)
+  {
+    this.obstacle = obstacle;
   }
 
   public Rectangle getBounds()
