@@ -65,7 +65,7 @@ public class DoorGenerator implements GameMap
 
     if(room.x1 > 2) availableSides.add('W');
     if(room.x2 < COL - 3) availableSides.add('E');
-    if(room.y1 > 1) availableSides.add('N');
+    if(room.y1 > 2) availableSides.add('N');
     if(room.y2 < ROW - 3) availableSides.add('S');
 
     return availableSides;
@@ -113,19 +113,12 @@ public class DoorGenerator implements GameMap
     {
       map[y+yInc][x+xInc] = 1;
     }
-/*
-    if(yInc == 0)
-    {
-      if(map[y-1][x+xInc*2] != 1) map[y-1][x+xInc*2] = 32;
-      if(map[y+1][x+xInc*2] != 1) map[y+1][x+xInc*2] = 32;
-    }
-    else
-    {
-      if(map[y+yInc*2][x-1] != 1) map[y+yInc*2][x-1] = 32;
-      if(map[y+yInc*2][x+1] != 1) map[y+yInc*2][x+1] = 32;
-    }*/
   }
 
+  //============================================================================
+  // Exit will be surrounded by walls and only one side will be open to be
+  // connected to the hallway.
+  //============================================================================
   private void connectExit(ArrayList<Character> availableSides)
   {
     Collections.shuffle(availableSides);

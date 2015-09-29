@@ -59,6 +59,7 @@ public class MapGenerator implements GameMap
     HallwayGenerator hg = new HallwayGenerator(dg.getMap(), dg.getDoors());
     //printMap();
     convertIntoDisplayableMap(hg.getMap());
+    printMap();
   }
 
   //============================================================================
@@ -84,19 +85,13 @@ public class MapGenerator implements GameMap
             ln += "   ";
             break;
           case 1:
-            ln += " / ";
+            ln += "[ ]";
             break;
           case 2:
-            ln += "[2]";
+            ln += " . ";
             break;
           case 4:
-            ln += "[4]";
-            break;
-          case 8:
-            ln += "[&]";
-            break;
-          case 16:
-            ln += "[=]";
+            ln += "[E]";
             break;
           default:
             ln += "[ ]";
@@ -157,6 +152,6 @@ public class MapGenerator implements GameMap
   public static void main(String[] args)
   {
     MapGenerator mg = new MapGenerator();
-    //mg.printMap();
+    mg.printMap();
   }
 }

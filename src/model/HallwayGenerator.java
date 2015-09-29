@@ -45,6 +45,10 @@ public class HallwayGenerator implements GameMap
     putWalls(target);
   }
 
+  //============================================================================
+  // At each point found to be alone (a wall tile that has all 8 adjacent tiles
+  // are also walls) start a hallway and extend it as far as it can go.
+  //============================================================================
   private void putWalls(Point target)
   {
     int x = target.x, y = target.y;
@@ -65,6 +69,9 @@ public class HallwayGenerator implements GameMap
     }
   }
 
+  //============================================================================
+  // Depth base search to install hallway.
+  //============================================================================
   private HashMap<Point, Point> findPath(Point start, Point target)
   {
     //System.out.println("("+start.x + ", " + start.y+") => (" +target.x + ", " + target.y + ")");
@@ -92,7 +99,7 @@ public class HallwayGenerator implements GameMap
 
       for(Point next: getNeighbors(current))
       {
-        newCost = costSoFar.get(current) + cost(current, next);
+        newCost = costSoFar.get(current) + cost(next);
         if(!costSoFar.containsKey(next) || newCost < costSoFar.get(next))
         {
           costSoFar.put(next, newCost);
@@ -109,7 +116,11 @@ public class HallwayGenerator implements GameMap
     return cameFrom;
   }
 
-  private int cost(Point current, Point next)
+
+  //============================================================================
+  // Cost for each tile. Hallways are preferable compared to other tiles.
+  //============================================================================
+  private int cost(Point next)
   {
     if(next != null)
     {
@@ -127,6 +138,9 @@ public class HallwayGenerator implements GameMap
     return 100;
   }
 
+  //============================================================================
+  // Putting Hallway using cameFram HashMap.
+  //============================================================================
   private void putHallway(HashMap<Point, Point> cameFrom, Point target)
   {
     Point current = target;
@@ -138,6 +152,9 @@ public class HallwayGenerator implements GameMap
     }
   }
 
+  //============================================================================
+  // A very expensive poll. If I have time, I will try to implement better poll.
+  //============================================================================
   private Point poll(ArrayList<Point> frontier)
   {
     Point priorPoint = null;
@@ -157,11 +174,9 @@ public class HallwayGenerator implements GameMap
     return priorPoint;
   }
 
-  private void setPriority(Point p, int priority)
-  {
-    priorityMap[p.y][p.x] = priority;
-  }
-
+  //============================================================================
+  // Returns all the neighbors that is not wall. Hallways can't cross walls.
+  //============================================================================
   private ArrayList<Point> getNeighbors(Point p)
   {
     ArrayList<Point> neighbors = new ArrayList<>();
@@ -172,30 +187,5 @@ public class HallwayGenerator implements GameMap
     if(p.x+1<COL && map[p.y][p.x+1] != 16) neighbors.add(new Point(p.x+1, p.y));
 
     return neighbors;
-  }
-
-  private Point findNearestDoor(Point start)
-  {
-    Point nearest = null;
-    int nearestHeuristic = 0;
-    int tempHeuristic = 0;
-
-    for(Point p: doors)
-    {
-      tempHeuristic = heuristic(start, p);
-
-      if((start != p ) && (nearest == null || nearestHeuristic > tempHeuristic))
-      {
-        nearest = p;
-        nearestHeuristic = tempHeuristic;
-      }
-    }
-
-    return nearest;
-  }
-
-  private int heuristic(Point p1, Point p2)
-  {
-    return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
   }
 }
