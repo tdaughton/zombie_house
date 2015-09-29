@@ -13,28 +13,54 @@ import java.util.ArrayList;
 //==============================================================================
 public class Tile extends Rectangle implements Comparable<Tile>
 {
-  private int x, y;
-  private int type;
+  protected int x, y;
+  protected int type;
 
-  private double priority; // priority will be calculated by the pathfinder.
+  protected double priority; // priority will be calculated by the pathfinder.
 
-  private int gridRow;
-  private int gridCol;
-  private boolean movable;
-  private boolean hasTrap;
+  protected int gridRow;
+  protected int gridCol;
+  protected boolean occupied;
+  protected boolean movable;
+  protected boolean hasTrap;
+  boolean hallway;
   private boolean exitFlag = false;
-
-
-
   private Trap trap;
 
   public Tile(int gridRow, int gridCol, boolean movable)
   {
+    super(gridCol, gridRow, 1, 1);
+
     this.gridRow = gridRow;
     this.gridCol = gridCol;
     this.movable = movable;
     this.hasTrap = false;
     this.trap = null;
+
+    x = gridCol;
+    y = gridRow;
+
+    hallway = false;
+  }
+
+  public boolean isHallway()
+  {
+    return hallway;
+  }
+
+  public void setHallway(boolean hallway)
+  {
+    this.hallway = hallway;
+  }
+
+  public boolean isOccupied()
+  {
+    return this.occupied;
+  }
+
+  private void setOccupied(boolean occupationStatus)
+  {
+    this.occupied = occupationStatus;
   }
 
   public boolean isMovable()
@@ -42,10 +68,10 @@ public class Tile extends Rectangle implements Comparable<Tile>
     return this.movable;
   }
 
-  public void setMovable(boolean moveStatus)
-  {
-    this.movable = moveStatus;
+  public void setMovable(boolean movable)
+  { this.movable=movable;
   }
+
 
   public String getTileType()
   {
@@ -142,8 +168,8 @@ public class Tile extends Rectangle implements Comparable<Tile>
   @Override
   public int compareTo(Tile anotherTile)
   {
-    if(this.priority < anotherTile.getPriority()) return -1;
-    if(this.priority > anotherTile.getPriority()) return 1;
+    if (this.priority < anotherTile.getPriority()) return -1;
+    if (this.priority > anotherTile.getPriority()) return 1;
     return 0;
   }
 

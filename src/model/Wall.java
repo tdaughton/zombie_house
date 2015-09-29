@@ -6,9 +6,9 @@ package model;
 
 public class Wall extends Tile
 {
-  public Wall(int gridRow, int gridCol)
+  public Wall(int gridRow, int gridCol, Tile[][] grid)
   {
-    super(gridRow, gridCol, false);
+    super(gridRow, gridCol, false, 1);
   }
 
   public String getTileType()

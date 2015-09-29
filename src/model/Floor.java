@@ -8,7 +8,7 @@ public class Floor extends Tile
 {
   public Floor(int gridRow, int gridCol)
   {
-    super(gridRow, gridCol, true);
+    super(gridRow, gridCol, true, 2);
   }
 
   public String getTileType()

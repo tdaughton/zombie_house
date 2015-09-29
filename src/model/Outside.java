@@ -8,7 +8,7 @@ public class Outside extends Tile
 {
   public Outside(int gridRow, int gridCol)
   {
-    super(gridRow, gridCol, true);
+    super(gridRow, gridCol, true, 0);
   }
 
   public String getTileType()

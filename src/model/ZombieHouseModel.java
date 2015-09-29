@@ -64,7 +64,7 @@ public class ZombieHouseModel
     this.tileHeight = currentScreenHeight / VISIBLE_Y_TILES;
     this.mapGen = new MapGenerator(2);
     this.rand = new Random();
-    this.grid = this.translateTileImages(mapGen.getMap());
+    this.grid = mapGen.getMap();
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     imageLoader.readImages();
     this.pf = new Pathfinder(this);
@@ -79,28 +79,36 @@ public class ZombieHouseModel
    * @param grid input 2D int array representing some tile types
    * @return a 2D Tile array representing the Zombie House
    */
-  private Tile[][] translateTileImages(int[][] grid)
-  {
-    Tile[][] tiles = new Tile[ROWS][COLS];
-
-    for (int i = 0; i < ROWS; i++)
-    {
-      for (int j = 0; j < COLS; j++)
-      {
-        if (grid[i][j] == 0) tiles[i][j] = new Outside(i, j);
-        else if (grid[i][j] == 2) tiles[i][j] = new Floor(i, j);
-        else if (grid[i][j] == 4)
-        {
-          tiles[i][j] = new Floor(i, j);
-          tiles[i][j].setExitFlag();
-        }
-        else tiles[i][j] = new Wall(i, j);
-        tiles[i][j].setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth, this.tileHeight);
-      }
-    }
-
-    return tiles;
-  }
+//  private Tile[][] translateTileImages(Tile[][] grid)
+//  {
+//    Tile[][] tiles = new Tile[ROWS][COLS];
+//
+//    for (int i = 0; i < ROWS; i++)
+//    {
+//      for (int j = 0; j < COLS; j++)
+//      {
+//        if (grid[i][j].type == 0)
+//        {
+//          tiles[i][j] = new Outside(i, j, tiles);
+//        } else if (grid[i][j].type == 2)
+//        {
+//          tiles[i][j] = new Floor(i, j, tiles);
+//          if (grid[i][j].hasExitFlag())
+//          {
+//            grid[i][j].setExitFlag();// implement exit tile
+//          }
+//        } else
+//        {
+//          tiles[i][j] = new Wall(i, j, tiles);
+//        }
+//        tiles[i][j]
+//        .setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth,
+//                  this.tileHeight);
+//      }
+//    }
+//
+//    return tiles;
+//  }
 
   /**
    * Parses the Zombie House map and places the Player at a random location
@@ -474,19 +482,19 @@ public class ZombieHouseModel
     if(newLevel)
     {
       this.level++;
-      this.traps.clear();
-      this.zombies.clear();
-      this.trapSub.clear();
-      this.zombieSub.clear();
-      this.mapGen = new MapGenerator(this.level+2);
-      this.grid = this.translateTileImages(this.mapGen.getMap());
+      traps = new ArrayList<>();
+      zombies = new ArrayList<>();
+      trapSub = new ArrayList<>();
+      zombieSub = new ArrayList<>();
+      this.mapGen = new MapGenerator(level+2);
+      this.grid = mapGen.getMap();
       this.setRandomTraps();
       this.initializeRandomZombies();
       this.playerCharacter = this.getRandomStart();
     }
     else
     {
-      this.grid = this.translateTileImages(this.mapGen.getMap());
+      this.grid = this.mapGen.getMap();
       this.playerCharacter = new Player(this, this.playerSub, false);
       this.zombies = resetZombies();
       this.traps = resetTraps();
