@@ -20,7 +20,6 @@ public class ZombieHouseModel
 {
   public final static int ROWS = 41;
   public final static int COLS = 48;
-  public int level = 1;
   private final static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   private final static int MAX_SCREEN_WIDTH = (int) userScreenSize.getWidth();
   private final static int MAX_SCREEN_HEIGHT = (int) userScreenSize.getHeight();
@@ -28,9 +27,9 @@ public class ZombieHouseModel
   private final static int VISIBLE_Y_TILES = 12;
   private final static double ZOMBIE_SPAWN_RATE = 0.01f;
   private final static double TRAP_SPAWN_RATE = 0.00f;
-
   public static SoundLoader soundLoader;
   public static ImageLoader imageLoader;
+  public int level = 1;
   private Random rand;
   private MapGenerator mapGen;
   private Player playerCharacter;
@@ -68,6 +67,7 @@ public class ZombieHouseModel
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     imageLoader.readImages();
     pf = new Pathfinder(this);
+    getObstacles(8);
     this.setRandomTraps();
     this.initializeRandomZombies();
     this.playerCharacter = this.getRandomStart();
@@ -95,7 +95,8 @@ public class ZombieHouseModel
           tiles[i][j].setExitFlag();// implement exit tile
         }
         else tiles[i][j] = new Wall(i, j, tiles);
-        tiles[i][j].setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth, this.tileHeight);
+        tiles[i][j].setBounds(j * this.tileWidth, i * this.tileHeight,
+                             this.tileWidth, this.tileHeight);
       }
     }
 
@@ -126,6 +127,22 @@ public class ZombieHouseModel
         this, imageLoader, false, 15);
     playerSub = grid[y][x];
     return playerCharacter;
+  }
+  private void getObstacles(int n)
+  {
+    int x = 0, y = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+      while (!(grid[y][x] instanceof Floor))
+      {
+        x = rand.nextInt(COLS - 1);
+        y = rand.nextInt(ROWS - 1);
+      }
+
+      grid[y][x] = new Obstacle(y, x, grid);
+      //TODO:grid[y][x].setBounds();
+    }
   }
 
 
