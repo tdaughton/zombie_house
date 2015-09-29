@@ -7,12 +7,16 @@
  * - keeps track of the ZombieHouseFrame's current height and width
  */
 
-import Resources.*;
-import model.*;
+import Resources.SpriteLoader;
+import model.Player;
+import model.Tile;
+import model.Zombie;
+import model.ZombieHouseModel;
+
 import javax.swing.JPanel;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 public class ZombieHouseViewer extends JPanel
 {
@@ -55,7 +59,6 @@ public class ZombieHouseViewer extends JPanel
     this.foreground2 = new BufferedImage(backgroundWidth, backgroundHeight, BufferedImage.TYPE_INT_ARGB);
     this.playerSprite = this.zModel.getPlayer();
     this.lightSource = new LightSource(playerSprite, zModel.getGrid());
-
   }
 
   /**
@@ -116,8 +119,6 @@ public class ZombieHouseViewer extends JPanel
     return background.getSubimage(xMin, yMin, xMax, yMax);
   }
 
-
-
   private BufferedImage getVisibleTransparentBuffer(int xMin, int yMin, int xMax, int yMax)
   {
     BufferedImage currentForeground;
@@ -172,7 +173,6 @@ public class ZombieHouseViewer extends JPanel
     return g2;
   }
 
-
   /**
    * Renders the traps with the graphics object of the background BufferedImage
    * If a trap has a true value for boolean explosion triggered, an explosion animation is played
@@ -192,6 +192,7 @@ public class ZombieHouseViewer extends JPanel
         {
           if (tile.getTrap().explosionTriggered())
           {
+            zModel.trapKill(tile);
             tile.getTrap().getTrapLoader().getExplosionEffect(tile);
             if (tile.getTrap() != null)
             {
@@ -236,8 +237,8 @@ public class ZombieHouseViewer extends JPanel
           g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
               2 * zombie.getRadius());
 
-          g.drawImage(zombieSprite.getCurrentRandomZombieImage(zombie), zombie.getX() - zombie.getRadius(), zombie
-              .getY() - zombie.getRadius(), null);
+          g.drawImage(zombieSprite.getCurrentRandomZombieImage(zombie), zombie.getX() - zombie.getRadius(),
+                     zombie.getY() - zombie.getRadius(), null);
         }
         else
         {
@@ -245,13 +246,12 @@ public class ZombieHouseViewer extends JPanel
           g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
               2 * zombie.getRadius());
 
-          g.drawImage(zombieSprite.getCurrentLineZombieImage(zombie), zombie.getX() - zombie.getRadius(), zombie.getY
-              () - zombie.getRadius(), null);
+          g.drawImage(zombieSprite.getCurrentLineZombieImage(zombie), zombie.getX() - zombie.getRadius(),
+                     zombie.getY() - zombie.getRadius(), null);
         }
       }
     }
   }
-
 
   /**
    * Utilizes a LightSource object to obtain a Polygon around the Player
@@ -293,16 +293,12 @@ public class ZombieHouseViewer extends JPanel
     this.drawSprite(g);
     this.drawBufferedComponents(g);
     this.drawLight(g, lightSource);
-
-
-
   }
   public void drawBufferedComponents(Graphics g)
   {
     Graphics2D g2 = (Graphics2D) this.getForegroundGraphics();
     this.drawZombies(g2);
     this.drawTraps(g2);
-
   }
 
 

@@ -5,7 +5,7 @@
 
 package model;
 
-public class CharredFloorTile extends Tile
+public class CharredFloorTile extends Floor
 {
 
   public CharredFloorTile(int gridRow, int gridCol, Tile[][] grid)

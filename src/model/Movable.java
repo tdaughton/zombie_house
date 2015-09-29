@@ -4,6 +4,7 @@
 package model;
 
 import javafx.scene.shape.Circle;
+
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
@@ -307,6 +308,11 @@ public class Movable implements Alive
   public boolean isDead()
   {
     return this.dead;
+  }
+
+  public void setDead(boolean status)
+  {
+    dead = status;
   }
 
 }

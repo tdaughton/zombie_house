@@ -106,15 +106,15 @@ public class ZombieHouseModel
     int x = 0;
     int y = 0;
 
-    while (!(grid[x][y] instanceof Floor))
+    while (!(grid[y][x] instanceof Floor))
     {
-      x = rand.nextInt(ROWS);
-      y = rand.nextInt(COLS);
+      y = rand.nextInt(ROWS);
+      x = rand.nextInt(COLS);
     }
 
-    this.playerCharacter = new Player(this.grid[x][y].getCenterTileX(), this.grid[x][y].getCenterTileY(), this.tileHeight / 2, this.grid[x][y],
+    this.playerCharacter = new Player(this.grid[y][x].getCenterTileX(), this.grid[y][x].getCenterTileY(), this.tileHeight / 2, this.grid[y][x],
         this, imageLoader, false, 20);
-    playerSub = grid[x][y];
+    playerSub = grid[y][x];
     return playerCharacter;
   }
 
@@ -172,7 +172,6 @@ public class ZombieHouseModel
       this.traps.add(trap);
       tile.installTrap();
       System.out.println("(" + tile.getGridRow() + ", " + tile.getGridCol());
-
     }
     return traps;
   }
@@ -187,7 +186,6 @@ public class ZombieHouseModel
       Zombie zombie =  new Zombie((int) tile.getCenterX(), (int)tile.getCenterY(),
         this.tileHeight / 2, tile, this, GridOrientation.pickRandomOrientation(), imageLoader,true, 10);
       this.zombies.add(zombie);
-      tile.installTrap();
       System.out.println("(" + tile.getGridRow() + ", " + tile.getGridCol());
     }
     return zombies;
@@ -281,7 +279,6 @@ public class ZombieHouseModel
         zombie.updateZombie(deltaSeconds);
       }
     }
-
   }
 
   /**
@@ -307,7 +304,6 @@ public class ZombieHouseModel
       playerCharacter.installTrap();
       traps.add(new Trap((int) playerCharacter.getCurrentTile().getCenterX(), (int) playerCharacter.getCurrentTile().getCenterY(), true));
       soundLoader.playDropTrap();
-
     }
   }
 
@@ -356,6 +352,23 @@ public class ZombieHouseModel
     return imageLoader;
   }
 
+  public void trapKill(Tile tile)
+  {
+    int y = tile.getGridRow();
+    int x = tile.getGridCol();
+    for(int i = y-1; i < y+2; i++)
+    {
+      for(int j = x-1; j < x+2; j++)
+      {
+        for (Zombie zombone : zombies)
+        {
+          if (zombone.intersects(grid[i][j])) zombone.setDead(true);
+        }
+        if (playerCharacter.intersects(grid[i][j])) playerCharacter.setDead(true);
+      }
+    }
+  }
+
   /**
    * Burns tiles caught in trap explosions
    * @param tile  Tile containing trap
@@ -363,20 +376,31 @@ public class ZombieHouseModel
   public void setCharredTile(Tile tile)
   {
     boolean hasTrap = false;
-    int x = tile.getGridRow();
-    int y = tile.getGridCol();
-    for(int i = x-1; i < x+2; i++)
+    int y = tile.getGridRow();
+    int x = tile.getGridCol();
+    for(int i = y-1; i < y+2; i++)
     {
-      for(int j=y-1; j< y+2; j++)
+      for(int j = x-1; j < x+2; j++)
       {
-        if(i>=0 && j>=0 && i<40 && j<40)
+        if(i>=1 && j>=1 && i<ZombieHouseModel.ROWS-1 && j<ZombieHouseModel.COLS-1)
         {
-          if(grid[i][j].hasTrap) hasTrap=true;
-          grid[i][j] = new CharredFloorTile(i,j,grid);
-          grid[i][j].setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth, this.tileHeight);
-          if(hasTrap)
-          { traps.add(new Trap((int) tile.getCenterX(), (int) tile.getCenterY(), true));
-            grid[i][j].installTrap();
+          int xCount = 0;
+          int yCount = 0;
+          if (grid[i][j-1] instanceof Floor) xCount++;
+          if (grid[i][j+1] instanceof Floor) xCount++;
+          if (grid[i-1][j] instanceof Floor) yCount++;
+          if (grid[i+1][j] instanceof Floor) yCount++;
+          if (grid[i][j] instanceof Floor || xCount == 2 || yCount == 2)
+          {
+            if (grid[i][j].hasTrap) hasTrap = true;
+            grid[i][j] = new CharredFloorTile(i, j, grid);
+            grid[i][j].setBounds(j * tileWidth, i * tileHeight, tileWidth, tileHeight);
+            if (hasTrap)
+            {
+              traps.add(new Trap((int) tile.getCenterX(),
+                                (int) tile.getCenterY(), true));
+              grid[i][j].installTrap();
+            }
           }
         }
       }
@@ -394,7 +418,6 @@ public class ZombieHouseModel
         this, imageLoader, false, 20);
     this.zombies = resetZombies();
     this.traps = resetTraps();
-
   }
 
   /**
