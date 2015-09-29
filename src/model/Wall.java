@@ -7,11 +7,15 @@ package model;
 public class Wall extends Tile
 {
 
-  public Wall(int x, int y, int gridRow, int gridCol)
+  public Wall(int gridRow, int gridCol, Tile[][] grid)
   {
-    super(x, y, gridRow, gridCol);
-    super.setType(1);
-
+    super(gridRow, gridCol, grid);
     this.movable = false;
+    super.setType(1);
+  }
+
+  public String getTileType()
+  {
+    return "W";
   }
 }

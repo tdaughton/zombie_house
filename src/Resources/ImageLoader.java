@@ -199,6 +199,15 @@ public class ImageLoader
         }
         else if (grid[i][j] instanceof Wall)
         {
+          if (grid[i][j].isObstacle())
+          {
+            g
+            .drawImage(tombObstacleSheet, xCoord, yCoord, tileWidth, tileHeight,
+                      null);
+          } else
+          {
+            g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          }
           g.drawImage(floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
           g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
 //          g.setColor(Color.BLUE);
