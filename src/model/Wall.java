@@ -6,7 +6,7 @@ package model;
 
 public class Wall extends Tile
 {
-  public Wall(int gridRow, int gridCol, Tile[][] grid)
+  public Wall(int gridRow, int gridCol)
   {
     super(gridRow, gridCol, false, 1);
   }

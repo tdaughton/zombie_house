@@ -113,16 +113,15 @@ public class DoorGenerator implements GameMap
 
     if (map[y + yInc * 2][x + xInc * 2].type != 1)
     {
-      map[y + yInc][x + xInc] = new Floor(y + yInc, x + xInc, null);
-      map[y + yInc * 2][x + xInc * 2] = new Floor(y + yInc * 2, x + xInc * 2,
-                                                 null);
+      map[y + yInc][x + xInc] = new Floor(y + yInc, x + xInc);
+      map[y + yInc * 2][x + xInc * 2] = new Floor(y + yInc * 2, x + xInc * 2);
       map[y + yInc * 2][x + xInc * 2].setHallway(true);
 
       doors.add(map[y + yInc * 2][x + xInc * 2]);
     }
     else
     {
-      map[y + yInc][x + xInc] = new Wall(y + yInc, x + xInc, null);
+      map[y + yInc][x + xInc] = new Wall(y + yInc, x + xInc);
     }
   }
 
@@ -143,7 +142,7 @@ public class DoorGenerator implements GameMap
       {
         if (i != 0 || j != 0)
         {
-          map[y + i][x + j] = new Wall(y + i, x + j, null);
+          map[y + i][x + j] = new Wall(y + i, x + j);
         }
       }
     }
@@ -161,7 +160,7 @@ public class DoorGenerator implements GameMap
       default: return;
     }
 
-    map[y][x] = new Floor(y, x, null);
+    map[y][x] = new Floor(y, x);
     map[y][x].setHallway(true);
     doors.add(map[y][x]);
   }

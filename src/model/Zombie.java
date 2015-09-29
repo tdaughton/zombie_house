@@ -100,7 +100,8 @@ public class Zombie extends Movable
     this.stepCount++;
     if (stepCount > 29) stepCount = 0;
     if(wType == WalkType.LINE) getFrames().getRotatingLineZombieWalk();
-    else getFrames().getRotatingRandomZombieWalk();
+    else if(wType == WalkType.RANDOM) getFrames().getRotatingRandomZombieWalk();
+    else getFrames().getRotatingMasterZombieWalk();
   }
 
   public int getStepCount()
