@@ -69,10 +69,9 @@ public class Player extends Movable
     this.getCurrentTile().removeTrap();
   }
 
-  public void installTrap()
+  public void installTrap(Trap trap)
   {
     numberOfTraps--;
-    Trap trap = new Trap((int) this.getCurrentTile().getCenterX(), (int) this.getCurrentTile().getCenterY(), true);
     this.getCurrentTile().installTrap(trap);
   }
 

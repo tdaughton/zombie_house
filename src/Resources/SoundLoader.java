@@ -22,6 +22,7 @@ public class SoundLoader
   private static Clip backgroundMusic;
   private static Clip explosion;
   private static Clip dropTrap;
+  private static Clip settingTrap;
   private static Clip pickUpTrap;
   private static Clip zombieTalk1;
   private static Clip zombieTalk2;
@@ -61,6 +62,7 @@ public class SoundLoader
     backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
     explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/explosion.wav");
     dropTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Trap_00.wav");
+    settingTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Pickup_Gold_00.wav");
     pickUpTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Inventory_Open_01.wav");
     zombieTalk1 = openWavByResourcePath("/Resources/sound_resources/zombies/dialogue.wav");
     zombieTalk2 = openWavByResourcePath("/Resources/sound_resources/zombies/dialogue2.wav");
@@ -177,6 +179,20 @@ public class SoundLoader
     if(pickUpTrap.isRunning()) pickUpTrap.stop();
     pickUpTrap.setFramePosition(0);
     pickUpTrap.start();
+  }
+
+  public void playSettingTrap()
+  {
+    settingTrap.loop(Clip.LOOP_CONTINUOUSLY);
+  }
+
+  public void stopSettingTrap()
+  {
+    if (settingTrap.isRunning())
+    {
+      settingTrap.stop();
+      settingTrap.setFramePosition(0);
+    }
   }
 
   public void playDropTrap()

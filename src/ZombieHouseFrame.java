@@ -39,6 +39,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private int curScreenHeight;
   private boolean pause;
   private int pauseTracker = 2;
+  private double inputWait;
 
   /**
    * Constructor
@@ -109,6 +110,11 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     this.currSeconds = System.nanoTime();
     this.deltaSeconds = (this.currSeconds - this.prevSeconds) / 1000000000.0f;
     this.zModel.update(this.deltaSeconds);
+    if (this.inputWait > 0)
+    {
+      this.inputWait -= this.deltaSeconds;
+      if (this.inputWait < 0) GAME_SOUNDS.stopSettingTrap();
+    }
 
     repaint();
   }
@@ -231,12 +237,29 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    */
   private void moveKeys()
   {
-    if(!timer.isRunning()) return;
+    if(!timer.isRunning() || this.pause || this.inputWait > 0) return;
+
+    // Handle trap keys
+    if(this.keysPressed[KeyEvent.VK_P] || this.keysPressed[KeyEvent.VK_T])
+    {
+      this.zModel.attemptTrapAction();
+      GAME_SOUNDS.playSettingTrap();
+      this.inputWait = 5.0f;
+    }
+
+    // Handle movement keys
     double movement = 1.0f;
     int dir = 5;
-    if(this.pause) return;
-    if ((this.keysPressed[KeyEvent.VK_R] || this.keysPressed[KeyEvent.VK_SHIFT]) && this.zModel.getPlayer().getPlayerStamina() > 0) this.zModel.getPlayer().setRunning(true);
-    else this.zModel.getPlayer().setRunning(false);
+
+    if ((this.keysPressed[KeyEvent.VK_R] || this.keysPressed[KeyEvent.VK_SHIFT]) && this.zModel.getPlayer().getPlayerStamina() > 0)
+    {
+      this.zModel.getPlayer().setRunning(true);
+    }
+    else
+    {
+      this.zModel.getPlayer().setRunning(false);
+    }
+
     if (this.keysPressed[KeyEvent.VK_UP] || this.keysPressed[KeyEvent.VK_W]) dir += 3;
     if (this.keysPressed[KeyEvent.VK_DOWN] || this.keysPressed[KeyEvent.VK_S]) dir -= 3;
     if (this.keysPressed[KeyEvent.VK_LEFT] || this.keysPressed[KeyEvent.VK_A]) dir -= 1;
@@ -276,7 +299,8 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
         break;
     }
 
-    if (this.keysPressed[KeyEvent.VK_R] || this.keysPressed[KeyEvent.VK_SHIFT]) this.stepCount += 2;
+    // Play footsteps
+    if (boost) this.stepCount += 2;
     else this.stepCount += 1;
 
     if (this.stepCount > 14)
@@ -287,12 +311,6 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     if (this.stepCount % 15 == 7)
     {
       GAME_SOUNDS.rightFootStep();
-    }
-
-    if(this.keysPressed[KeyEvent.VK_P])
-    {
-      this.zModel.attemptTrapAction();
-      this.pause = true;
     }
   }
 

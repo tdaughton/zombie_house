@@ -312,7 +312,11 @@ public class ZombieHouseModel
   {
     if (this.playerCharacter.getCurrentTile().hasTrap())
     {
-      for (Trap trap : this.traps)
+      Trap theTrap = this.playerCharacter.getCurrentTile().getTrap();
+      this.playerCharacter.grabTrap();
+      this.traps.remove(theTrap);
+      soundLoader.playPickUpTrap();
+      /*for (Trap trap : this.traps)
       {
         if ((trap.getX() == this.playerCharacter.getCurrentTile().getTrap().getX()) && (trap.getY() == this.playerCharacter.getCurrentTile().getTrap().getY()))
         {
@@ -321,12 +325,13 @@ public class ZombieHouseModel
           soundLoader.playPickUpTrap();
           break;
         }
-      }
+      }*/
     }
     else if (this.playerCharacter.getNumberOfTraps() > 0)
     {
-      this.playerCharacter.installTrap();
-      this.traps.add(new Trap((int) this.playerCharacter.getCurrentTile().getCenterX(), (int) this.playerCharacter.getCurrentTile().getCenterY(), true));
+      Trap trap = new Trap((int) this.playerCharacter.getCurrentTile().getCenterX(), (int) this.playerCharacter.getCurrentTile().getCenterY(), true);
+      this.playerCharacter.installTrap(trap);
+      this.traps.add(trap);
       soundLoader.playDropTrap();
     }
   }
