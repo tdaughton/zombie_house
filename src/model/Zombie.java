@@ -21,12 +21,12 @@ public class Zombie extends Movable
    */
   private enum WalkType
   {
-    RANDOM, LINE
+    RANDOM, LINE, PATH
   }
 
+  public static final double DIST_SMELL = 7.0f;
   private static final double SPEED_WALK = 0.5f;
   private static final double RATE_ACT = 2.0f;
-  private static final double DIST_SMELL = 7.0f;
   private static final Random rng = new Random();
   private ArrayList<Tile> path;
   private WalkType wType;
@@ -62,7 +62,7 @@ public class Zombie extends Movable
 
   /**
    * Getter for Player's animation frames (sprites)
-   * @return
+   * @return  frames
    */
   public SpriteLoader getFrames()
   {
@@ -133,7 +133,14 @@ public class Zombie extends Movable
     }
     else
     {*/
-    if (wType == WalkType.RANDOM || !bumped)
+    if (!path.isEmpty())
+    {
+      Tile nextTile = path.get(0);
+      theta = Math.atan2(nextTile.getCenterX() - this.getX(), nextTile.getCenterY() - this.getY());
+      System.out.println("Z["+this.getTileRow()+"]["+this.getTileCol()+"] tracking ["+this.getZModel().getPlayer().getTileRow()+"]["+this.getZModel().getPlayer().getTileCol()+"] via ["+nextTile.getGridRow()+"]["+nextTile.getGridCol()+"]");
+      System.out.println(Math.toDegrees(theta));
+    }
+    else if (wType == WalkType.RANDOM || !bumped)
     {
       theta = rng.nextDouble() * Math.PI * 2.0f;
       bumped = true;
@@ -151,5 +158,15 @@ public class Zombie extends Movable
       this.theta = rng.nextDouble() * Math.PI * 2.0;
     }*/
     //}
+  }
+
+  public void setPath(ArrayList<Tile> fastPath)
+  {
+    path = fastPath;
+  }
+
+  public void deletePath()
+  {
+    path.clear();
   }
 }
