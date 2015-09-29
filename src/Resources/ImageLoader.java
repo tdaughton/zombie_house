@@ -24,13 +24,24 @@ public class ImageLoader
   private static BufferedImage floorImage1;
   private static BufferedImage floorImage2;
   private static BufferedImage floorImage3;
+  private static BufferedImage floorImage4;
+  private static BufferedImage floorImage5;
 
-  private static BufferedImage charredFloorImage;
+  private static BufferedImage charredFloorImage1;
+  private static BufferedImage charredFloorImage2;
+  private static BufferedImage charredFloorImage3;
+
+
   private static BufferedImage wallImage1;
   private static BufferedImage wallImage2;
   private static BufferedImage wallImage3;
+  private static BufferedImage wallImage4;
+  private static BufferedImage wallImage5;
 
-  private static BufferedImage outsideImage;
+  private static BufferedImage outsideImage1;
+  private static BufferedImage outsideImage2;
+  private static BufferedImage outsideImage3;
+
 
   private static BufferedImage background;
   private static BufferedImage randomZombieSheet;
@@ -77,17 +88,32 @@ public class ImageLoader
   {
     try
     {
-        floorImage1 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor2.jpg"));
-        wallImage1 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall.png"));
-        outsideImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/deadgrass.png"));
-        floorImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor3.png"));
-        wallImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall2.png"));
-        treeObstacle = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/obstacle2.png"));
-        floorImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor4.jpg"));
-        wallImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall4.png"));
+      floorImage1 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor2.jpg"));
+      floorImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor3.png"));
+      floorImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor4.png"));
+      floorImage4 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor5.jpg"));
+      floorImage5 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/floor6.jpg"));
 
-        charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.png"));
-        exitImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/exit.png"));
+      wallImage1 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall.png"));
+      wallImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall2.png"));
+      wallImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall4.png"));
+      wallImage4 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall5.jpg"));
+      wallImage5 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall6.jpg"));
+
+      outsideImage1 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/deadgrass.png"));
+      outsideImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/outside4.jpg"));
+      outsideImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/outside3.jpg"));
+
+
+
+        treeObstacle = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/obstacle2.png"));
+
+        charredFloorImage1 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.png"));
+        charredFloorImage2 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor2.png"));
+      charredFloorImage3 = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor3.jpg"));
+
+
+      exitImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/exit.png"));
         playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
         //randomZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
         randomZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie.png"));
@@ -117,20 +143,45 @@ public class ImageLoader
     int yCoord = 0;
     BufferedImage floorImage;
     BufferedImage wallImage;
+    BufferedImage charredFloorImage;
+    BufferedImage outsideImage;
     if(levelCount==1)
     { floorImage = floorImage1;
       wallImage = wallImage1;
+      outsideImage=outsideImage1;
+      charredFloorImage=charredFloorImage1;
     }
     else if(levelCount==2)
     {
       floorImage = floorImage2;
       wallImage = wallImage2;
+      outsideImage=outsideImage3;
+      charredFloorImage=charredFloorImage2;
     }
-    else
+    else if(levelCount==3)
     {
       floorImage = floorImage3;
       wallImage = wallImage3;
+      outsideImage = outsideImage2;
+      charredFloorImage=charredFloorImage2;
     }
+    else if(levelCount==4)
+    {
+      floorImage = floorImage4;
+      wallImage = wallImage4;
+      outsideImage = outsideImage3;
+      charredFloorImage=charredFloorImage2;
+    }
+    else
+    {
+      floorImage = floorImage5;
+      wallImage=wallImage5;
+      outsideImage = outsideImage2;
+      charredFloorImage=charredFloorImage3;
+
+
+    }
+
 
     Graphics g = background.getGraphics();
 
@@ -158,6 +209,7 @@ public class ImageLoader
         }
         else if (grid[i][j] instanceof Wall)
         {
+          g.drawImage(floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
           g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
 //          g.setColor(Color.BLUE);
 //          g.drawRect((int) grid[i][j].getX(), (int) grid[i][j].getY(), (int) grid[i][j].getWidth(), (int) grid[i][j]

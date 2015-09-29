@@ -12,6 +12,7 @@ import model.Player;
 import model.Tile;
 import model.Zombie;
 import model.ZombieHouseModel;
+import model.Trap;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -192,6 +193,7 @@ public class ZombieHouseViewer extends JPanel
         {
           if (tile.getTrap().explosionTriggered())
           {
+            this.drawLightTrap(this.getForegroundGraphics(),lightSource,tile.getTrap());
             zModel.trapKill(tile);
             tile.getTrap().getTrapLoader().getExplosionEffect(tile);
             if (tile.getTrap() != null)
@@ -268,6 +270,20 @@ public class ZombieHouseViewer extends JPanel
     darkness.subtract(new Area(light));
     g2.setColor(Color.black);
     g2.fill(darkness);
+    Color [] fade = {new Color(0f,0f,0f,0f),new Color(0f,0f,0f,1f), Color.BLACK};
+    float [] fCen = {0.0f, 0.7f, 1.0f};
+    RadialGradientPaint radialGradientPaint =  new RadialGradientPaint(lightSource.getCenter(), lightSource.getRadius(), fCen, fade,
+        MultipleGradientPaint.CycleMethod.NO_CYCLE);
+    g2.setPaint(radialGradientPaint);
+    g2.draw(light);
+    g2.fill(light);
+  }
+
+  public void drawLightTrap(Graphics a, LightSource lightsource, Trap trap)
+  {
+    Graphics2D g2 = (Graphics2D) a;
+    lightSource.setPolygonTrap(trap.getX(), trap.getY(),trap);
+    Polygon light = lightSource.getPolygon();
     Color [] fade = {new Color(0f,0f,0f,0f),new Color(0f,0f,0f,1f), Color.BLACK};
     float [] fCen = {0.0f, 0.7f, 1.0f};
     RadialGradientPaint radialGradientPaint =  new RadialGradientPaint(lightSource.getCenter(), lightSource.getRadius(), fCen, fade,

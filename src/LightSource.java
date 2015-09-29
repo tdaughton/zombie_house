@@ -6,6 +6,7 @@
 import model.Player;
 import model.Tile;
 import model.Wall;
+import model.Trap;
 
 import java.awt.Point;
 import java.awt.Polygon;
@@ -118,6 +119,36 @@ public class LightSource extends Polygon
     }
     return new Point(x1-x0,y1-y0);
   }
+
+
+  protected void setPolygonTrap(int centerX, int centerY, Trap trap)
+  {
+
+    double tileRadius = Math.sqrt(((Math.pow(playerTile.getHeight(), 2))
+        + (Math.pow(playerTile.getWidth(), 2))));
+    this.radius = (float) (playerSight * tileRadius);
+    this.light = new Polygon();
+    double relativeX = player.getX();
+    double relativeY = player.getY();
+    this.center = new Point2D.Double(centerX, centerY);
+    double x;
+    double y;
+    double xMult;
+    double yMult;
+
+    for (int deg = 0; deg <= 360; deg++)
+    {
+      xMult = Math.cos(Math.toRadians(deg));
+      yMult = Math.sin(Math.toRadians(deg));
+
+      x = relativeX + (xMult * radius);
+      y = relativeY + (yMult * radius);
+
+      Point newPoint = this.raytrace((int)relativeX, (int)relativeY, (int) x, (int) y);
+      light.addPoint( (int) (centerX + newPoint.getX()), (int)(centerY + newPoint.getY()));
+    }
+  }
+
 
 
   /**

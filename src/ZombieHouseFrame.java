@@ -311,11 +311,12 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     ArrayList<Zombie> zombies = zModel.getZombieList();
     for (Zombie zombie : zombies)
     {
-      int r = RAND.nextInt();
+      int r = RAND.nextInt(250);
+      int x = RAND.nextInt(500);
 
-      if (r % 47 == 0) GAME_SOUNDS.playRandomGrunt(zombie, zModel.getPlayer());
+      if (r == 1) GAME_SOUNDS.playRandomGrunt(zombie, zModel.getPlayer());
 
-      else if (r % 83 == 0) GAME_SOUNDS.playRandomDialogue(zombie, zModel.getPlayer());
+      else if (x==1) GAME_SOUNDS.playRandomDialogue(zombie, zModel.getPlayer());
     }
   }
 
@@ -325,11 +326,10 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private void toggleShift()
   {
     for (Boolean key : keysPressed)
-          key = false;
+      key = false;
 
-    keysPressed[KeyEvent.VK_SHIFT] = ! (keysPressed[KeyEvent.VK_SHIFT]);
+    if (keysPressed[KeyEvent.VK_SHIFT] == true) keysPressed[KeyEvent.VK_SHIFT] = false;
   }
-
   /**
    * Restart the level when the Player dies
    */
@@ -338,6 +338,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     if (levelUp)
     { GAME_SOUNDS.playLevelUpSound();
       JOptionPane.showMessageDialog(this, "You reached the next level in Zombie House.\nNext level loading.");
+      this.toggleShift();
       zModel.restart(true);
       timer.setInitialDelay(500);
       timer.restart();

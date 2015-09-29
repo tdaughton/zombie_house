@@ -230,6 +230,7 @@ public class Movable implements Alive
         {
           if (location.hasTrap)
           {
+            if(this instanceof Zombie) ZombieHouseModel.soundLoader.playRandomPain((Zombie)this,zModel.getPlayer());
             location.getTrap().setExplosionTrigger();
             this.dead=true;
             if (!location.getTrap().getSoundPlayed())

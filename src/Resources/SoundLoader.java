@@ -246,8 +246,8 @@ public class SoundLoader
     else if(r%3==2) zombiePain = zombiePain2;
     else if(r%3==0) zombiePain = zombiePain3;
 
-//    gainControl = (FloatControl) zombiePain.getControl(FloatControl.Type.MASTER_GAIN);
-//    gainControl.setValue(pan);
+    gainControl = (FloatControl) zombiePain.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(pan);
     if(zombiePain.isRunning()) return;
     else
     { zombiePain.setFramePosition(0);

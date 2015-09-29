@@ -68,9 +68,9 @@ public class ZombieHouseModel
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     imageLoader.readImages();
     pf = new Pathfinder(this);
+    this.playerCharacter = this.getRandomStart();
     this.setRandomTraps();
     this.initializeRandomZombies();
-    this.playerCharacter = this.getRandomStart();
   }
 
   /**
@@ -226,7 +226,7 @@ public class ZombieHouseModel
               if (this.grid[k][l] instanceof Wall) valid++;
             }
           }
-          if (valid < 4 && rand.nextDouble() < ZOMBIE_SPAWN_RATE)
+          if (valid < 4 && rand.nextDouble() < ZOMBIE_SPAWN_RATE && !(grid[i][j].intersects(playerCharacter.getCurrentTile())))
           {
             Zombie zombone = new Zombie((int) grid[i][j].getCenterX(), (int) grid[i][j].getCenterY(),
                                         this.tileHeight / 2, grid[i][j], this, GridOrientation.pickRandomOrientation(), imageLoader,true, 10);
@@ -440,7 +440,7 @@ public class ZombieHouseModel
       zombies = new ArrayList<>();
       trapSub = new ArrayList<>();
       zombieSub = new ArrayList<>();
-      this.mapGen = new MapGenerator(level+2);
+      this.mapGen = new MapGenerator(level + 2);
       this.grid = this.translateTileImages(mapGen.getMap());
       this.setRandomTraps();
       this.initializeRandomZombies();
