@@ -143,8 +143,8 @@ public class ZombieHouseViewer extends JPanel
   private void drawSprite(Graphics g)
   {
     SpriteLoader sprites = playerSprite.getFrames();
-    g.setColor(Color.CYAN);
-    g.drawOval(this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), 2 * playerSprite.getRadius(), 2 * playerSprite.getRadius());
+//    g.setColor(Color.CYAN);
+//    g.drawOval(this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), 2 * playerSprite.getRadius(), 2 * playerSprite.getRadius());
     g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), null);
   }
 
@@ -233,21 +233,30 @@ public class ZombieHouseViewer extends JPanel
 
         if (zombie.getZType().equals("Random"))
         {
-          g.setColor(Color.GREEN);
-          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
-              2 * zombie.getRadius());
+//          g.setColor(Color.GREEN);
+//          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
+//              2 * zombie.getRadius());
 
           g.drawImage(zombieSprite.getCurrentRandomZombieImage(zombie), zombie.getX() - zombie.getRadius(),
                      zombie.getY() - zombie.getRadius(), null);
         }
-        else
+        else if (zombie.getZType().equals("Line"))
         {
-          g.setColor(Color.RED);
-          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
-              2 * zombie.getRadius());
+//          g.setColor(Color.RED);
+//          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
+//              2 * zombie.getRadius());
 
           g.drawImage(zombieSprite.getCurrentLineZombieImage(zombie), zombie.getX() - zombie.getRadius(),
                      zombie.getY() - zombie.getRadius(), null);
+        }
+        else
+        {
+//          g.setColor(Color.MAGENTA);
+//          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
+//                  2 * zombie.getRadius());
+//
+          g.drawImage(zombieSprite.getCurrentMasterZombieImage(zombie), zombie.getX() - zombie.getRadius(),
+                  zombie.getY() - zombie.getRadius(), null);
         }
       }
     }

@@ -61,6 +61,7 @@ public class ZombieHouseModel
     this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
     this.tileHeight = currentScreenHeight / VISIBLE_Y_TILES;
     this.mapGen = new MapGenerator(2);
+    this.mapGen.printMap();
     this.rand = new Random();
     this.grid = this.translateTileImages(mapGen.getMap());
     this.getObstacles(4);
