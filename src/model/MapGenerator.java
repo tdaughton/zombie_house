@@ -52,18 +52,20 @@ public class MapGenerator implements GameMap
   // 5. locate exit on hallway.
   // 6. Erase unused hallways.
   //============================================================================
-  public MapGenerator()
+  public MapGenerator(int roomNum)
   {
     map = new int[ROW][COL];
-    rooms = new Room[NUMBER_OF_ROOMS + 1];
+    rooms = new Room[roomNum + 1];
 
     initiateHouse();
-    RoomGenerator rg = new RoomGenerator(map);
-    DoorGenerator dg = new DoorGenerator(rg.getMap(), rg.getRooms());
+    RoomGenerator rg = new RoomGenerator(map,roomNum);
+    DoorGenerator dg = new DoorGenerator(rg.getMap(), rg.getRooms(), roomNum);
     //printMap();
     HallwayGenerator hg = new HallwayGenerator(dg.getMap(), dg.getDoors());
     //printMap();
     convertIntoDisplayableMap(hg.getMap());
+    printMap();
+
   }
 
   //============================================================================
@@ -159,9 +161,4 @@ public class MapGenerator implements GameMap
    *
    * @param args do nothing
    */
-  public static void main(String[] args)
-  {
-    MapGenerator mg = new MapGenerator();
-    //mg.printMap();
-  }
 }

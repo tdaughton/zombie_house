@@ -12,11 +12,12 @@ import java.util.Random;
 //==============================================================================
 public interface GameMap
 {
-  int NUMBER_OF_ROOMS = 10;
   int COL = 48;
   int ROW = 41;
 
   Random RANDOM = new Random();
 
   int[][] getMap();
+
+
 }

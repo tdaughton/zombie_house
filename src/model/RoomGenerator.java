@@ -17,16 +17,18 @@ public class RoomGenerator implements GameMap
 
   private int[][] map;
   private int col, row;
+  private int roomNum;
 
-  public RoomGenerator(int[][] map)
+  public RoomGenerator(int[][] map, int roomNum)
   {
     this.map = map;
+    this.roomNum=roomNum;
 
     row = map.length;
     col = map[0].length;
 
     tempRooms = new ArrayList<>();
-    rooms = new Room[NUMBER_OF_ROOMS + 1];
+    rooms = new Room[roomNum + 1];
 
     generateRandomRoom();
   }
@@ -47,7 +49,7 @@ public class RoomGenerator implements GameMap
     int exitRoomNumber, exitX, exitY, exitWid, exitHei;
     while (true)
     { // generate smaller squares for border
-      if (getQuadSect(new Room(0, 0, col - 2, row - 2), 0) > NUMBER_OF_ROOMS+1)
+      if (getQuadSect(new Room(0, 0, col - 2, row - 2), 0) > roomNum +1)
       {
         break;
       }
@@ -65,16 +67,16 @@ public class RoomGenerator implements GameMap
 
     //System.out.println(exitX + "," + exitY);
 
-    locateExit(new Room(exitX, exitY, exitX + 1, exitY + 1), NUMBER_OF_ROOMS);
+    locateExit(new Room(exitX, exitY, exitX + 1, exitY + 1), roomNum);
 
     tempRooms.remove(exitRoomNumber);
 
-    while (tempRooms.size() > NUMBER_OF_ROOMS)
+    while (tempRooms.size() > roomNum)
     { // Pick random tempRooms.
       tempRooms.remove(RANDOM.nextInt(tempRooms.size()));
     }
 
-    for (int i = 0; i < NUMBER_OF_ROOMS; i++) addNewRoom(tempRooms.get(i), i);
+    for (int i = 0; i < roomNum; i++) addNewRoom(tempRooms.get(i), i);
   }
 
   //============================================================================
@@ -90,7 +92,7 @@ public class RoomGenerator implements GameMap
     if (room.width < 5 || room.height < 5) return 0; // 5x5 is too small.
 
     if (room.width < 8 || room.height < 8 ||
-        Math.pow(4.0, (double)it) > NUMBER_OF_ROOMS)
+        Math.pow(4.0, (double)it) > roomNum)
     { // If the dimension of room gets too small it can't be divided further.
       tempRooms.add(room);
       return 1;

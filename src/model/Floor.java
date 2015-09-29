@@ -12,8 +12,5 @@ public class Floor extends Tile
     movable = true;
   }
 
-  public String getTileType()
-  {
-    return "F";
-  }
+
 }

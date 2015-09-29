@@ -26,7 +26,7 @@ public class ImageLoader
   private static BufferedImage randomZombieSheet;
   private static BufferedImage lineZombieSheet;
   private static BufferedImage masterZombieSheet;
-  private static BufferedImage lineZombieDeathSheet;
+  private static BufferedImage exitImage;
   private static BufferedImage trap;
   private static BufferedImage explosionSheet;
   private static BufferedImage playerSheetRun;
@@ -63,6 +63,7 @@ public class ImageLoader
       wallImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/wall.png"));
       outsideImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/deadgrass.png"));
       charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.png"));
+      exitImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/exit.png"));
       playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
       randomZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
       lineZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/line.png"));
@@ -90,7 +91,13 @@ public class ImageLoader
     {
       for (int j = 0; j < ZombieHouseModel.COLS; j++)
       {
-        if (grid[i][j] instanceof Floor)
+        if (grid[i][j] instanceof Floor && grid[i][j].hasExitFlag())
+        {
+          g.drawImage(floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+          g.drawImage(exitImage, xCoord, yCoord, tileWidth, tileHeight, null);
+
+        }
+        else if (grid[i][j] instanceof Floor)
         {
           g.drawImage(floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }
@@ -98,7 +105,8 @@ public class ImageLoader
         {
           g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
           g.setColor(Color.BLUE);
-          g.drawRect((int)grid[i][j].getX(), (int)grid[i][j].getY(), (int)grid[i][j].getWidth(), (int)grid[i][j].getHeight());
+          g.drawRect((int) grid[i][j].getX(), (int) grid[i][j].getY(), (int) grid[i][j].getWidth(), (int) grid[i][j]
+              .getHeight());
         }
         else if (grid[i][j] instanceof Outside)
         {
@@ -153,15 +161,6 @@ public class ImageLoader
   public BufferedImage getMasterZombieSheet()
   {
     return masterZombieSheet;
-  }
-
-  /**
-   * getter for zombie death sheet
-   * @return  sprite sheet
-   */
-  public BufferedImage getLineZombieDeathSheet()
-  {
-    return lineZombieDeathSheet;
   }
 
   /**

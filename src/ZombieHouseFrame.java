@@ -89,9 +89,10 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     this.requestFocus();
 
-    if(zModel.getPlayer().isDead())
+    if(zModel.getPlayer().isDead() || zModel.getPlayer().isLevelUp())
     {
-      this.restartLevel();
+      System.out.println(zModel.getPlayer().isLevelUp());
+      this.restartLevel(zModel.getPlayer().isLevelUp());
       return;
     }
     if(pause && pauseTracker>0) pauseTracker--;
@@ -334,14 +335,28 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   /**
    * Restart the level when the Player dies
    */
-  private void restartLevel()
+  private void restartLevel(boolean levelUp)
   {
-    JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading");
-    this.toggleShift();
-    GAME_SOUNDS.playLosingSound();
-    zModel.restart(false);
-    timer.setInitialDelay(500);
-    timer.restart();
-    zView.restart();
+    if (levelUp)
+    {
+      JOptionPane.showMessageDialog(this, "You reached the next level in Zombie House.\nNext level loading.");
+      GAME_SOUNDS.playLevelUpSound();
+      zModel.restart(true);
+      timer.setInitialDelay(500);
+      timer.restart();
+      zView.restart();
+    }
+
+
+    else
+    {
+      JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading.");
+      this.toggleShift();
+      GAME_SOUNDS.playLosingSound();
+      zModel.restart(false);
+      timer.setInitialDelay(500);
+      timer.restart();
+      zView.restart();
+    }
   }
 }

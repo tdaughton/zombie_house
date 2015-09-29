@@ -20,12 +20,13 @@ public class ZombieHouseModel
 {
   public final static int ROWS = 41;
   public final static int COLS = 48;
+  public int level = 1;
   private final static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
   private final static int MAX_SCREEN_WIDTH = (int) userScreenSize.getWidth();
   private final static int MAX_SCREEN_HEIGHT = (int) userScreenSize.getHeight();
   private final static int VISIBLE_X_TILES = 12;
   private final static int VISIBLE_Y_TILES = 10;
-  private final static double ZOMBIE_SPAWN_RATE = 0.05f;
+  private final static double ZOMBIE_SPAWN_RATE = 0.01f;
   private final static double TRAP_SPAWN_RATE = 0.00f;
 
   public static SoundLoader soundLoader;
@@ -61,7 +62,7 @@ public class ZombieHouseModel
     this.currentScreenHeight = MAX_SCREEN_HEIGHT;
     this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
     this.tileHeight = currentScreenHeight / VISIBLE_Y_TILES;
-    this.mapGen = new MapGenerator();
+    this.mapGen = new MapGenerator(2);
     this.rand = new Random();
     this.grid = this.translateTileImages(mapGen.getMap());
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
@@ -87,7 +88,11 @@ public class ZombieHouseModel
       {
         if (grid[i][j] == 0) tiles[i][j] = new Outside(i,j,tiles);
         else if (grid[i][j] == 2) tiles[i][j] = new Floor(i,j,tiles);
-        else if (grid[i][j] == 4) tiles[i][j] = new Floor(i,j,tiles); // implement exit tile
+        else if (grid[i][j] == 4)
+        {
+          tiles[i][j] = new Floor(i,j,tiles);
+          tiles[i][j].setExitFlag();// implement exit tile
+        }
         else tiles[i][j] = new Wall(i, j, tiles);
         tiles[i][j].setBounds(j * this.tileWidth, i * this.tileHeight, this.tileWidth, this.tileHeight);
       }
@@ -111,7 +116,11 @@ public class ZombieHouseModel
       x = rand.nextInt(ROWS);
       y = rand.nextInt(COLS);
     }
-
+    for(Zombie zombie: zombies)
+    {
+      if (grid[x][y].contains(zombie.getX(), zombie.getY())) getRandomStart();
+      break;
+    }
     this.playerCharacter = new Player(this.grid[x][y].getCenterTileX(), this.grid[x][y].getCenterTileY(), this.tileHeight / 2, this.grid[x][y],
         this, imageLoader, false, 20);
     playerSub = grid[x][y];
@@ -389,11 +398,27 @@ public class ZombieHouseModel
    */
   public void restart(boolean newLevel)
   {
-    this.grid = this.translateTileImages(mapGen.getMap());
-    this.playerCharacter = new Player(playerSub.getCenterTileX(), playerSub.getCenterTileY(), this.tileHeight / 2,playerSub,
-        this, imageLoader, false, 20);
-    this.zombies = resetZombies();
-    this.traps = resetTraps();
+    if(newLevel)
+    {
+      level++;
+      traps = new ArrayList<>();
+      zombies = new ArrayList<>();
+      trapSub = new ArrayList<>();
+      zombieSub = new ArrayList<>();
+      this.mapGen = new MapGenerator(level+2);
+      this.grid = this.translateTileImages(mapGen.getMap());
+      this.setRandomTraps();
+      this.initializeRandomZombies();
+      this.playerCharacter = this.getRandomStart();
+    }
+    else
+    {
+      this.grid = this.translateTileImages(mapGen.getMap());
+      this.playerCharacter = new Player(playerSub.getCenterTileX(), playerSub.getCenterTileY(), this.tileHeight / 2, playerSub,
+          this, imageLoader, false, 20);
+      this.zombies = resetZombies();
+      this.traps = resetTraps();
+    }
 
   }
 
@@ -406,5 +431,8 @@ public class ZombieHouseModel
     this.deltaSeconds = timeElapsed;
     this.playerCharacter.update(timeElapsed);
     this.updateZombies();
+    boolean playerDead = false;
+    for (Zombie zombone : zombies) playerDead |= zombone.intersects(playerCharacter);
+    playerCharacter.setDead(playerDead);
   }
 }

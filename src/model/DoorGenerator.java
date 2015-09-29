@@ -16,10 +16,12 @@ public class DoorGenerator implements GameMap
   private int[][] map;
   private Room[] rooms;
   private ArrayList<Point> doors;
+  int roomNum;
 
-  public DoorGenerator(int[][] map, Room[] rooms)
+  public DoorGenerator(int[][] map, Room[] rooms, int roomNum)
   {
     this.map = map;
+    this.roomNum = roomNum;
     this.rooms = rooms;
     doors = new ArrayList<>();
 
@@ -34,10 +36,10 @@ public class DoorGenerator implements GameMap
   //============================================================================
   private void generateDoorways()
   {
-    for (int i = 0; i < NUMBER_OF_ROOMS; i++) getDoorsFor(rooms[i]);
+    for (int i = 0; i < roomNum; i++) getDoorsFor(rooms[i]);
 
     /** For Exit, special algorithm is needed! **/
-    connectExit(getAvailableSides(rooms[NUMBER_OF_ROOMS]));
+    connectExit(getAvailableSides(rooms[roomNum]));
   }
 
   //============================================================================
@@ -130,8 +132,8 @@ public class DoorGenerator implements GameMap
   {
     Collections.shuffle(availableSides);
 
-    int x = rooms[NUMBER_OF_ROOMS].x1;
-    int y = rooms[NUMBER_OF_ROOMS].y1;
+    int x = rooms[roomNum].x1;
+    int y = rooms[roomNum].y1;
 
     for(int i=-1; i<2; i++)
     {

@@ -22,6 +22,8 @@ public class Tile extends Rectangle implements Comparable<Tile>
   protected boolean occupied;
   protected boolean movable;
   protected boolean hasTrap;
+  private boolean exitFlag = false;
+
 
   private Trap trap;
 
@@ -142,5 +144,14 @@ public class Tile extends Rectangle implements Comparable<Tile>
     if(this.priority < anotherTile.getPriority()) return -1;
     if(this.priority > anotherTile.getPriority()) return 1;
     return 0;
+  }
+
+  public boolean hasExitFlag()
+  {
+    return this.exitFlag;
+  }
+  public void setExitFlag()
+  {
+    this.exitFlag = true;
   }
 }

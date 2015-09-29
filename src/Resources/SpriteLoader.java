@@ -59,7 +59,6 @@ public class SpriteLoader
     lineZombieSheet = imageLoader.getLineZombieSheet();
     playerSheetRun = imageLoader.getPlayerSheetRun();
     masterZombieSheet=imageLoader.getMasterZombieSheet();
-    lineDeadSheet = imageLoader.getLineZombieDeathSheet();
 
     run = new BufferedImage[15];
     randomZombie = new BufferedImage[30];

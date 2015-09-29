@@ -21,10 +21,8 @@ public class Movable implements Alive
   private boolean running;
 
   private int originalHealth;
-  private int defenseRate;
-  private double healingRate;
-  private double damage;
   private boolean dead;
+  private boolean levelUp = false;
 
   //static copy used in boundary checking to avoid multiple instantiation
   private static Movable moveChecker = new Movable();
@@ -142,10 +140,14 @@ public class Movable implements Alive
     double r1 = Math.pow(otherMovable.getRadius() - circle.getRadius(), 2);
     double r2 = Math.pow(otherMovable.getRadius() + circle.getRadius(), 2);
     double distance = Math.pow((otherMovable.getX() - circle.getCenterX()), 2) +
-                      Math.pow((otherMovable.getY() - circle.getCenterY()), 2);
+        Math.pow((otherMovable.getY() - circle.getCenterY()), 2);
 
     if (distance >= r1 && distance <= r2) intersects = true;
-    if(intersects && this instanceof Player) this.dead=true;
+
+//    if (intersects && (this instanceof Player || otherMovable instanceof Player))
+//    {
+//      zModel.getPlayer().setDead(true);
+//    }
     return intersects;
   }
 
@@ -237,6 +239,10 @@ public class Movable implements Alive
           }
         }
       }
+      if(this instanceof Player && this.location.hasExitFlag())
+      { this.levelUp=true;
+        zModel.restart(true);
+      }
     }
     return (successX & successY);
   }
@@ -273,6 +279,7 @@ public class Movable implements Alive
       {
         if (!zombone.equals(this)) intersectsMovable |= moveChecker.intersects(zombone);
       }
+      //if (this instanceof Zombie) zModel.getPlayer().setDead(moveChecker.intersects(zModel.getPlayer()));
       return ((canMove || !intersectsWall) && !intersectsMovable);
     }
     else return false;
@@ -307,6 +314,14 @@ public class Movable implements Alive
   public boolean isDead()
   {
     return this.dead;
+  }
+  public void setDead(boolean dead)
+  {
+    this.dead=dead;
+  }
+  public boolean isLevelUp()
+  {
+    return this.levelUp;
   }
 
 }
