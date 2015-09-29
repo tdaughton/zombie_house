@@ -58,56 +58,7 @@ public class TrapLoader
    * during the explosion animation
    */
   private void setExplosionSheet()
-      {
-//    explosions[0] = explosionSheet.getSubimage(25,36, 211, 214);
-//    explosions[1] = explosionSheet.getSubimage(279,36, 211, 214);
-//    explosions[2] = explosionSheet.getSubimage(530,36, 211, 214);
-//    explosions[3] = explosionSheet.getSubimage(782,36, 211, 214);
-//    explosions[4] = explosionSheet.getSubimage(1023,36, 211, 214);
-//    explosions[5] = explosionSheet.getSubimage(1273,36, 211, 214);
-//    explosions[6] = explosionSheet.getSubimage(1519,36, 211, 214);
-//    explosions[7] = explosionSheet.getSubimage(1769,36, 211, 214);
-//    explosions[8] = explosionSheet.getSubimage(25, 270, 211, 214);
-//    explosions[9] = explosionSheet.getSubimage(279, 270, 211, 214);
-//    explosions[10] = explosionSheet.getSubimage(530, 270, 211, 214);
-//    explosions[11] = explosionSheet.getSubimage(782, 270, 211, 214);
-//    explosions[12] = explosionSheet.getSubimage(1023, 270, 211, 214);
-//    explosions[13] = explosionSheet.getSubimage(1273, 270, 211, 214);
-//    explosions[14] = explosionSheet.getSubimage(1519, 270, 211, 214);
-//    explosions[15] = explosionSheet.getSubimage(1769, 270, 211, 214);
-//    explosions[16] = explosionSheet.getSubimage(25, 518, 211, 214);
-//    explosions[17] = explosionSheet.getSubimage(279, 518, 211, 214);
-//    explosions[18] = explosionSheet.getSubimage(530, 518, 211, 214);
-//    explosions[19] = explosionSheet.getSubimage(782, 518, 211, 214);
-//    explosions[20] = explosionSheet.getSubimage(1023, 518, 211, 214);
-//    explosions[21] = explosionSheet.getSubimage(1273, 518, 211, 214);
-//    explosions[22] = explosionSheet.getSubimage(1519, 518, 211, 214);
-//    explosions[23] = explosionSheet.getSubimage(1769, 518, 211, 214);
-//    explosions[24] = explosionSheet.getSubimage(25, 765, 211, 214);
-//    explosions[25] = explosionSheet.getSubimage(279, 765, 211, 214);
-//    explosions[26] = explosionSheet.getSubimage(530, 765, 211, 214);
-//    explosions[27] = explosionSheet.getSubimage(782, 765, 211, 214);
-//    explosions[28] = explosionSheet.getSubimage(1023, 765, 211, 214);
-//    explosions[29] = explosionSheet.getSubimage(1273, 765, 211, 214);
-//    explosions[30] = explosionSheet.getSubimage(1519,765, 211, 214);
-//    explosions[31]= explosionSheet.getSubimage(1769, 765, 211, 214);
-//    explosions[32] = explosionSheet.getSubimage(25, 1022, 211, 214);
-//    explosions[33] = explosionSheet.getSubimage(279, 1022, 211, 214);
-//    explosions[34] = explosionSheet.getSubimage(530, 1022, 211, 214);
-//    explosions[35] = explosionSheet.getSubimage(782, 1022, 211, 214);
-//    explosions[36] = explosionSheet.getSubimage(1023, 1022, 211, 214);
-//    explosions[37] = explosionSheet.getSubimage(1273, 1022, 211, 214);
-//    explosions[38] = explosionSheet.getSubimage(1519, 1022, 211, 214);
-//    explosions[39] = explosionSheet.getSubimage(1769, 1022, 211, 214);
-//    explosions[40] = explosionSheet.getSubimage(25, 1273, 211, 214);
-//    explosions[41] = explosionSheet.getSubimage(279, 1273, 211, 214);
-//    explosions[42] = explosionSheet.getSubimage(530, 1273, 211, 214);
-//    explosions[43] = explosionSheet.getSubimage(782, 1273, 211, 214);
-//    explosions[44] = explosionSheet.getSubimage(1023, 1273, 211, 214);
-//    explosions[45] = explosionSheet.getSubimage(1273, 1273, 211, 214);
-//    explosions[46] = explosionSheet.getSubimage(1519, 1273, 211, 214);
-
-
+  {
 
     explosions[0] = explosionSheet.getSubimage(77,73, 438, 464);
     explosions[1] = explosionSheet.getSubimage(566,73, 438, 464);
@@ -156,7 +107,7 @@ public class TrapLoader
     explosions[44] = explosionSheet.getSubimage(2059, 2565, 438, 430);
     explosions[45] = explosionSheet.getSubimage(2554, 2565, 438, 430);
     explosions[46] = explosionSheet.getSubimage(3046, 2565, 438, 430);
-    }
+  }
 
   /**
    * Cycles through the BufferedImages of the explosion animation using a class variable iterator

@@ -65,9 +65,8 @@ public class ImageLoader
       charredFloorImage = ImageIO.read(this.getClass().getResourceAsStream("/Resources/image_resources/burntfloor.png"));
       playerSheetRun = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/running.png"));
       randomZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/zombie_sprite.png"));
-      lineZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/random.png"));
+      lineZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/line.png"));
       masterZombieSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/master.png"));
-      lineZombieDeathSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/sprite_resources/random_death.png"));
       trap = ImageIO.read(this.getClass().getResourceAsStream("/Resources/trap_resources/bomb.png"));
       explosionSheet = ImageIO.read(this.getClass().getResourceAsStream("/Resources/trap_resources/explosion.png"));
     }

@@ -195,9 +195,9 @@ public class SoundLoader
     if (r % 3 == 0) zombieTalk = zombieTalk1;
     else if (r % 3 == 1) zombieTalk = zombieTalk2;
     else zombieTalk = zombieTalk3;
-//
-//    gainControl = (FloatControl) zombieTalk.getControl(FloatControl.Type.MASTER_GAIN);
-//    gainControl.setValue(pan);
+
+    gainControl = (FloatControl) zombieTalk.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(pan);
     if (zombieTalk.isRunning()) return;
 
     else
@@ -223,9 +223,9 @@ public class SoundLoader
     else if(r%7==5) zombieGrunt = zombieGrunt6;
     else zombieGrunt = zombieGrunt7;
 
-//
-//    gainControl = (FloatControl) zombieGrunt.getControl(FloatControl.Type.MASTER_GAIN);
-//    gainControl.setValue(pan);
+
+    gainControl = (FloatControl) zombieGrunt.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(pan);
     if(zombieGrunt.isRunning()) return;
     else
     {
@@ -245,7 +245,7 @@ public class SoundLoader
     if(r%3==1) zombiePain = zombiePain1;
     else if(r%3==2) zombiePain = zombiePain2;
     else if(r%3==0) zombiePain = zombiePain3;
-//
+
 //    gainControl = (FloatControl) zombiePain.getControl(FloatControl.Type.MASTER_GAIN);
 //    gainControl.setValue(pan);
     if(zombiePain.isRunning()) return;
