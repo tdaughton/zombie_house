@@ -51,8 +51,8 @@ public class ZombieHouseViewer extends JPanel
     this.zModel = zModel;
     this.currentScreenWidth = (int) userScreenSize.getWidth();
     this.currentScreenHeight = (int) userScreenSize.getHeight();
-    this.zModel.getImageLoader().createBackground();
-    this.background = zModel.getImageLoader().getBackground();
+    ZombieHouseModel.imageLoader.createBackground();
+    this.background = ZombieHouseModel.imageLoader.getBackground();
     this.backgroundWidth = background.getWidth();
     this.backgroundHeight = background.getHeight();
     this.foreground1 = new BufferedImage(backgroundWidth, backgroundHeight, BufferedImage.TYPE_INT_ARGB);
@@ -114,7 +114,7 @@ public class ZombieHouseViewer extends JPanel
     if ((yMin + yMax) >= background.getHeight()) yMax = background.getHeight() - yMin;
 
     this.currentForegroundSubImage = this.getVisibleTransparentBuffer(xMin, yMin, xMax, yMax);
-    this.background = zModel.getImageLoader().getBackground();
+    this.background = ZombieHouseModel.imageLoader.getBackground();
 
     return background.getSubimage(xMin, yMin, xMax, yMax);
   }
@@ -143,8 +143,8 @@ public class ZombieHouseViewer extends JPanel
   private void drawSprite(Graphics g)
   {
     SpriteLoader sprites = playerSprite.getFrames();
-    g.setColor(Color.CYAN);
-    g.drawOval(this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), 2 * playerSprite.getRadius(), 2 * playerSprite.getRadius());
+//    g.setColor(Color.CYAN);
+//    g.drawOval(this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), 2 * playerSprite.getRadius(), 2 * playerSprite.getRadius());
     g.drawImage(sprites.getCurrentPlayerImage(playerSprite), this.getWidth() / 2 - playerSprite.getRadius(), this.getHeight() / 2 - playerSprite.getRadius(), null);
   }
 
@@ -202,8 +202,8 @@ public class ZombieHouseViewer extends JPanel
             {
               tile.removeTrap();
               zModel.setCharredTile(tile);
-              zModel.getImageLoader().createBackground();
-              this.background = zModel.getImageLoader().getBackground();
+              ZombieHouseModel.imageLoader.createBackground();
+              this.background = ZombieHouseModel.imageLoader.getBackground();
             }
           }
           else
@@ -233,21 +233,30 @@ public class ZombieHouseViewer extends JPanel
 
         if (zombie.getZType().equals("Random"))
         {
-          g.setColor(Color.GREEN);
-          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
-              2 * zombie.getRadius());
+//          g.setColor(Color.GREEN);
+//          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
+//              2 * zombie.getRadius());
 
           g.drawImage(zombieSprite.getCurrentRandomZombieImage(zombie), zombie.getX() - zombie.getRadius(),
                      zombie.getY() - zombie.getRadius(), null);
         }
-        else
+        else if (zombie.getZType().equals("Line"))
         {
-          g.setColor(Color.RED);
-          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
-              2 * zombie.getRadius());
+//          g.setColor(Color.RED);
+//          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
+//              2 * zombie.getRadius());
 
           g.drawImage(zombieSprite.getCurrentLineZombieImage(zombie), zombie.getX() - zombie.getRadius(),
                      zombie.getY() - zombie.getRadius(), null);
+        }
+        else
+        {
+//          g.setColor(Color.MAGENTA);
+//          g.drawOval(zombie.getX() - zombie.getRadius(), zombie.getY() - zombie.getRadius(), 2 * zombie.getRadius(),
+//                  2 * zombie.getRadius());
+//
+          g.drawImage(zombieSprite.getCurrentMasterZombieImage(zombie), zombie.getX() - zombie.getRadius(),
+                  zombie.getY() - zombie.getRadius(), null);
         }
       }
     }
@@ -304,13 +313,13 @@ public class ZombieHouseViewer extends JPanel
 
   public void restart()
   {
-    Graphics2D g2 = (Graphics2D) background.getGraphics();
+    Graphics2D g2 = (Graphics2D)background.getGraphics();
     g2.setBackground(new Color(255, 255, 255, 0));
     g2.clearRect(0, 0, backgroundWidth, backgroundHeight);
-    zModel.getImageLoader().createBackground();
-    this.background = zModel.getImageLoader().getBackground();
+    ZombieHouseModel.imageLoader.createBackground();
+    this.background = ZombieHouseModel.imageLoader.getBackground();
     this.playerSprite = zModel.getPlayer();
-    this.lightSource = new LightSource(playerSprite,zModel.getGrid());
+    this.lightSource = new LightSource(playerSprite, zModel.getGrid());
     repaint();
   }
 }

@@ -5,11 +5,9 @@ package model;
  */
 public class Obstacle extends Wall
 {
-  public Obstacle(int gridRow, int gridCol, Tile[][] grid)
+  public Obstacle(int gridRow, int gridCol)
   {
-    super(gridRow, gridCol, grid);
-    super.setType(1);
+    super(gridRow, gridCol);
     super.setObstacle(true);
-    this.movable = false;
   }
 }

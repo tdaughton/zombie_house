@@ -58,7 +58,7 @@ public class LightSource extends Polygon
     double xMult;
     double yMult;
 
-    for (int deg = 0; deg <= 360; deg++)
+    for (int deg = 0; deg <= 360; deg+=3)
     {
       xMult = Math.cos(Math.toRadians(deg));
       yMult = Math.sin(Math.toRadians(deg));
