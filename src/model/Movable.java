@@ -4,6 +4,7 @@
 package model;
 
 import javafx.scene.shape.Circle;
+
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
@@ -322,6 +323,11 @@ public class Movable implements Alive
   public boolean isLevelUp()
   {
     return this.levelUp;
+  }
+
+  public void setDead(boolean status)
+  {
+    dead = status;
   }
 
 }

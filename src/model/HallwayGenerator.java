@@ -45,6 +45,10 @@ public class HallwayGenerator implements GameMap
     putWalls(target);
   }
 
+  //============================================================================
+  // At each point found to be alone (a wall tile that has all 8 adjacent tiles
+  // are also walls) start a hallway and extend it as far as it can go.
+  //============================================================================
   private void putWalls(Point target)
   {
     int x = target.x, y = target.y;
@@ -65,6 +69,9 @@ public class HallwayGenerator implements GameMap
     }
   }
 
+  //============================================================================
+  // Depth base search to install hallway.
+  //============================================================================
   private HashMap<Point, Point> findPath(Point start, Point target)
   {
     //System.out.println("("+start.x + ", " + start.y+") => (" +target.x + ", " + target.y + ")");
@@ -92,7 +99,7 @@ public class HallwayGenerator implements GameMap
 
       for(Point next: getNeighbors(current))
       {
-        newCost = costSoFar.get(current) + cost(current, next);
+        newCost = costSoFar.get(current) + cost(next);
         if(!costSoFar.containsKey(next) || newCost < costSoFar.get(next))
         {
           costSoFar.put(next, newCost);
@@ -109,7 +116,11 @@ public class HallwayGenerator implements GameMap
     return cameFrom;
   }
 
-  private int cost(Point current, Point next)
+
+  //============================================================================
+  // Cost for each tile. Hallways are preferable compared to other tiles.
+  //============================================================================
+  private int cost(Point next)
   {
     if(next != null)
     {
@@ -127,6 +138,9 @@ public class HallwayGenerator implements GameMap
     return 100;
   }
 
+  //============================================================================
+  // Putting Hallway using cameFram HashMap.
+  //============================================================================
   private void putHallway(HashMap<Point, Point> cameFrom, Point target)
   {
     Point current = target;
@@ -138,6 +152,9 @@ public class HallwayGenerator implements GameMap
     }
   }
 
+  //============================================================================
+  // A very expensive poll. If I have time, I will try to implement better poll.
+  //============================================================================
   private Point poll(ArrayList<Point> frontier)
   {
     Point priorPoint = null;
@@ -157,11 +174,9 @@ public class HallwayGenerator implements GameMap
     return priorPoint;
   }
 
-  private void setPriority(Point p, int priority)
-  {
-    priorityMap[p.y][p.x] = priority;
-  }
-
+  //============================================================================
+  // Returns all the neighbors that is not wall. Hallways can't cross walls.
+  //============================================================================
   private ArrayList<Point> getNeighbors(Point p)
   {
     ArrayList<Point> neighbors = new ArrayList<>();
@@ -173,208 +188,4 @@ public class HallwayGenerator implements GameMap
 
     return neighbors;
   }
-
-  private Point findNearestDoor(Point start)
-  {
-    Point nearest = null;
-    int nearestHeuristic = 0;
-    int tempHeuristic = 0;
-
-    for(Point p: doors)
-    {
-      tempHeuristic = heuristic(start, p);
-
-      if((start != p ) && (nearest == null || nearestHeuristic > tempHeuristic))
-      {
-        nearest = p;
-        nearestHeuristic = tempHeuristic;
-      }
-    }
-
-    return nearest;
-  }
-
-  private int heuristic(Point p1, Point p2)
-  {
-    return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
-  }
-
-  //============================================================================
-  // Returns true all the adjacent tiles are walls and the tile itself is also
-  // a wall.
-  //============================================================================
-  private boolean isAlone(int x, int y)
-  {
-    return map[y][x] == 0 && map[y - 1][x - 1] == 0 && map[y - 1][x] == 0 &&
-           map[y - 1][x + 1] == 0 && map[y][x - 1] == 0 && map[y][x] == 0 &&
-           map[y][x + 1] == 0 && map[y + 1][x - 1] == 0 && map[y + 1][x] == 0 &&
-           map[y + 1][x + 1] == 0;
-  }
-
-  //============================================================================
-  // returns true if the tile is "extendable". (I will have to come up with
-  // better name though).
-  // Extendability indicates([ ] = wall, * = hallway trying to extend):
-  //
-  //    *  *  *       The tile wants to check extendability of adjacent tiles.
-  //    * [ ] *   =>  Adjacent tiles here only mean tiles located north, west,
-  //    *  *  *       east, south.
-  //
-  //    @  @  @
-  //    @ [?] @
-  //    @ [?] @  =>  Say that the tile wants to extend to north, then we want
-  //    * [ ] *      @ marked tiles to be wall.
-  //    *  *  *
-  //
-  // Since the cell will only move to 4 directions, either xInc(x increment) or
-  // yInc(y increment) must be 0 but not both.
-  //============================================================================
-  private boolean isExtendable(int x, int y, int xInc, int yInc)
-  {
-    int newX = x + xInc * 3;
-    int newY = y + yInc * 3;
-
-    if (newX < 0 || newX >= COL || newY < 0 || newY >= ROW) return false;
-
-    for (int i = -1; i < 1; i++)
-    {
-      for (int j = -1; j < 1; j++)
-      {
-        //if (map[y + i + yInc * 2][x + j + xInc * 2] > 0) return false;
-        if (map[y + i + yInc][x + j + xInc] > 0) return false;
-      }
-    }
-
-    return true;
-  }
-
-  //============================================================================
-  // This is a method to extend hallway as far as it can go but each time the
-  // direction is kind of randomized. If the hallway can't be extended anymore
-  // it will just stop.
-  //============================================================================
-  private void extendHallway(int x, int y)
-  {
-    int xInc = (RANDOM.nextInt(1) > 0) ? 1 : -1;
-    int yInc = (RANDOM.nextInt(1) > 0) ? 1 : -1;
-
-    if (!isExtendable(x, y, 0, yInc) && !isExtendable(x, y, xInc, 0) &&
-        !isExtendable(x, y, -xInc, 0) && !isExtendable(x, y, 0, -yInc))
-    {
-      map[y][x] = 4;
-      return;
-    }
-
-    if (isExtendable(x, y, 0, yInc))
-    {
-      map[y + yInc][x] = 2;
-      //map[y + yInc * 2][x] = 2;
-
-      //extendHallway(x, y + yInc * 2);
-      extendHallway(x, y + yInc);
-    }
-    if (isExtendable(x, y, xInc, 0))
-    {
-      map[y][x + xInc] = 2;
-      //map[y][x + xInc * 2] = 2;
-
-      //extendHallway(x + xInc * 2, y);
-      extendHallway(x + xInc, y);
-    }
-    if (isExtendable(x, y, -xInc, 0))
-    {
-      map[y][x - xInc] = 2;
-      //map[y][x - xInc * 2] = 2;
-
-      //extendHallway(x - xInc * 2, y);
-      extendHallway(x - xInc, y);
-    }
-    if (isExtendable(x, y, 0, -yInc))
-    {
-      map[y - yInc][x] = 2;
-      //map[y - yInc * 2][x] = 2;
-
-      //extendHallway(x, y - yInc * 2);
-      extendHallway(x, y - yInc);
-    }
-  }
-
-
-  /************************* Hallway Removing Methods *************************/
-  //============================================================================
-  // If the end of hallway tile is only the one connected to the room, it should
-  // not be removed.
-  //============================================================================
-  private boolean isConnectingDoorway(int x, int y)
-  {
-    return ((y-1 > 0 && map[y-1][x] == 8) || (y+2 < ROW && map[y+1][x] == 8) ||
-            (x-1 > 0 && map[y][x-1] == 8) || (x+2 < COL && map[y][x+1] == 8)) &&
-           ((y-1 > 0 && map[y-1][x] == 2) || (y+2 < ROW && map[y+1][x] == 2) ||
-            (x-1 > 0 && map[y][x-1] == 2) || (x+2 < COL && map[y][x+1] == 2));
-  }
-
-  //============================================================================
-  // If the hallway goes to multiple direction at the point, it will stop
-  // removing hallway tile there.
-  //============================================================================
-  private boolean isIntersection(int x, int y)
-  {
-    boolean a, b, c, d;
-
-    // is the hallway continuing
-    a = y-1 > 0 && map[y-1][x] == 2; // to the north?
-    b = y+2 < ROW && map[y+1][x] == 2; // to the south?
-    c = x-1 > 0 && map[y][x-1] == 2; // to the west?
-    d = x+2 < COL && map[y][x+1] == 2; // to the east?
-
-    // return true if at least 2 of them are true
-    return a?  b || c || d : b? c || d : c && d;
-  }
-
-  //============================================================================
-  // This will remove hallways at
-  // 1. intersection (where two or more hallways intersect each other)
-  // 2. door (the end of the hallway)
-  //============================================================================
-  private void removeHallways(int x, int y)
-  {
-    if(isIntersection(x, y)) return;
-
-    map[y][x] = 0;
-
-    if(x-1 >= 0 && map[y][x-1] == 2)
-    {
-      removeHallways(x-1, y);
-    }
-    else if(x+1 < COL-1 && map[y][x+1] == 2)
-    {
-      removeHallways(x+1, y);
-    }
-    else if(y-1 >= 0 && map[y-1][x] == 2)
-    {
-      removeHallways(x, y-1);
-    }
-    else if(y+1 < ROW-1 && map[y+1][x] == 2)
-    {
-      removeHallways(x, y+1);
-    }
-  }
-
-  //============================================================================
-  // Search for end of the hallway and start removing.
-  //============================================================================
-  private void removeUnusedHallways()
-  {
-    for(int i=0; i<ROW; i++)
-    {
-      for(int j=0; j<COL; j++)
-      {
-        if(map[i][j] == 4 && !isConnectingDoorway(j, i))
-        {
-          removeHallways(j, i);
-        }
-      }
-    }
-  }
-
 }

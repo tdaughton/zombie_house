@@ -45,12 +45,8 @@ public class MapGenerator implements GameMap
   // 2. Generate RANDOM room with different sizes. Each room must start and end
   //    at odd coordinates of of tile because that way hallways are going to
   //    look prettier.
-  // 3. Generate RANDOM hallways. Hallways are going to change directions or end
-  //    at odd number of coordinates only, too.
-  // 4. Connect tempRooms and hallways. Each room can have multiple doors but
-  //    must have at least one.
-  // 5. locate exit on hallway.
-  // 6. Erase unused hallways.
+  // 3. Build doors for each room. Each room should have one or more doors.
+  // 4. Build hallways and make sure all the doors are connected.
   //============================================================================
   public MapGenerator(int roomNum)
   {
@@ -91,19 +87,13 @@ public class MapGenerator implements GameMap
             ln += "   ";
             break;
           case 1:
-            ln += " / ";
+            ln += "[ ]";
             break;
           case 2:
-            ln += "[2]";
+            ln += " . ";
             break;
           case 4:
-            ln += "[4]";
-            break;
-          case 8:
-            ln += "[&]";
-            break;
-          case 16:
-            ln += "[=]";
+            ln += "[E]";
             break;
           default:
             ln += "[ ]";
@@ -161,4 +151,9 @@ public class MapGenerator implements GameMap
    *
    * @param args do nothing
    */
+  public static void main(String[] args)
+  {
+    MapGenerator mg = new MapGenerator();
+    mg.printMap();
+  }
 }

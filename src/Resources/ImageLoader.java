@@ -8,7 +8,8 @@ package Resources;
 import model.*;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -91,7 +92,11 @@ public class ImageLoader
     {
       for (int j = 0; j < ZombieHouseModel.COLS; j++)
       {
-        if (grid[i][j] instanceof Floor && grid[i][j].hasExitFlag())
+        if (grid[i][j] instanceof CharredFloorTile)
+        {
+          g.drawImage(charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
+        }
+        else if (grid[i][j] instanceof Floor)
         {
           g.drawImage(floorImage, xCoord, yCoord, tileWidth, tileHeight, null);
           g.drawImage(exitImage, xCoord, yCoord, tileWidth, tileHeight, null);
@@ -104,19 +109,12 @@ public class ImageLoader
         else if (grid[i][j] instanceof Wall)
         {
           g.drawImage(wallImage, xCoord, yCoord, tileWidth, tileHeight, null);
-          g.setColor(Color.BLUE);
-          g.drawRect((int) grid[i][j].getX(), (int) grid[i][j].getY(), (int) grid[i][j].getWidth(), (int) grid[i][j]
-              .getHeight());
+//          g.setColor(Color.BLUE);
+//          g.drawRect((int) grid[i][j].getX(), (int) grid[i][j].getY(), (int) grid[i][j].getWidth(), (int) grid[i][j]
+//              .getHeight());
+
         }
         else if (grid[i][j] instanceof Outside)
-        {
-          g.drawImage(outsideImage, xCoord, yCoord, tileWidth, tileHeight, null);
-        }
-        else if (grid[i][j] instanceof CharredFloorTile )
-        {
-          g.drawImage(charredFloorImage, xCoord, yCoord, tileWidth, tileHeight, null);
-        }
-        else
         {
           g.drawImage(outsideImage, xCoord, yCoord, tileWidth, tileHeight, null);
         }

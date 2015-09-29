@@ -2,11 +2,14 @@
  * Created by Tess Daughton, September 21st 2015
  * LightSource creates a Polygon to render a light source around the player
  */
-import model.*;
 
+import model.Player;
+import model.Tile;
+import model.Wall;
+
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
-import java.awt.Point;
 
 public class LightSource extends Polygon
 {
@@ -59,8 +62,10 @@ public class LightSource extends Polygon
     {
       xMult = Math.cos(Math.toRadians(deg));
       yMult = Math.sin(Math.toRadians(deg));
+
       x = relativeX + (xMult * radius);
       y = relativeY + (yMult * radius);
+
       Point newPoint = this.raytrace((int)relativeX, (int)relativeY, (int) x, (int) y);
       light.addPoint( (int) (centerX + newPoint.getX()), (int)(centerY + newPoint.getY()));
     }
