@@ -21,6 +21,7 @@ public class HallwayGenerator implements GameMap
   {
     this.map = map;
     this.doors = doors;
+
     generateRandomHallway();
   }
 
@@ -61,7 +62,7 @@ public class HallwayGenerator implements GameMap
         {
           if (map[y + j][x + i].type == 0)
           {
-            map[y + j][x + i] = new Wall(x + i, y + j, ROW, COL);
+            map[y + j][x + i] = new Wall(y + j, x + i, null);
           } else if (map[y + j][x + i].isHallway())
           {
             map[y + j][x + i].setHallway(false);
@@ -138,7 +139,7 @@ public class HallwayGenerator implements GameMap
 
     while(cameFrom.get(current) != null)
     {
-      map[current.y][current.x] = new Floor(current.x, current.y, ROW, COL);
+      map[current.y][current.x] = new Floor(current.y, current.x, null);
       map[current.y][current.x].setHallway(true);
 
       current = cameFrom.get(current);

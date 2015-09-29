@@ -5,12 +5,12 @@
 
 package model;
 
-public class CharredFloorTile extends Floor
+public class CharredFloorTile extends Tile
 {
 
-  public CharredFloorTile(int x, int y, int gridRow, int gridCol)
+  public CharredFloorTile(int gridRow, int gridCol, Tile[][] grid)
   {
-    super(x, y, gridRow, gridCol);
+    super(gridRow, gridCol, grid);
     movable = true;
   }
 

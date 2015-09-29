@@ -34,7 +34,7 @@ public class MapGenerator implements GameMap
   // If the number of rooms are too big compared to the dimension of the map
   // the tempRooms won't fit into the map so try not to use such a number.
 
-
+  private Room[] rooms;
   private Tile[][] map;
 
   //============================================================================
@@ -53,9 +53,10 @@ public class MapGenerator implements GameMap
 
     initiateHouse();
     RoomGenerator rg = new RoomGenerator(map, roomNum);
-    map = rg.getMap();
     DoorGenerator dg = new DoorGenerator(rg.getMap(), rg.getRooms(), roomNum);
     HallwayGenerator hg = new HallwayGenerator(dg.getMap(), dg.getDoors());
+
+    rooms = rg.getRooms();
     //printMap();
   }
 
@@ -71,6 +72,15 @@ public class MapGenerator implements GameMap
   public Tile[][] getMap()
   {
     return map;
+  }
+
+  //============================================================================
+  // This will only return the finalized map composed only with
+  // 0(Wall), 1(Floor), 2(Exit), 4(Nowhere, not added yet).
+  //============================================================================
+  public Room[] getRooms()
+  {
+    return rooms;
   }
 
   //============================================================================
@@ -121,34 +131,9 @@ public class MapGenerator implements GameMap
     {
       for (int j = 0; j < COL; j++)
       {
-        map[i][j] = new Outside(j, i, ROW, COL);
+        map[i][j] = new Outside(i, j, null);
+
       }
     }
   }
-
-//  //============================================================================
-//  // Search for end of the hallway and start removing.
-//  //============================================================================
-//  private void convertIntoDisplayableMap(int[][] finalMap)
-//  {
-//    for (int i = 0; i < ROW; i++)
-//    {
-//      for (int j = 0; j < COL; j++)
-//      {
-//        switch (finalMap[i][j])
-//        {
-//          case 16: //if it's wall
-//            this.map[i][j] = 1;
-//            break;
-//          case 8: //if it's exit
-//            this.map[i][j] = 4;
-//            break;
-//          case 0: //if it's nowhere
-//            continue;
-//          default:
-//            this.map[i][j] = 2;
-//        }
-//      }
-//    }
-//  }
 }
