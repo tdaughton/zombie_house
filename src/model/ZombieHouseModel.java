@@ -64,7 +64,7 @@ public class ZombieHouseModel
     this.mapGen.printMap();
     this.rand = new Random();
     this.grid = this.translateTileImages(mapGen.getMap());
-    this.getObstacles(4);
+    this.getObstacles(8);
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     imageLoader.readImages();
     soundLoader = frameSounds;
