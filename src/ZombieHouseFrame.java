@@ -5,22 +5,30 @@
  */
 
 import Resources.SoundLoader;
-import Resources.ImageLoader;
 import model.GridOrientation;
 import model.ZombieHouseModel;
+import model.Zombie;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Random;
 
+/**
+ * This class is the parent JComponent for the Zombie House game. It holds the major Controller elements
+ * including timer, key listener, and resize listener.
+ */
 public class ZombieHouseFrame extends JFrame implements ActionListener, ComponentListener, KeyListener
 {
-  private final static Dimension userScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
+  private final static Dimension USER_SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
+  public final static Random RAND = new Random();
+  public final static SoundLoader GAME_SOUNDS = new SoundLoader(RAND);
+
+  public static Timer timer;
   private ZombieHouseModel zModel;
   private ZombieHouseViewer zView;
   private ZombieHouseMenu zMenu;
-  private SoundLoader gameSounds;
-  public static Timer timer;
   private boolean[] keysPressed;
   private long prevSeconds;
   private long currSeconds;
@@ -42,18 +50,16 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   public ZombieHouseFrame()
   {
     super("ZombieHouse");
-    this.zModel = new ZombieHouseModel();
-    this.zView  = new ZombieHouseViewer(zModel, userScreenSize);
-    this.zMenu = new ZombieHouseMenu(zModel, (int) userScreenSize.getWidth());
-    this.gameSounds = new SoundLoader();
-    this.gameSounds.playBackgroundMusic();
-
+    this.zModel = new ZombieHouseModel(GAME_SOUNDS);
+    this.zView  = new ZombieHouseViewer(zModel, USER_SCREEN_SIZE);
+    this.zMenu = new ZombieHouseMenu(zModel, (int) USER_SCREEN_SIZE.getWidth());
+    GAME_SOUNDS.playBackgroundMusic();
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setPreferredSize(userScreenSize);
-    this.setSize(userScreenSize);
+    this.setPreferredSize(USER_SCREEN_SIZE);
+    this.setSize(USER_SCREEN_SIZE);
     this.setBackground(Color.black);
-    this.getContentPane().add(zMenu, BorderLayout.PAGE_END);
-    this.getContentPane().add(zView, BorderLayout.CENTER);
+    this.add(zMenu, BorderLayout.PAGE_END);
+    this.add(zView, BorderLayout.CENTER);
     zView.requestFocusInWindow();
     this.setVisible(true);
 
@@ -77,30 +83,38 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    * keeps track of time specifications
    * updates the model every 1/60 of a second
    * repaints the viewer when an update has been made inside of model
-   **/
+   * @param e  ActionEvent required by interface
+   */
   public void actionPerformed(ActionEvent e)
   {
     this.requestFocus();
+
+
+    if(pause && pauseTracker>0) pauseTracker--;
+    else
+    {
+      pauseTracker = 2;
+      pause = false;
+    }
+    if(RAND.nextBoolean()) playRandomZombieSounds();
     this.playerPickUpTrap();
     this.zMenu.updateLabels();
     prevSeconds = currSeconds;
     currSeconds = System.nanoTime();
     deltaSeconds = (currSeconds - prevSeconds) / 1000000000.0f;
     zModel.update(deltaSeconds);
-    if(pause && pauseTracker>0)
-    {
-      pauseTracker--;
-    }
-    if(pauseTracker==0)
-    {
-      pauseTracker = 2;
-      pause = false;
+    if(zModel.getPlayer().isDead())
+    { this.restartLevel();
+      return;
     }
     repaint();
   }
 
-  //TODO: ComponentListener to resize Viewer/Panel
   @Override
+  /**
+   * updates currentScreen dimensions for resizing inside of ZombieHouseViewer
+   * @param e  ComponentEvent required by interface
+   */
   public void componentResized(ComponentEvent e)
   {
     this.notifyScreenSizes();
@@ -123,13 +137,14 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     //do nothing
   }
+  
 
+  @Override
   /**
    * When a valid key is pressed, set the keyCode's index in keysPressed to true
    * then call moveKeys to do appropriate actions.
    * @param e  KeyEvent required by interface
    */
-  @Override
   public void keyPressed(KeyEvent e)
   {
     int keyCode = e.getKeyCode();
@@ -214,20 +229,21 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    */
   private void moveKeys()
   {
+    if(!timer.isRunning()) return;
     double movement = 1.0f;
-    boolean boost = false;
     int dir = 5;
     if(pause) return;
-    if (keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT])
-    {
-      boost = true;      //movement = 2 * movement;
-      zModel.setPlayerRunning(true);
+    if ((keysPressed[KeyEvent.VK_R] || keysPressed[KeyEvent.VK_SHIFT]) &&
+        this.zModel.getPlayer().getPlayerStamina()>0)
+    { this.zModel.getPlayer().setRunning(true);
     }
+    else this.zModel.getPlayer().setRunning(false);
     if (keysPressed[KeyEvent.VK_UP] || keysPressed[KeyEvent.VK_W]) dir += 3;
     if (keysPressed[KeyEvent.VK_DOWN] || keysPressed[KeyEvent.VK_S]) dir -= 3;
     if (keysPressed[KeyEvent.VK_LEFT] || keysPressed[KeyEvent.VK_A]) dir -= 1;
     if (keysPressed[KeyEvent.VK_RIGHT] || keysPressed[KeyEvent.VK_D]) dir += 1;
-    if (!boost) zModel.setPlayerRunning(false);
+
+    boolean boost= this.zModel.getPlayer().getRunning();
 
     if (dir % 2 != 0) movement = movement / Math.sqrt(2);
     switch (dir)
@@ -266,15 +282,18 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
 
     if (stepCount > 14)
     {
-      this.gameSounds.leftFootStep();
+      GAME_SOUNDS.leftFootStep();
       stepCount = 0;
     }
     if (stepCount % 15 == 7)
     {
-      this.gameSounds.rightFootStep();
+      GAME_SOUNDS.rightFootStep();
     }
   }
 
+  /**
+   * Picks up or sets traps when the trap key is pressed
+   */
   private void playerPickUpTrap()
   {
     if(keysPressed[KeyEvent.VK_P])
@@ -282,5 +301,46 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
       zModel.attemptTrapAction();
       pause = true;
     }
+  }
+
+  /**
+   * Plays random zombie sounds with stereo panning
+   */
+  private void playRandomZombieSounds()
+  {
+    ArrayList<Zombie> zombies = zModel.getZombieList();
+    for (Zombie zombie : zombies)
+    {
+      int r = RAND.nextInt();
+
+      if (r % 47 == 0) GAME_SOUNDS.playRandomGrunt(zombie, zModel.getPlayer());
+
+      else if (r % 83 == 0) GAME_SOUNDS.playRandomDialogue(zombie, zModel.getPlayer());
+    }
+  }
+
+  /**
+   * Resets running state when the game is restarted
+   */
+  private void toggleShift()
+  {
+    for (Boolean key : keysPressed)
+          key = false;
+
+    keysPressed[KeyEvent.VK_SHIFT] = ! (keysPressed[KeyEvent.VK_SHIFT]);
+  }
+
+  /**
+   * Restart the level when the Player dies
+   */
+  private void restartLevel()
+  {
+    JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading");
+    this.toggleShift();
+    GAME_SOUNDS.playLosingSound();
+    zModel.restart(false);
+    timer.setInitialDelay(500);
+    timer.restart();
+    zView.restart();
   }
 }

@@ -1,7 +1,5 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 
-import model.Zombie;
 import model.ZombieHouseModel;
 
 import java.awt.*;
@@ -19,6 +17,7 @@ public class ZombieHouseMenu extends JPanel
   private JLabel sight_Capability;
   private JLabel hear_Capability;
   private JLabel stamina;
+  String stamString;
 
 
 
@@ -28,8 +27,17 @@ public class ZombieHouseMenu extends JPanel
     this.zModel=zModel;
     this.sight_Capability = new JLabel("Sight Radius: " + zModel.getPlayer().getPlayerSight() +" \t" );
     this.hear_Capability = new JLabel("Hearing Radius: " + zModel.getPlayer().getPlayerHearing() + " \t");
-    this.stamina = new JLabel("\t Stamina: " + zModel.getPlayer().getPlayerStamina());
+    stamString = String.format("%02f",zModel.getPlayer().getPlayerStamina());
+    this.stamina = new JLabel("\t Stamina: " + stamString);
     this.traps = new JLabel(("Number of Traps: " + zModel.getPlayer().getNumberOfTraps()) +  "\t");
+    this.sight_Capability.setFont(new Font("Lucida Console", Font.BOLD, 20));
+    this.hear_Capability.setFont(new Font("Lucida Console", Font.BOLD, 20));
+    this.stamina.setFont(new Font("Lucida Console", Font.BOLD, 20));
+    this.traps.setFont(new Font("Lucida Console", Font.BOLD, 20));
+    this.pause.setFont(new Font("Lucida Console", Font.BOLD, 20));
+
+
+
     this.add(sight_Capability);
     this.add(hear_Capability);
     this.add(traps);
@@ -47,13 +55,13 @@ public class ZombieHouseMenu extends JPanel
         if (e.getStateChange() == ItemEvent.SELECTED)
         {
           ZombieHouseFrame.timer.stop();
-          ZombieHouseModel.SOUNDLOADER.setPause(true);
+          ZombieHouseModel.soundLoader.setPause(true);
           pause.setText("Start");
         }
         else
         {
           ZombieHouseFrame.timer.start();
-          ZombieHouseModel.SOUNDLOADER.setPause(false);
+          ZombieHouseModel.soundLoader.setPause(false);
           pause.setText("Pause");
         }
       }
@@ -63,7 +71,8 @@ public class ZombieHouseMenu extends JPanel
   {
     sight_Capability.setText("Sight Radius: " + zModel.getPlayer().getPlayerSight());
     hear_Capability.setText("Hearing Radius: " + zModel.getPlayer().getPlayerHearing());
-    stamina.setText(("Stamina: " + zModel.getPlayer().getPlayerStamina()));
+    stamString = String.format("%02f",zModel.getPlayer().getPlayerStamina());
+    stamina.setText(("Stamina: " + stamString));
     traps.setText(("Number of Traps: " + zModel.getPlayer().getNumberOfTraps()));
   }
 }

@@ -7,7 +7,6 @@ package model;
 
 import java.awt.Rectangle;
 
-
 //==============================================================================
 // I implemented comparable interface to implement priority queue. - Miri :)
 //==============================================================================
@@ -16,9 +15,8 @@ public class Tile extends Rectangle implements Comparable<Tile>
   protected int x, y;
   protected int type;
 
-  protected int priority; // priority will be calculated by the pathfinder.
+  protected double priority; // priority will be calculated by the pathfinder.
 
-  //private Rectangle bounds;
   protected int gridRow;
   protected int gridCol;
   protected boolean occupied;
@@ -32,7 +30,7 @@ public class Tile extends Rectangle implements Comparable<Tile>
     this.gridRow = gridRow;
     this.gridCol = gridCol;
     this.movable = false;
-    this.hasTrap=false;
+    this.hasTrap = false;
     this.trap = null;
   }
 
@@ -40,14 +38,6 @@ public class Tile extends Rectangle implements Comparable<Tile>
   {
     this.occupied = occupationStatus;
   }
-
-//  public boolean contains(int x, int y)
-//  {
-//    boolean contains = false;
-//    if (this.contains(x, y)) contains = true;
-//    if(x>=this.xMin && x<=xMax && y>=yMin && y<=yMax) contains = true;
-//    return contains;
-//  }
 
   public boolean isOccupied()
   {
@@ -84,16 +74,10 @@ public class Tile extends Rectangle implements Comparable<Tile>
     return this.gridCol;
   }
 
-
   public Rectangle getBounds()
   {
     return this;
   }
-
-//  public void setBounds(int xMin, int xMax, int yMin, int yMax)
-//  {
-//    this.setBounds(new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin));
-//  }
 
   public int getType()
   {
@@ -104,7 +88,6 @@ public class Tile extends Rectangle implements Comparable<Tile>
   {
     this.type = type;
   }
-
 
   //============================================================================
   // The traps are managed with following methods. All the methods are named
@@ -140,12 +123,12 @@ public class Tile extends Rectangle implements Comparable<Tile>
   // Setter and getter of priority. Priority will be set and called by the
   // pathfinder.
   //============================================================================
-  public int getPriority()
+  public double getPriority()
   {
     return this.priority;
   }
 
-  public void setPriority(int priority)
+  public void setPriority(double priority)
   {
     this.priority = priority;
   }

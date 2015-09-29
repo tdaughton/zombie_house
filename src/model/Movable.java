@@ -2,8 +2,10 @@
  * Created by Tess Daughton, September 13th, 2015
  */
 package model;
+
 import javafx.scene.shape.Circle;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 /**
  * This class represents the basic functionality of moving or movable entities in the Zombie House game.
@@ -13,6 +15,7 @@ public class Movable implements Alive
 {
   private Circle circle;
   private Tile location;
+  private ZombieHouseModel zModel;
   private Tile[][] tiles;
   private Enum playerOrientation;
   private boolean running;
@@ -31,7 +34,7 @@ public class Movable implements Alive
    */
   public Movable()
   {
-    circle = new Circle(0, 0, 1);
+    this.circle = new Circle(0, 0, 1);
   }
 
   /**
@@ -40,15 +43,17 @@ public class Movable implements Alive
    * @param y                    Y coordinate of center point (in pixels)
    * @param radius               Radius of bounding circle (in pixels)
    * @param loc                  Tile location containing center point
-   * @param grid                 Reference to Zombie House map
+   * @param zhModel              Reference to Zombie House map
    */
-  public Movable(double x, double y, double radius, Tile loc, Tile[][] grid, Boolean running, int health)
+  public Movable(double x, double y, double radius, Tile loc, ZombieHouseModel zhModel, Boolean running, int health)
   {
     this.location = loc;
-    this.tiles = grid;
-    this.running=running;
+    this.zModel = zhModel;
+    this.tiles = zModel.getGrid();
+    this.running = running;
     this.originalHealth = health;
-    circle = new Circle(x, y, radius);
+    this.dead = false;
+    this.circle = new Circle(x, y, radius);
   }
 
   /**
@@ -78,6 +83,11 @@ public class Movable implements Alive
     return (int)circle.getRadius();
   }
 
+  public ZombieHouseModel getZModel()
+  {
+    return zModel;
+  }
+
   /**
    * Getter for orientation
    * @return  compass orientation
@@ -105,30 +115,34 @@ public class Movable implements Alive
     return location;
   }
 
+  public int getTileRow()
+  {
+    return location.getGridRow();
+  }
+
+  public int getTileCol()
+  {
+    return location.getGridCol();
+  }
 
   public boolean isRunning()
   {
     return running;
   }
 
-
-  public void setRunning(Boolean running)
-  {
-    this.running = running;
-  }
   /**
    * Method to calculate collision detection with other Movables.
    * If the distance between center pixels are less than either Movable's radius, then there is a collision.
    * @param otherMovable  any other Movable
    * @return  true/false if collision
    */
-  public boolean intersects(Circle otherMovable)
+  public boolean intersects(Movable otherMovable)
   {
     boolean intersects = false;
     double r1 = Math.pow(otherMovable.getRadius() - circle.getRadius(), 2);
     double r2 = Math.pow(otherMovable.getRadius() + circle.getRadius(), 2);
-    double distance = Math.pow((otherMovable.getCenterX() - circle.getCenterX()), 2) +
-                       Math.pow((otherMovable.getCenterY() - circle.getCenterY()), 2);
+    double distance = Math.pow((otherMovable.getX() - circle.getCenterX()), 2) +
+                      Math.pow((otherMovable.getY() - circle.getCenterY()), 2);
 
     if (distance >= r1 && distance <= r2) intersects = true;
 
@@ -171,7 +185,7 @@ public class Movable implements Alive
       double yPos = circle.getCenterY();
       int gCol = (int)(xPos / location.getWidth());
       int gRow = (int)(yPos / location.getHeight());
-      if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
+      if(gRow<ZombieHouseModel.ROWS && gCol<ZombieHouseModel.COLS && gRow>=0 && gCol>=0)
       {
         playerOrientation = orientation;
         circle.setCenterX(xPos);
@@ -187,7 +201,7 @@ public class Movable implements Alive
 
             if (!location.getTrap().getSoundPlayed())
             {
-              ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+              ZombieHouseModel.soundLoader.playExplosionEffect();
               location.getTrap().setSoundPlayed();
             }
           }
@@ -202,7 +216,7 @@ public class Movable implements Alive
       double yPos = circle.getCenterY() + dY;
       int gCol = (int)(xPos / location.getWidth());
       int gRow = (int)(yPos / location.getHeight());
-      if(gRow<40 && gCol<40 && gRow>=0 && gCol>=0)
+      if(gRow<ZombieHouseModel.ROWS && gCol<ZombieHouseModel.COLS && gRow>=0 && gCol>=0)
       {
         playerOrientation = orientation;
         circle.setCenterX(xPos);
@@ -217,7 +231,7 @@ public class Movable implements Alive
             this.decrementHealth(10);
             if (!location.getTrap().getSoundPlayed())
             {
-              ZombieHouseModel.SOUNDLOADER.playExplosionEffect();
+              ZombieHouseModel.soundLoader.playExplosionEffect();
               location.getTrap().setSoundPlayed();
             }
           }
@@ -248,12 +262,18 @@ public class Movable implements Alive
     else if (dX > 0) gCol = gCol + 1;
     if (dY < 0) gRow = gRow - 1;
     else if (dY > 0) gRow = gRow + 1;
-    if (gRow < 40 && gCol < 40 && gRow >= 0 && gCol >= 0)
+    if (gRow < ZombieHouseModel.ROWS && gCol < ZombieHouseModel.COLS && gRow >= 0 && gCol >= 0)
     {
       Tile nextTile = tiles[gRow][gCol];
       boolean canMove = nextTile.isMovable();
       boolean intersectsWall = moveChecker.intersects(nextTile);
-      return (canMove || !intersectsWall);
+      boolean intersectsMovable = false;
+      ArrayList<Zombie> zList = zModel.getZombieList();
+      for (Zombie zombone : zList)
+      {
+        if (!zombone.equals(this)) intersectsMovable |= moveChecker.intersects(zombone);
+      }
+      return ((canMove || !intersectsWall) && !intersectsMovable);
     }
     else return false;
   }
@@ -266,11 +286,12 @@ public class Movable implements Alive
    */
   public double getDistanceTo(double xNew, double yNew)
   {
-    double dist;
+    return Math.sqrt(Math.pow((circle.getCenterX() - xNew), 2) + Math.pow((circle.getCenterY() - yNew), 2));
+  }
 
-    dist = Math.sqrt(Math.pow((circle.getCenterX() - xNew), 2) + Math.pow((circle.getCenterY() - yNew), 2));
-
-    return dist;
+  public double getDistanceTo(Movable otherMovable)
+  {
+    return Math.sqrt(Math.pow((circle.getCenterX() - otherMovable.getX()), 2) + Math.pow((circle.getCenterY() - otherMovable.getY()), 2));
   }
 
   public void decrementHealth(int damage)
@@ -284,8 +305,23 @@ public class Movable implements Alive
     return this.originalHealth-this.damage;
   }
 
+  public boolean getRunning()
+  {
+    return this.running;
+  }
+
+  public void setRunning(boolean running)
+  {
+    this.running = running;
+  }
+
   public boolean isDead()
   {
     return this.dead;
   }
+  public void isAlive()
+  {
+    this.dead=false;
+  }
+
 }
