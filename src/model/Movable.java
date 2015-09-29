@@ -205,7 +205,7 @@ public class Movable implements Alive
     if(this instanceof Player && this.location.hasExitFlag())
     {
       this.levelUp = true;
-      this.zModel.restart(true);
+      //this.zModel.restart(true);
     }
 
     return (successX & successY);

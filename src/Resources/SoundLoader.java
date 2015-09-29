@@ -17,6 +17,8 @@ public class SoundLoader
 {
   private static Clip pcRightFoot;
   private static Clip pcLeftFoot;
+  private static Clip zombieRightFoot;
+  private static Clip zombieLeftFoot;
   private static Clip backgroundMusic;
   private static Clip explosion;
   private static Clip dropTrap;
@@ -54,6 +56,8 @@ public class SoundLoader
     this.rand = rand;
     pcRightFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_02.wav");
     pcLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav");
+    zombieRightFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_04.wav");
+    zombieLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_05.wav");
     backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
     explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/explosion.wav");
     dropTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Trap_00.wav");
@@ -206,6 +210,7 @@ public class SoundLoader
       zombieTalk.start();
     }
   }
+
   public void playRandomGrunt(Zombie zombie, Player player)
   {
     if(this.getPause()) return;
@@ -233,6 +238,7 @@ public class SoundLoader
       zombieGrunt.start();
     }
   }
+
   public void playRandomPain(Zombie zombie, Player player)
   {
     if(this.getPause()) return;
@@ -253,6 +259,36 @@ public class SoundLoader
     { zombiePain.setFramePosition(0);
       zombiePain.start();
     }
+  }
+
+  /**
+   * Plays sound effect for zombie's right foot step
+   */
+  public void zombieRightFootStep(Zombie zombie, Player player)
+  {
+    if(zombieRightFoot.isRunning()) zombieRightFoot.stop();
+    if (zombie.getX() - 20 < player.getX()) pan = -1f;
+    else pan = 1f;
+
+    gainControl = (FloatControl) zombieRightFoot.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(pan);
+    zombieRightFoot.setFramePosition(0);
+    zombieRightFoot.start();
+  }
+
+  /**
+   * Plays sound effect for zombie's left foot step
+   */
+  public void zombieLeftFootStep(Zombie zombie, Player player)
+  {
+    if(zombieLeftFoot.isRunning()) zombieLeftFoot.stop();
+    if (zombie.getX() - 20 < player.getX()) pan = -1f;
+    else pan = 1f;
+
+    gainControl = (FloatControl) zombieLeftFoot.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(pan);
+    zombieLeftFoot.setFramePosition(0);
+    zombieLeftFoot.start();
   }
 
   public void playLosingSound()

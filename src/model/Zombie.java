@@ -36,6 +36,7 @@ public class Zombie extends Movable
   private boolean bumped;
   private Enum zombieOrientation;
   private SpriteLoader frames;
+  private int stepCount;
 
   /**
    * Full constructor
@@ -52,6 +53,7 @@ public class Zombie extends Movable
     this.theta = rng.nextDouble() * 2.0f * Math.PI;
     this.decodeOrientation();
     this.timeSinceUpdate = 0.0f;
+    this.stepCount = 0;
   }
 
   /**
@@ -94,17 +96,21 @@ public class Zombie extends Movable
     double xDistance = (SPEED_WALK * super.getCurrentTile().getWidth() * Math.sin(this.theta) * timeElapsed);
     double yDistance = (SPEED_WALK * super.getCurrentTile().getHeight() * Math.cos(this.theta) * timeElapsed);
     //System.out.println("zxd "+xDistance+" zyd "+yDistance+" theta "+theta);
-    if (5.8905f < theta || theta < 0.3927f) zombieOrientation = GridOrientation.SOUTH;
-    else if (0.3927f < theta && theta < 1.1781f) zombieOrientation = GridOrientation.SOUTHEAST;
-    else if (1.1781f < theta && theta < 1.9635f) zombieOrientation = GridOrientation.EAST;
-    else if (1.9635f < theta && theta < 2.7489f) zombieOrientation = GridOrientation.NORTHEAST;
-    else if (2.7489f < theta && theta < 3.5343f) zombieOrientation = GridOrientation.NORTH;
-    else if (3.5343f < theta && theta < 4.3197f) zombieOrientation = GridOrientation.NORTHWEST;
-    else if (4.3197f < theta && theta < 5.1051f) zombieOrientation = GridOrientation.WEST;
-    else if (5.1051f < theta && theta < 5.8905f) zombieOrientation = GridOrientation.SOUTHWEST;
-    bumped = super.move(xDistance, yDistance, zombieOrientation);
+    bumped = !super.move(xDistance, yDistance, zombieOrientation);
+    this.stepCount++;
+    if (stepCount > 29) stepCount = 0;
     if(wType == WalkType.LINE) getFrames().getRotatingLineZombieWalk();
     else getFrames().getRotatingRandomZombieWalk();
+  }
+
+  public int getStepCount()
+  {
+    return this.stepCount;
+  }
+
+  public boolean getBumped()
+  {
+    return bumped;
   }
 
   /**

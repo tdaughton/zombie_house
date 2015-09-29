@@ -302,16 +302,15 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private void playRandomZombieSounds()
   {
     ArrayList<Zombie> zombies = this.zModel.getZombieList();
-    Player playerCharacter = this.zModel.getPlayer();
+    Player player = this.zModel.getPlayer();
     for (Zombie zombie : zombies)
     {
-      if (playerCharacter.getDistanceTo(zombie) < playerCharacter.DIST_HEAR)
+      if (player.getDistanceTo(zombie) < Player.DIST_HEAR * this.zModel.getTileWidth())
       {
-        int r = RAND.nextInt();
-
-        if (r % 47 == 0) GAME_SOUNDS.playRandomGrunt(zombie, this.zModel.getPlayer());
-
-        else if (r % 83 == 0) GAME_SOUNDS.playRandomDialogue(zombie, this.zModel.getPlayer());
+        if (zombie.getBumped()) GAME_SOUNDS.playRandomGrunt(zombie, player);
+        if (RAND.nextInt() % 83 == 0) GAME_SOUNDS.playRandomDialogue(zombie, player);
+        if (zombie.getStepCount() % 30 == 0) GAME_SOUNDS.zombieLeftFootStep(zombie, player);
+        else if (zombie.getStepCount() % 30 == 15) GAME_SOUNDS.zombieRightFootStep(zombie, player);
       }
     }
   }
@@ -334,14 +333,14 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     if (levelUp)
     {
-      JOptionPane.showMessageDialog(this, "You reached the next level in Zombie House.\nNext level loading.");
       GAME_SOUNDS.playLevelUpSound();
+      JOptionPane.showMessageDialog(this, "You reached the next level in Zombie House.\nNext level loading.");
       this.zModel.restart(true);
     }
     else
     {
-      JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading.");
       GAME_SOUNDS.playLosingSound();
+      JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading.");
       this.zModel.restart(false);
     }
 

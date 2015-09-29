@@ -121,7 +121,7 @@ public class ZombieHouseModel
       valid = true;
       for (Zombie zombone : this.zombies)
       {
-        valid &= (zombone.getDistanceTo(this.grid[y][x].getCenterX(), this.grid[y][x].getCenterY()) > Zombie.DIST_SMELL);
+        valid &= (zombone.getDistanceTo(this.grid[y][x].getCenterX(), this.grid[y][x].getCenterY()) > Zombie.DIST_SMELL * this.tileWidth);
       }
     }
     this.playerCharacter = new Player(this, this.grid[y][x], false);
