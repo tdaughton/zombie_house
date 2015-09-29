@@ -17,7 +17,5 @@ public interface GameMap
 
   Random RANDOM = new Random();
 
-  int[][] getMap();
-
-
+  Tile[][] getMap();
 }

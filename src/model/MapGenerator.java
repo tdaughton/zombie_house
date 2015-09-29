@@ -35,8 +35,7 @@ public class MapGenerator implements GameMap
   // the tempRooms won't fit into the map so try not to use such a number.
 
 
-  private int[][] map;
-  private Room[] rooms;
+  private Tile[][] map;
 
   //============================================================================
   // MapGenerating can be abstracted to following steps:
@@ -50,25 +49,26 @@ public class MapGenerator implements GameMap
   //============================================================================
   public MapGenerator(int roomNum)
   {
-    map = new int[ROW][COL];
-    rooms = new Room[roomNum + 1];
+    map = new Tile[ROW][COL];
 
     initiateHouse();
     RoomGenerator rg = new RoomGenerator(map, roomNum);
+    map = rg.getMap();
     DoorGenerator dg = new DoorGenerator(rg.getMap(), rg.getRooms(), roomNum);
-    //printMap();
     HallwayGenerator hg = new HallwayGenerator(dg.getMap(), dg.getDoors());
     //printMap();
-    convertIntoDisplayableMap(hg.getMap());
-    printMap();
+  }
 
+  public static void main(String[] args)
+  {
+    MapGenerator mg = new MapGenerator(10);
   }
 
   //============================================================================
   // This will only return the finalized map composed only with
   // 0(Wall), 1(Floor), 2(Exit), 4(Nowhere, not added yet).
   //============================================================================
-  public int[][] getMap()
+  public Tile[][] getMap()
   {
     return map;
   }
@@ -84,7 +84,7 @@ public class MapGenerator implements GameMap
       ln = "";
       for (int j = 0; j < COL; j++)
       {
-        switch (map[i][j])
+        switch (map[i][j].type)
         {
           case 0:
             ln += "   ";
@@ -93,10 +93,13 @@ public class MapGenerator implements GameMap
             ln += "[ ]";
             break;
           case 2:
-            ln += " . ";
-            break;
-          case 4:
-            ln += "[E]";
+            if (map[i][j].hasExitFlag())
+            {
+              ln += "[E]";
+            } else
+            {
+              ln += " . ";
+            }
             break;
           default:
             ln += "[ ]";
@@ -118,34 +121,34 @@ public class MapGenerator implements GameMap
     {
       for (int j = 0; j < COL; j++)
       {
-        map[i][j] = 0;
+        map[i][j] = new Outside(j, i, ROW, COL);
       }
     }
   }
 
-  //============================================================================
-  // Search for end of the hallway and start removing.
-  //============================================================================
-  private void convertIntoDisplayableMap(int[][] finalMap)
-  {
-    for (int i = 0; i < ROW; i++)
-    {
-      for (int j = 0; j < COL; j++)
-      {
-        switch (finalMap[i][j])
-        {
-          case 16: //if it's wall
-            this.map[i][j] = 1;
-            break;
-          case 8: //if it's exit
-            this.map[i][j] = 4;
-            break;
-          case 0: //if it's nowhere
-            continue;
-          default:
-            this.map[i][j] = 2;
-        }
-      }
-    }
-  }
+//  //============================================================================
+//  // Search for end of the hallway and start removing.
+//  //============================================================================
+//  private void convertIntoDisplayableMap(int[][] finalMap)
+//  {
+//    for (int i = 0; i < ROW; i++)
+//    {
+//      for (int j = 0; j < COL; j++)
+//      {
+//        switch (finalMap[i][j])
+//        {
+//          case 16: //if it's wall
+//            this.map[i][j] = 1;
+//            break;
+//          case 8: //if it's exit
+//            this.map[i][j] = 4;
+//            break;
+//          case 0: //if it's nowhere
+//            continue;
+//          default:
+//            this.map[i][j] = 2;
+//        }
+//      }
+//    }
+//  }
 }
