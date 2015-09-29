@@ -8,9 +8,9 @@ package model;
 public class CharredFloorTile extends Floor
 {
 
-  public CharredFloorTile(int gridRow, int gridCol, Tile[][] grid)
+  public CharredFloorTile(int x, int y, int gridRow, int gridCol)
   {
-    super(gridRow, gridCol, grid);
+    super(x, y, gridRow, gridCol);
     movable = true;
   }
 

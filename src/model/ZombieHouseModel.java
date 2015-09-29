@@ -31,6 +31,7 @@ public class ZombieHouseModel
 
   public static SoundLoader soundLoader;
   public static ImageLoader imageLoader;
+  public int level = 1;
   private Random rand;
   private MapGenerator mapGen;
   private Player playerCharacter;

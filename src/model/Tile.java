@@ -9,42 +9,61 @@ import java.awt.Rectangle;
 
 //==============================================================================
 // I implemented comparable interface to implement priority queue. - Miri :)
+// Tile name            type
+// Outside              0
+// Wall                 1
+// Floor                2
 //==============================================================================
 public class Tile extends Rectangle implements Comparable<Tile>
 {
   protected int x, y;
   protected int type;
-
   protected double priority; // priority will be calculated by the pathfinder.
-
   protected int gridRow;
   protected int gridCol;
   protected boolean occupied;
   protected boolean movable;
   protected boolean hasTrap;
+  private boolean hallway;
   private boolean exitFlag = false;
 
 
 
   private Trap trap;
 
-  public Tile(int gridRow, int gridCol, Tile[][] grid)
+  public Tile(int x, int y, int gridRow, int gridCol)
   {
+    super(x, y, 1, 1);
+
     this.gridRow = gridRow;
     this.gridCol = gridCol;
     this.movable = false;
     this.hasTrap = false;
     this.trap = null;
+    this.x = x;
+    this.y = y;
+
+    hallway = false;
   }
 
-  private void setOccupied(boolean occupationStatus)
+  public boolean isHallway()
   {
-    this.occupied = occupationStatus;
+    return hallway;
+  }
+
+  public void setHallway(boolean hallway)
+  {
+    this.hallway = hallway;
   }
 
   public boolean isOccupied()
   {
     return this.occupied;
+  }
+
+  private void setOccupied(boolean occupationStatus)
+  {
+    this.occupied = occupationStatus;
   }
 
   public boolean isMovable()
@@ -145,10 +164,10 @@ public class Tile extends Rectangle implements Comparable<Tile>
   // Compare priority with another tile.
   //============================================================================
   @Override
-  public int compareTo(Tile anotherTile)
+  public int compareTo(Tile other)
   {
-    if(this.priority < anotherTile.getPriority()) return -1;
-    if(this.priority > anotherTile.getPriority()) return 1;
+    if (this.priority < other.getPriority()) return -1;
+    if (this.priority > other.getPriority()) return 1;
     return 0;
   }
 

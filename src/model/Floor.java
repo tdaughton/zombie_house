@@ -6,11 +6,10 @@ package model;
 
 public class Floor extends Tile
 {
-  public Floor(int gridRow, int gridCol, Tile[][] grid)
+  public Floor(int x, int y, int gridRow, int gridCol)
   {
-    super(gridRow, gridCol, grid);
+    super(x, y, gridRow, gridCol);
+    super.setType(2);
     movable = true;
   }
-
-
 }
