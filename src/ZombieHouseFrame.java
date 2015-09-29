@@ -24,7 +24,6 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   private final static Dimension USER_SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
   public final static Random RAND = new Random();
   public final static SoundLoader GAME_SOUNDS = new SoundLoader(RAND);
-  private final static Dimension USER_SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
   public static Timer timer;
   private ZombieHouseModel zModel;
@@ -339,7 +338,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading");
     this.toggleShift();
     GAME_SOUNDS.playLosingSound();
-    zModel.restart();
+    zModel.restart(false);
     timer.setInitialDelay(500);
     timer.restart();
     zView.restart();

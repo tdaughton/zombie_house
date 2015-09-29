@@ -54,11 +54,15 @@ public class ZombieHouseModel
   {
     traps = new ArrayList<>();
     zombies = new ArrayList<>();
+    trapSub = new ArrayList<>();
+    zombieSub = new ArrayList<>();
     ZombieHouseModel.soundLoader =soundLoader;
     this.currentScreenWidth = MAX_SCREEN_WIDTH;
     this.currentScreenHeight = MAX_SCREEN_HEIGHT;
     this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
     this.tileHeight = currentScreenHeight / VISIBLE_Y_TILES;
+    this.mapGen = new MapGenerator();
+    this.rand = new Random();
     this.grid = this.translateTileImages(mapGen.getMap());
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);
     pf = new Pathfinder(this);
@@ -81,11 +85,6 @@ public class ZombieHouseModel
     {
       for (int j = 0; j < COLS; j++)
       {
-        // 0(Nowhere) ---------------> 0(Nowhere)
-// 1(Room) ------------------> 2(Floor)
-// 2(Hallways) --------------> 2(Floor)
-// 8(Exit) ------------------> 4(Exit)
-// 16(Wall) -----------------> 1(Wall)
         if (grid[i][j] == 0) tiles[i][j] = new Outside(i,j,tiles);
         else if (grid[i][j] == 2) tiles[i][j] = new Floor(i,j,tiles);
         else if (grid[i][j] == 4) tiles[i][j] = new Floor(i,j,tiles); // implement exit tile
