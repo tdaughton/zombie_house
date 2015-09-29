@@ -47,11 +47,11 @@ public class Zombie extends Movable
    * @param y                    Y coordinate of center point (in pixels)
    * @param radius               Radius of bounding circle (in pixels)
    * @param location             Tile location containing center point
-   * @param zhModel              Reference to Zombie House Model
+   * @param grid                 Reference to Zombie House map
    */
-  public Zombie(int x, int y, int radius, Tile location, ZombieHouseModel zhModel, Enum direction, ImageLoader imageLoader, boolean running, int health)
+  public Zombie(int x, int y, int radius, Tile location, ZombieHouseModel grid, Enum direction, ImageLoader imageLoader, boolean running, int health)
   {
-    super(x, y, radius, location, zhModel, running, health);
+    super(x, y, radius, location, grid, running, health);
     wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
     path = new ArrayList<>();
     frames = new SpriteLoader(imageLoader);

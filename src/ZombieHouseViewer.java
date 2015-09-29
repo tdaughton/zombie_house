@@ -112,8 +112,11 @@ public class ZombieHouseViewer extends JPanel
 
     this.currentForegroundSubImage = this.getVisibleTransparentBuffer(xMin, yMin, xMax, yMax);
     this.background = zModel.getImageLoader().getBackground();
+
     return background.getSubimage(xMin, yMin, xMax, yMax);
   }
+
+
 
   private BufferedImage getVisibleTransparentBuffer(int xMin, int yMin, int xMax, int yMax)
   {
@@ -168,6 +171,7 @@ public class ZombieHouseViewer extends JPanel
     }
     return g2;
   }
+
 
   /**
    * Renders the traps with the graphics object of the background BufferedImage
@@ -253,20 +257,18 @@ public class ZombieHouseViewer extends JPanel
    * Utilizes a LightSource object to obtain a Polygon around the Player
    * Fills Polygon in with RadialGradientPaint to render light source around Player
    * Utilizes Area class to paint the area outside of the Polygon black (to render darkness)
-   * @param g  Graphics system reference
+   * @param a  Graphics system reference
    */
-  public void drawLight(Graphics g, LightSource lightSource)
+  public void drawLight(Graphics a, LightSource lightSource)
   {
-    Graphics2D g2 = (Graphics2D) g;
-
-    lightSource.setPolygon(playerSprite.getCurrentTile().getGridRow(),playerSprite.getCurrentTile().getGridCol(),
-                            this.currentScreenWidth/2, this.currentScreenHeight/2);
+    Graphics2D g2 = (Graphics2D) a;
+    lightSource.setPolygon(currentScreenWidth/2, currentScreenHeight/2);
     Polygon light = lightSource.getPolygon();
     Area darkness = new Area(new Rectangle(0,0,currentScreenWidth,currentScreenHeight));
     darkness.subtract(new Area(light));
     g2.setColor(Color.black);
     g2.fill(darkness);
-    Color [] fade = {new Color(1f,1f,1f,0f), Color.BLACK};
+    Color [] fade = {new Color(0f,0f,0f,0f), Color.BLACK};
     float [] fCen = {0.0f, 1.0f};
     RadialGradientPaint radialGradientPaint =  new RadialGradientPaint(lightSource.getCenter(), lightSource.getRadius(), fCen, fade,
         MultipleGradientPaint.CycleMethod.NO_CYCLE);
@@ -289,15 +291,18 @@ public class ZombieHouseViewer extends JPanel
     g.drawImage(this.getVisibleBuffer(), negXOffSet, negYOffSet, null);
     g.drawImage(currentForegroundSubImage, negXOffSet, negYOffSet, null);
     this.drawSprite(g);
-    this.drawLight(g, lightSource);
     this.drawBufferedComponents(g);
+    this.drawLight(g, lightSource);
+
+
 
   }
   public void drawBufferedComponents(Graphics g)
   {
-    Graphics g2 = this.getForegroundGraphics();
+    Graphics2D g2 = (Graphics2D) this.getForegroundGraphics();
     this.drawZombies(g2);
     this.drawTraps(g2);
+
   }
 
 

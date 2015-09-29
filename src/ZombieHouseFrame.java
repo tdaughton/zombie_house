@@ -222,6 +222,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    */
   private void moveKeys()
   {
+    if(!timer.isRunning()) return;
     double movement = 1.0f;
     int dir = 5;
     if(pause) return;
@@ -307,6 +308,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
 
   private void toggleShift()
   {
+    for (Boolean key : keysPressed)
+          key = false;
+
     keysPressed[KeyEvent.VK_SHIFT] = ! (keysPressed[KeyEvent.VK_SHIFT]);
   }
 
@@ -316,6 +320,8 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     this.toggleShift();
     GAME_SOUNDS.playLosingSound();
     zModel.restart();
+    timer.setInitialDelay(500);
+    timer.restart();
     zView.restart();
   }
 }
