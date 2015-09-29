@@ -7,11 +7,16 @@
 import Resources.SoundLoader;
 import model.GridOrientation;
 import model.Player;
-import model.ZombieHouseModel;
 import model.Zombie;
+import model.ZombieHouseModel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,10 +27,9 @@ import java.util.Random;
  */
 public class ZombieHouseFrame extends JFrame implements ActionListener, ComponentListener, KeyListener
 {
-  private final static Dimension USER_SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
   public final static Random RAND = new Random();
   public final static SoundLoader GAME_SOUNDS = new SoundLoader(RAND);
-
+  private final static Dimension USER_SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
   public static Timer timer;
   private ZombieHouseModel zModel;
   private ZombieHouseViewer zView;
@@ -363,8 +367,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     if (levelUp)
     {
       GAME_SOUNDS.playLevelUpSound();
-      JOptionPane.showMessageDialog(this, "You reached the next level in Zombie House.\nNext level loading.");
-      this.toggleShift();
+      JOptionPane.showMessageDialog(this,
+                                   "You reached the next level in Zombie House.\nNext level loading.");
+      //this.toggleShift();
       zModel.restart(true);
       timer.setInitialDelay(500);
       timer.restart();

@@ -60,11 +60,11 @@ public class MapGenerator implements GameMap
     //printMap();
   }
 
-  public static void main(String[] args)
-  {
-    MapGenerator mg = new MapGenerator(10);
-    mg.printMap();
-  }
+//  public static void main(String[] args)
+//  {
+//    MapGenerator mg = new MapGenerator(10);
+//    //mg.printMap();
+//  }
 
   //============================================================================
   // This will only return the finalized map composed only with

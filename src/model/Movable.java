@@ -14,6 +14,8 @@ import java.util.ArrayList;
  */
 public class Movable implements Alive
 {
+  //static copy used in boundary checking to avoid multiple instantiation
+  private static Movable moveChecker = new Movable();
   private Circle circle;
   private Tile location;
   private ZombieHouseModel zModel;
@@ -21,10 +23,7 @@ public class Movable implements Alive
   private Enum playerOrientation;
   private boolean running;
   private boolean dead;
-  private boolean levelUp; 
-
-  //static copy used in boundary checking to avoid multiple instantiation
-  private static Movable moveChecker = new Movable();
+  private boolean levelUp;
 
   /**
    * Default constructor. Mostly for static moveChecker only.
@@ -46,7 +45,7 @@ public class Movable implements Alive
     this.zModel = zhModel;
     this.tiles = zModel.getGrid();
     this.running = running;
-    this.originalHealth = health;
+    //this.originalHealth = health;
     this.dead = false;
     this.levelUp = false;
     this.circle = new Circle(this.location.getCenterX(), this.location.getCenterY(), Math.floor((this.zModel.getTileHeight() - 1) / 2));
