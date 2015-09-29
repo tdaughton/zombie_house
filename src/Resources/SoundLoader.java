@@ -20,6 +20,7 @@ public class SoundLoader
   private static Clip backgroundMusic;
   private static Clip explosion;
   private static Clip dropTrap;
+  private static Clip thud;
   private static Clip pickUpTrap;
   private static Clip zombieTalk1;
   private static Clip zombieTalk2;
@@ -56,6 +57,7 @@ public class SoundLoader
     pcLeftFoot = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Footsteps/Footstep_Dirt_03.wav");
     backgroundMusic = openWavByResourcePath("/Resources/sound_resources/Haunted_Woods/Haunted_Woods_Loop.wav");
     explosion = openWavByResourcePath("/Resources/sound_resources/boom_pack/explosion.wav");
+    thud = openWavByResourcePath("/Resources/sound_resources/boom_pack/thud.wav");
     dropTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Trap_00.wav");
     pickUpTrap = openWavByResourcePath("/Resources/sound_resources/fantasy_sound/Wav/Inventory_Open_01.wav");
     zombieTalk1 = openWavByResourcePath("/Resources/sound_resources/zombies/dialogue.wav");
@@ -246,8 +248,8 @@ public class SoundLoader
     else if(r%3==2) zombiePain = zombiePain2;
     else if(r%3==0) zombiePain = zombiePain3;
 
-//    gainControl = (FloatControl) zombiePain.getControl(FloatControl.Type.MASTER_GAIN);
-//    gainControl.setValue(pan);
+    gainControl = (FloatControl) zombiePain.getControl(FloatControl.Type.MASTER_GAIN);
+    gainControl.setValue(pan);
     if(zombiePain.isRunning()) return;
     else
     { zombiePain.setFramePosition(0);
@@ -267,5 +269,12 @@ public class SoundLoader
     if(levelUpSound.isRunning()) levelUpSound.stop();
     levelUpSound.setFramePosition(0);
     levelUpSound.start();
+  }
+
+  public void playThud()
+  {
+    if(thud.isRunning()) thud.stop();
+    thud.setFramePosition(0);
+    thud.start();
   }
 }

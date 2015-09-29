@@ -27,7 +27,7 @@ public class ZombieHouseModel
   private final static int VISIBLE_X_TILES = 20;
   private final static int VISIBLE_Y_TILES = 12;
   private final static double ZOMBIE_SPAWN_RATE = 0.01f;
-  private final static double TRAP_SPAWN_RATE = 0.00f;
+  private final static double TRAP_SPAWN_RATE = 0.01f;
 
   public static SoundLoader soundLoader;
   public static ImageLoader imageLoader;
@@ -62,7 +62,7 @@ public class ZombieHouseModel
     this.currentScreenHeight = MAX_SCREEN_HEIGHT;
     this.tileWidth = currentScreenWidth / VISIBLE_X_TILES;
     this.tileHeight = currentScreenHeight / VISIBLE_Y_TILES;
-    this.mapGen = new MapGenerator(2);
+    this.mapGen = new MapGenerator(level);
     this.rand = new Random();
     this.grid = this.translateTileImages(mapGen.getMap());
     imageLoader = new ImageLoader(this, tileWidth, tileHeight);

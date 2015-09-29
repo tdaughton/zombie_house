@@ -6,6 +6,7 @@
 import model.Player;
 import model.Tile;
 import model.Wall;
+import model.ZombieHouseModel;
 
 import java.awt.Point;
 import java.awt.Polygon;
@@ -26,16 +27,15 @@ public class LightSource extends Polygon
   /**
    * Constructor
    *
-   * @param player takes the Player object to obtain current tile and player's sight abilities for radii of polygon
-   * @param map    takes the Tile[][] map to check for obstacles to create shadows around
+   * @param zModel  to obtain the grid and player
    */
-  public LightSource(Player player, Tile[][] map)
+  public LightSource(ZombieHouseModel zModel)
   {
-    this.grid = map;
+    this.grid = zModel.getGrid();
+    this.player = zModel.getPlayer();
     this.playerTile = player.getCurrentTile();
     this.gridRow = playerTile.getGridRow();
     this.gridCol = playerTile.getGridCol();
-    this.player = player;
     this.playerSight = player.getPlayerSight();
   }
 

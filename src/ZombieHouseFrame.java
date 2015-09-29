@@ -311,23 +311,22 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     ArrayList<Zombie> zombies = zModel.getZombieList();
     for (Zombie zombie : zombies)
     {
-      int r = RAND.nextInt();
+      int r = RAND.nextInt(500);
+      int x = RAND.nextInt(250);
 
-      if (r % 47 == 0) GAME_SOUNDS.playRandomGrunt(zombie, zModel.getPlayer());
+      if (x ==1) GAME_SOUNDS.playRandomGrunt(zombie, zModel.getPlayer());
 
-      else if (r % 83 == 0) GAME_SOUNDS.playRandomDialogue(zombie, zModel.getPlayer());
+      else if (r==1) GAME_SOUNDS.playRandomDialogue(zombie, zModel.getPlayer());
     }
   }
 
   /**
    * Resets running state when the game is restarted
    */
-  private void toggleShift()
+  private void toggleKeys()
   {
     for (Boolean key : keysPressed)
           key = false;
-
-    keysPressed[KeyEvent.VK_SHIFT] = ! (keysPressed[KeyEvent.VK_SHIFT]);
   }
 
   /**
@@ -337,6 +336,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
   {
     if (levelUp)
     { GAME_SOUNDS.playLevelUpSound();
+      this.toggleKeys();
       JOptionPane.showMessageDialog(this, "You reached the next level in Zombie House.\nNext level loading.");
       zModel.restart(true);
       timer.setInitialDelay(500);
@@ -348,7 +348,7 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     else
     {
       JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading.");
-      this.toggleShift();
+      this.toggleKeys();
       GAME_SOUNDS.playLosingSound();
       zModel.restart(false);
       timer.setInitialDelay(500);
