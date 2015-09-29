@@ -6,45 +6,35 @@
 package model;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 //==============================================================================
 // I implemented comparable interface to implement priority queue. - Miri :)
 //==============================================================================
 public class Tile extends Rectangle implements Comparable<Tile>
 {
-  protected int x, y;
-  protected int type;
+  private int x, y;
+  private int type;
 
-  protected double priority; // priority will be calculated by the pathfinder.
+  private double priority; // priority will be calculated by the pathfinder.
 
-  protected int gridRow;
-  protected int gridCol;
-  protected boolean occupied;
-  protected boolean movable;
-  protected boolean hasTrap;
+  private int gridRow;
+  private int gridCol;
+  private boolean movable;
+  private boolean hasTrap;
   private boolean exitFlag = false;
 
 
 
   private Trap trap;
 
-  public Tile(int gridRow, int gridCol, Tile[][] grid)
+  public Tile(int gridRow, int gridCol, boolean movable)
   {
     this.gridRow = gridRow;
     this.gridCol = gridCol;
-    this.movable = false;
+    this.movable = movable;
     this.hasTrap = false;
     this.trap = null;
-  }
-
-  private void setOccupied(boolean occupationStatus)
-  {
-    this.occupied = occupationStatus;
-  }
-
-  public boolean isOccupied()
-  {
-    return this.occupied;
   }
 
   public boolean isMovable()
@@ -52,10 +42,10 @@ public class Tile extends Rectangle implements Comparable<Tile>
     return this.movable;
   }
 
-  public void setMovable(boolean movable)
-  { this.movable=movable;
+  public void setMovable(boolean moveStatus)
+  {
+    this.movable = moveStatus;
   }
-
 
   public String getTileType()
   {
@@ -82,11 +72,6 @@ public class Tile extends Rectangle implements Comparable<Tile>
     return this.gridCol;
   }
 
-  public Rectangle getBounds()
-  {
-    return this;
-  }
-
   public int getType()
   {
     return this.type;
@@ -109,11 +94,12 @@ public class Tile extends Rectangle implements Comparable<Tile>
   public void removeTrap()
   {
     this.hasTrap=false;
+    this.trap = null;
   }
 
-  public void installTrap()
+  public void installTrap(Trap trap)
   {
-    this.trap = new Trap((int) this.getCenterX(),(int)this.getCenterY(),true);
+    this.trap = trap;
     this.hasTrap = true;
   }
 
@@ -125,6 +111,15 @@ public class Tile extends Rectangle implements Comparable<Tile>
   public boolean hasTrap()
   {
     return this.hasTrap;
+  }
+
+  public boolean hasZombie(ArrayList<Zombie> zombies)
+  {
+    for (Zombie zombie : zombies)
+    {
+      if (this.contains(zombie.getX(), zombie.getY())) return true;
+    }
+    return false;
   }
 
   //============================================================================
@@ -156,6 +151,7 @@ public class Tile extends Rectangle implements Comparable<Tile>
   {
     return this.exitFlag;
   }
+
   public void setExitFlag()
   {
     this.exitFlag = true;

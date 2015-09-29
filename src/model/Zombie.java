@@ -25,9 +25,10 @@ public class Zombie extends Movable
   }
 
   public static final double DIST_SMELL = 7.0f;
-  private static final double SPEED_WALK = 0.5f;
-  private static final double RATE_ACT = 2.0f;
+  public static final double SPEED_WALK = 0.5f;
+  public static final double RATE_ACT = 2.0f;
   private static final Random rng = new Random();
+
   private ArrayList<Tile> path;
   private WalkType wType;
   private double theta;
@@ -38,21 +39,19 @@ public class Zombie extends Movable
 
   /**
    * Full constructor
-   * @param x                    X coordinate of center point (in pixels)
-   * @param y                    Y coordinate of center point (in pixels)
-   * @param radius               Radius of bounding circle (in pixels)
-   * @param location             Tile location containing center point
-   * @param grid                 Reference to Zombie House map
+   * @param zhModel              Reference to Zombie House Model
+   * @param loc                  Tile location containing center point
+   * @param running              Initial running status
    */
-  public Zombie(int x, int y, int radius, Tile location, ZombieHouseModel grid, Enum direction, ImageLoader imageLoader, boolean running, int health)
+  public Zombie(ZombieHouseModel zhModel, Tile loc, boolean running)
   {
-    super(x, y, radius, location, grid, running, health);
-    wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
-    path = new ArrayList<>();
-    frames = new SpriteLoader(imageLoader);
-    zombieOrientation = direction;
-    theta = rng.nextDouble() * 2.0f * Math.PI;
-    timeSinceUpdate = 0.0f;
+    super(zhModel, loc, running);
+    this.wType = (rng.nextBoolean() ? WalkType.RANDOM : WalkType.LINE);
+    this.path = new ArrayList<>();
+    this.frames = new SpriteLoader(ZombieHouseModel.imageLoader);
+    this.theta = rng.nextDouble() * 2.0f * Math.PI;
+    this.decodeOrientation();
+    this.timeSinceUpdate = 0.0f;
   }
 
   /**
@@ -61,7 +60,7 @@ public class Zombie extends Movable
    */
   public SpriteLoader getFrames()
   {
-    return frames;
+    return this.frames;
   }
 
   /**
@@ -70,9 +69,21 @@ public class Zombie extends Movable
    */
   public String getZType()
   {
-    if (wType == WalkType.LINE) return "Line";
-    else if (wType == WalkType.PATH) return "Master";
+    if (this.wType == WalkType.LINE) return "Line";
+    else if (this.wType == WalkType.PATH) return "Master";
     return "Random";
+  }
+
+  private void decodeOrientation()
+  {
+    if (5.8905f < this.theta || this.theta < 0.3927f) this.zombieOrientation = GridOrientation.SOUTH;
+    else if (0.3927f < this.theta && this.theta < 1.1781f) this.zombieOrientation = GridOrientation.SOUTHEAST;
+    else if (1.1781f < this.theta && this.theta < 1.9635f) this.zombieOrientation = GridOrientation.EAST;
+    else if (1.9635f < this.theta && this.theta < 2.7489f) this.zombieOrientation = GridOrientation.NORTHEAST;
+    else if (2.7489f < this.theta && this.theta < 3.5343f) this.zombieOrientation = GridOrientation.NORTH;
+    else if (3.5343f < this.theta && this.theta < 4.3197f) this.zombieOrientation = GridOrientation.NORTHWEST;
+    else if (4.3197f < this.theta && this.theta < 5.1051f) this.zombieOrientation = GridOrientation.WEST;
+    else if (5.1051f < this.theta && this.theta < 5.8905f) this.zombieOrientation = GridOrientation.SOUTHWEST;
   }
 
   /**
@@ -80,8 +91,8 @@ public class Zombie extends Movable
    */
   protected void walk(double timeElapsed)
   {
-    double xDistance = (SPEED_WALK * super.getCurrentTile().getWidth() * Math.sin(theta) * timeElapsed);
-    double yDistance = (SPEED_WALK * super.getCurrentTile().getHeight() * Math.cos(theta) * timeElapsed);
+    double xDistance = (SPEED_WALK * super.getCurrentTile().getWidth() * Math.sin(this.theta) * timeElapsed);
+    double yDistance = (SPEED_WALK * super.getCurrentTile().getHeight() * Math.cos(this.theta) * timeElapsed);
     //System.out.println("zxd "+xDistance+" zyd "+yDistance+" theta "+theta);
     if (5.8905f < theta || theta < 0.3927f) zombieOrientation = GridOrientation.SOUTH;
     else if (0.3927f < theta && theta < 1.1781f) zombieOrientation = GridOrientation.SOUTHEAST;
@@ -93,8 +104,7 @@ public class Zombie extends Movable
     else if (5.1051f < theta && theta < 5.8905f) zombieOrientation = GridOrientation.SOUTHWEST;
     bumped = super.move(xDistance, yDistance, zombieOrientation);
     if(wType == WalkType.LINE) getFrames().getRotatingLineZombieWalk();
-    else if(wType == WalkType.RANDOM) getFrames().getRotatingRandomZombieWalk();
-    else getFrames().getRotatingMasterZombieWalk();
+    else getFrames().getRotatingRandomZombieWalk();
   }
 
   /**
@@ -103,13 +113,13 @@ public class Zombie extends Movable
    */
   public void updateZombie(double timeElapsed)
   {
-    timeSinceUpdate += timeElapsed;
-    if (timeSinceUpdate > RATE_ACT)
+    this.timeSinceUpdate += timeElapsed;
+    if (this.timeSinceUpdate > RATE_ACT)
     {
-      timeSinceUpdate = 0.0f;
-      decisionEngine();
+      this.timeSinceUpdate = 0.0f;
+      this.decisionEngine();
     }
-    walk(timeElapsed);
+    this.walk(timeElapsed);
   }
 
   /**
@@ -117,18 +127,19 @@ public class Zombie extends Movable
    */
   private void decisionEngine()
   {
-    if (!path.isEmpty())
+    if (!this.path.isEmpty())
     {
-      Tile nextTile = path.get(0);
-      theta = Math.atan2(nextTile.getCenterX() - this.getX(), nextTile.getCenterY() - this.getY());
+      Tile nextTile = this.path.get(0);
+      this.theta = Math.atan2(nextTile.getCenterX() - this.getX(), nextTile.getCenterY() - this.getY());
       //System.out.println("Z["+this.getTileRow()+"]["+this.getTileCol()+"] tracking ["+this.getZModel().getPlayer().getTileRow()+"]["+this.getZModel().getPlayer().getTileCol()+"] via ["+nextTile.getGridRow()+"]["+nextTile.getGridCol()+"]");
-      if (theta < 0.0f) theta += Math.PI * 2.0f;
+      if (this.theta < 0.0f) this.theta += Math.PI * 2.0f;
     }
-    else if (wType == WalkType.RANDOM || !bumped)
+    else if (this.wType == WalkType.RANDOM || !this.bumped)
     {
-      theta = rng.nextDouble() * Math.PI * 2.0f;
-      bumped = true;
+      this.theta = rng.nextDouble() * Math.PI * 2.0f;
+      this.bumped = true;
     }
+    this.decodeOrientation();
   }
 
   /**
@@ -137,7 +148,7 @@ public class Zombie extends Movable
    */
   public void setPath(ArrayList<Tile> fastPath)
   {
-    path = fastPath;
+    this.path = fastPath;
   }
 
   /**
@@ -145,7 +156,7 @@ public class Zombie extends Movable
    */
   public void deletePath()
   {
-    path.clear();
+    this.path.clear();
   }
 
   /**
@@ -153,6 +164,6 @@ public class Zombie extends Movable
    */
   public void setMasterZombie()
   {
-    wType = WalkType.PATH;
+    this.wType = WalkType.PATH;
   }
 }
