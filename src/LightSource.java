@@ -7,11 +7,9 @@ import model.Player;
 import model.Tile;
 import model.Wall;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
 public class LightSource extends Polygon
 {
@@ -24,8 +22,6 @@ public class LightSource extends Polygon
   private Polygon light;
   private Point2D center;
   private float radius;
-  private Graphics graphics;
-  private ArrayList<Point> points;
 
   /**
    * Constructor
@@ -41,7 +37,6 @@ public class LightSource extends Polygon
     this.gridCol = playerTile.getGridCol();
     this.player = player;
     this.playerSight = player.getPlayerSight();
-    points = new ArrayList<>();
   }
 
   /**
@@ -50,7 +45,6 @@ public class LightSource extends Polygon
    */
   protected void setPolygon(int centerX, int centerY)
   {
-    points.clear();
 
     double tileRadius = Math.sqrt(((Math.pow(playerTile.getHeight(), 2))
         + (Math.pow(playerTile.getWidth(), 2))));
@@ -64,7 +58,7 @@ public class LightSource extends Polygon
     double xMult;
     double yMult;
 
-    for (int deg = 0; deg <= 360; deg++)
+    for (int deg = 0; deg <= 360; deg+=3)
     {
       xMult = Math.cos(Math.toRadians(deg));
       yMult = Math.sin(Math.toRadians(deg));
@@ -106,8 +100,6 @@ public class LightSource extends Polygon
           if (i >= 0 && j >= 0 && i < 41 && j < 48)
             if (grid[i][j] instanceof Wall && grid[i][j].contains(x, y))
             {
-              points.add(new Point((int) grid[i][j].getCenterX() - x0,
-                                  (int) grid[i][j].getCenterY() - y0));
               return new Point((int)grid[i][j].getCenterX()-x0, (int)grid[i][j].getCenterY()-y0);
             }
         }
@@ -124,8 +116,6 @@ public class LightSource extends Polygon
         error += dx;
       }
     }
-
-    points.add(new Point(x1 - x0, y1 - y0));
     return new Point(x1-x0,y1-y0);
   }
 
@@ -157,12 +147,4 @@ public class LightSource extends Polygon
     return this.center;
   }
 
-  public void drawRayTrace(Graphics g)
-  {
-    //System.out.println(points.size());
-    for (Point p : points)
-    {
-      g.drawLine((int) center.getX(), (int) center.getY(), p.x, p.y);
-    }
-  }
 }

@@ -51,8 +51,8 @@ public class ZombieHouseViewer extends JPanel
     this.zModel = zModel;
     this.currentScreenWidth = (int) userScreenSize.getWidth();
     this.currentScreenHeight = (int) userScreenSize.getHeight();
-    this.zModel.getImageLoader().createBackground();
-    this.background = zModel.getImageLoader().getBackground();
+    ZombieHouseModel.imageLoader.createBackground();
+    this.background = ZombieHouseModel.imageLoader.getBackground();
     this.backgroundWidth = background.getWidth();
     this.backgroundHeight = background.getHeight();
     this.foreground1 = new BufferedImage(backgroundWidth, backgroundHeight, BufferedImage.TYPE_INT_ARGB);
@@ -114,7 +114,7 @@ public class ZombieHouseViewer extends JPanel
     if ((yMin + yMax) >= background.getHeight()) yMax = background.getHeight() - yMin;
 
     this.currentForegroundSubImage = this.getVisibleTransparentBuffer(xMin, yMin, xMax, yMax);
-    this.background = zModel.getImageLoader().getBackground();
+    this.background = ZombieHouseModel.imageLoader.getBackground();
 
     return background.getSubimage(xMin, yMin, xMax, yMax);
   }
@@ -202,8 +202,8 @@ public class ZombieHouseViewer extends JPanel
             {
               tile.removeTrap();
               zModel.setCharredTile(tile);
-              zModel.getImageLoader().createBackground();
-              this.background = zModel.getImageLoader().getBackground();
+              ZombieHouseModel.imageLoader.createBackground();
+              this.background = ZombieHouseModel.imageLoader.getBackground();
             }
           }
           else
@@ -304,13 +304,13 @@ public class ZombieHouseViewer extends JPanel
 
   public void restart()
   {
-    Graphics2D g2 = (Graphics2D) background.getGraphics();
+    Graphics2D g2 = (Graphics2D)background.getGraphics();
     g2.setBackground(new Color(255, 255, 255, 0));
     g2.clearRect(0, 0, backgroundWidth, backgroundHeight);
-    zModel.getImageLoader().createBackground();
-    this.background = zModel.getImageLoader().getBackground();
+    ZombieHouseModel.imageLoader.createBackground();
+    this.background = ZombieHouseModel.imageLoader.getBackground();
     this.playerSprite = zModel.getPlayer();
-    this.lightSource = new LightSource(playerSprite,zModel.getGrid());
+    this.lightSource = new LightSource(playerSprite, zModel.getGrid());
     repaint();
   }
 }

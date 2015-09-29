@@ -9,7 +9,7 @@
 package model;
 import Resources.TrapLoader;
 
-public class Trap extends Movable
+public class Trap
 {
   private int x, y;
   private boolean grabbable;

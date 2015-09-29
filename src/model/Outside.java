@@ -6,11 +6,9 @@ package model;
 
 public class Outside extends Tile
 {
-  public Outside(int gridRow, int gridCol, Tile[][] grid)
+  public Outside(int gridRow, int gridCol)
   {
-    super(gridRow, gridCol, grid);
-    this.movable = true;
-    super.setType(0);
+    super(gridRow, gridCol, true, 0);
   }
 
   public String getTileType()

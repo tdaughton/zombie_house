@@ -86,6 +86,7 @@ public class Pathfinder
 
         if(!costSoFar.containsKey(next) || newCost < costSoFar.get(next))
         {
+          //TODO: It should be able to find out when there is no way to get to the target.
           costSoFar.put(next, newCost);
 
           double heuristic = heuristic(target.getX(), target.getY(), next.getX(), next.getY());

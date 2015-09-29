@@ -120,7 +120,7 @@ public class RoomGenerator implements GameMap
   private void locateExit(Room exit, int roomNumber)
   {
     rooms[roomNumber] = exit;
-    map[exit.y1][exit.x1] = new Floor(exit.x1, exit.y1, null);
+    map[exit.y1][exit.x1] = new Floor(exit.x1, exit.y1);
     map[exit.y1][exit.x1].setExitFlag();
   }
 
@@ -153,10 +153,10 @@ public class RoomGenerator implements GameMap
       {
         if (i >= y && i < y + height && j >= x && j < x + width)
         {
-          map[i][j] = new Floor(i, j, null);
+          map[i][j] = new Floor(i, j);
         } else
         {
-          map[i][j] = new Wall(i, j, null);
+          map[i][j] = new Wall(i, j);
         }
       }
     }

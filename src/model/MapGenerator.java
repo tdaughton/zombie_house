@@ -60,10 +60,11 @@ public class MapGenerator implements GameMap
     //printMap();
   }
 
-//  public static void main(String[] args)
-//  {
-//    MapGenerator mg = new MapGenerator(10);
-//  }
+  public static void main(String[] args)
+  {
+    MapGenerator mg = new MapGenerator(10);
+    mg.printMap();
+  }
 
   //============================================================================
   // This will only return the finalized map composed only with
@@ -131,7 +132,7 @@ public class MapGenerator implements GameMap
     {
       for (int j = 0; j < COL; j++)
       {
-        map[i][j] = new Outside(i, j, null);
+        map[i][j] = new Outside(i, j);
       }
     }
   }
