@@ -161,7 +161,6 @@ public class DoorGenerator implements GameMap
     }
 
     map[y][x] = new Floor(y, x);
-    map[y][x].setHallway(true);
     doors.add(map[y][x]);
   }
 }
