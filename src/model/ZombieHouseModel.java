@@ -512,19 +512,22 @@ public class ZombieHouseModel
     if(newLevel)
     {
       this.level++;
-      traps = new ArrayList<>();
-      zombies = new ArrayList<>();
-      trapSub = new ArrayList<>();
-      zombieSub = new ArrayList<>();
+      traps.clear();
+      zombies.clear();
+      trapSub.clear();
+      zombieSub.clear();
       this.mapGen = new MapGenerator(level+2);
-      this.grid = mapGen.getMap();
+      this.mapGen.printMap();
+      this.grid = this.translateTileImages(mapGen.getMap());
+      this.getObstacles(8);
       this.setRandomTraps();
       this.initializeRandomZombies();
       this.playerCharacter = this.getRandomStart();
     }
     else
     {
-      this.grid = this.mapGen.getMap();
+      this.grid = this.translateTileImages(mapGen.getMap());
+      this.getObstacles(8);
       this.playerCharacter = new Player(this, this.playerSub, false);
       this.zombies = resetZombies();
       this.traps = resetTraps();

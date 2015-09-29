@@ -37,6 +37,7 @@ public class LightSource extends Polygon
     this.gridRow = playerTile.getGridRow();
     this.gridCol = playerTile.getGridCol();
     this.player = player;
+    this.light = new Polygon();
     this.playerSight = player.getPlayerSight();
   }
 
@@ -50,7 +51,7 @@ public class LightSource extends Polygon
     double tileRadius = Math.sqrt(((Math.pow(playerTile.getHeight(), 2))
         + (Math.pow(playerTile.getWidth(), 2))));
     this.radius = (float) (playerSight * tileRadius);
-    this.light = new Polygon();
+    this.light.reset();
     double relativeX = player.getX();
     double relativeY = player.getY();
     this.center = new Point2D.Double(centerX, centerY);
@@ -125,7 +126,7 @@ public class LightSource extends Polygon
   {
 
     double tileRadius = Math.sqrt(((Math.pow(playerTile.getHeight(), 2))
-        + (Math.pow(playerTile.getWidth(), 2))));
+                                   + (Math.pow(playerTile.getWidth(), 2))));
     this.radius = (float) (playerSight * tileRadius);
     this.light = new Polygon();
     double relativeX = player.getX();

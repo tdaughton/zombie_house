@@ -332,9 +332,9 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
       int r = RAND.nextInt(250);
       int x = RAND.nextInt(500);
 
-      if (r == 1) GAME_SOUNDS.playRandomGrunt(zombie, zModel.getPlayer());
+      if (r == 1) GAME_SOUNDS.playRandomGrunt(zombie, player);
 
-      else if (x==1) GAME_SOUNDS.playRandomDialogue(zombie, zModel.getPlayer());
+      else if (x==1) GAME_SOUNDS.playRandomDialogue(zombie, player);
       if (player.getDistanceTo(zombie) < Player.DIST_HEAR * this.zModel.getTileWidth())
       {
         if (zombie.getBumped()) GAME_SOUNDS.playRandomGrunt(zombie, player);
@@ -350,15 +350,12 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
    */
   private void resetKeys()
   {
-    for (Boolean key : keysPressed)
-      key = false;
-
-    if (keysPressed[KeyEvent.VK_SHIFT] == true) keysPressed[KeyEvent.VK_SHIFT] = false;
     for (int i = 0; i < 128; i++)
     {
       this.keysPressed[i] = false;
     }
   }
+
   /**
    * Restart the level when the Player dies
    */
@@ -367,25 +364,18 @@ public class ZombieHouseFrame extends JFrame implements ActionListener, Componen
     if (levelUp)
     {
       GAME_SOUNDS.playLevelUpSound();
-      JOptionPane.showMessageDialog(this,
-                                   "You reached the next level in Zombie House.\nNext level loading.");
-      //this.toggleShift();
-      zModel.restart(true);
-      timer.setInitialDelay(500);
-      timer.restart();
-      zView.restart();
-      this.zModel.restart(true);
+      JOptionPane.showMessageDialog(this, "You reached the next level in Zombie House.\nNext level loading.");
+      this.zView.restart(true);
     }
     else
     {
       GAME_SOUNDS.playLosingSound();
       JOptionPane.showMessageDialog(this, "You died in the Zombie House.\nLevel reloading.");
-      this.zModel.restart(false);
+      this.zView.restart(false);
     }
 
     this.resetKeys();
     timer.setInitialDelay(500);
     timer.restart();
-    this.zView.restart();
   }
 }

@@ -291,7 +291,7 @@ public class ZombieHouseViewer extends JPanel
   public void drawLightTrap(Graphics a, LightSource lightsource, Trap trap)
   {
     Graphics2D g2 = (Graphics2D) a;
-    lightSource.setPolygonTrap(trap.getX(), trap.getY(),trap);
+    lightSource.setPolygonTrap(trap.getX(), trap.getY(), trap);
     Polygon light = lightSource.getPolygon();
     Color [] fade = {new Color(0f,0f,0f,0f),new Color(0f,0f,0f,1f), Color.BLACK};
     float [] fCen = {0.0f, 0.7f, 1.0f};
@@ -327,8 +327,9 @@ public class ZombieHouseViewer extends JPanel
   }
 
 
-  public void restart()
+  public void restart(boolean nextLevel)
   {
+    this.zModel.restart(nextLevel);
     Graphics2D g2 = (Graphics2D)background.getGraphics();
     g2.setBackground(new Color(255, 255, 255, 0));
     g2.clearRect(0, 0, backgroundWidth, backgroundHeight);
